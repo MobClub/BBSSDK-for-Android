@@ -1,15 +1,16 @@
 (function() {
     /*获取主题帖子详情*/
-    function getForumThreadDetails() {
+    function getForumThreadDetails(callback) {
+        var data = null;
         try {
             if (window.forumThread) {
-                return JSON.parse(window.forumThread.getForumThreadDetails());
+                data = JSON.parse(window.forumThread.getForumThreadDetails());
             } else {
-                return JSON.parse(prompt("getForumThreadDetails"));
+                data = JSON.parse(prompt("getForumThreadDetails"));
             }
         } catch(err) {
-            return null;
         }
+        callback(data);
     }
 
     /*获取主题帖子回帖列表*/
@@ -65,12 +66,14 @@
     }
 
     /*获取网页图片集和当前点击的图片id*/
-    function getImageUrlsAndIndex() {
+    function getImageUrlsAndIndex(callback) {
+        var data = null;
         if (window.forumImage) {
-            return JSON.parse(window.forumImage.getImageUrlsAndIndex());
+            data = JSON.parse(window.forumImage.getImageUrlsAndIndex());
         } else {
-            return JSON.parse(prompt("getImageUrlsAndIndex"));
+            data = JSON.parse(prompt("getImageUrlsAndIndex"));
         }
+        callback(data);
     }
 
     /*设置当前页面图片地址和index*/

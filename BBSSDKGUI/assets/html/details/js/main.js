@@ -108,9 +108,15 @@ function getDetailHtml(data){
 		return html;
 	}
 	var data = data;
-	data.createdOn = timeTodate(data.createdOn);
-	data.avatar = '<img src="'+ data.avatar +'">';
-	data.message = data.message.replace(/<img/g, '<img dz-imgshow').replace(/<a /g, '<a dz-ahref class="external"');
+	if (data.createdOn) {
+	    data.createdOn = timeTodate(data.createdOn);
+	}
+	if (data.avatar) {
+	    data.avatar = '<img src="'+ data.avatar +'">';
+	}
+	if (data.message) {
+	    data.message = data.message.replace(/<img/g, '<img dz-imgshow').replace(/<a /g, '<a dz-ahref class="external"');
+	}
 	$.each($("[dz-bind]"), function(index, item){
 		var getAttr = $(item).attr("dz-bind").split(".");
 		var html = $(item).html();
@@ -143,10 +149,11 @@ function getDetailHtml(data){
 $(function(){
 	$(document).on("pageInit", ".detail-page", function(e, id, page){
 		// 页面初始化完成
-		var getDetaildata = BBSSDKNative.getForumThreadDetails();
-		getDetailHtml(getDetaildata);
-		// 页面初始化完成，获取主题帖子列表
-		getCommonHtml(page, getDetaildata.fid, getDetaildata.tid);
+		BBSSDKNative.getForumThreadDetails(function(detailData) {
+		    getDetailHtml(detailData);
+            // 页面初始化完成，获取主题帖子列表
+            getCommonHtml(page, detailData.fid, detailData.tid);
+		});
 	});
 
 	$.init();
