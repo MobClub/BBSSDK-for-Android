@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>详情页</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" type="text/css" href="./css/base.css">
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+
+  </head>
+  <body>
+    <div class="page detail-page">
+        <div class="content">
+            <div class="main-content">
+                <div class="title-content">
+                    <h1 dz-bind="data.subject"></h1>
+                    <p class="sub">
+                        <span dz-bind="data.createdOn"></span>
+                        <span dz-bind="data.replies"><i class="mobicon mobicon-common"></i></span>
+                    </p>
+                </div>
+                <div class="detail-content">
+                    <div class="header">
+                        <span class="headimg" dz-bind="data.avatar"></span>
+                        <span dz-bind="data.author"></span>
+                        <span class="tip">楼主</span>
+                    </div>
+                    <div class="center" dz-bind="data.message"></div>
+                    <div class="bottom" dz-repeat="data.attachments">
+                        <p>
+                            <i class="mobicon mobicon-dz{{item.extension}}"></i>
+                            <span class="filename">{{item.fileName}}</span>
+                            <a href="javascript:;" class="external dz-filehref">打开附件</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="content-block-title">评论</div>
+            <div class="common-content infinite-scroll" data-distance="10">
+                <ul></ul>
+                <!-- 加载提示符 -->
+                <div class="infinite-scroll-preloader">
+                    <div class="preloader"></div>
+                    <div class="preloader-text"><span>正在加载中...</span></div>
+                </div>
+                <div class="dz-loading-over">
+                    <span>暂无评论</span>
+                </div>
+            </div>
+        </div>
+       <!--  <div class="bar bar-footer">
+          <button class="button button-block"><i class="mobicon mobicon-common-green"></i>我要评论</button>
+        </div> -->
+    </div>
+
+    <script type="text/javascript" src="./js/base.js"></script>
+    <script type="text/javascript" src="./js/BBSSDK.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>
+  </body>
+</html>

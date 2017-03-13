@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="7dp">
+
+    <com.mob.bbssdk.gui.ptrlistview.ChrysanthemumView
+        android:id="@+id/cvHeaderProgress"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
+
+    <com.mob.bbssdk.gui.ptrlistview.RotateImageView
+        android:id="@+id/ivHeaderPointer"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/bbs_header_arrow"/>
+
+    <TextView
+        android:id="@+id/tvHeaderMessage"
+        android:layout_width="match_parent"
+        android:layout_height="23dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="26dp"
+        android:gravity="center_horizontal|top"
+        android:textColor="@color/bbs_header_txt_color"
+        android:textSize="@dimen/bbs_header_txt_size"/>
+</RelativeLayout>

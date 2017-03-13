@@ -1,0 +1,5 @@
+<resources>
+    <style name="BBS_AppTheme" parent="@style/BBS_AppBaseTheme">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+</resources>

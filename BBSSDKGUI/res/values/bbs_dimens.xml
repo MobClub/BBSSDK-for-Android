@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 标题字体大小 -->
+    <dimen name="bbs_title_txt_size">17sp</dimen>
+    <dimen name="bbs_title_right_txt_size">16sp</dimen>
+    <dimen name="bbs_title_left_txt_size">16sp</dimen>
+    <!-- 标题高度 -->
+    <dimen name="bbs_title_bar_height">44dp</dimen>
+    <dimen name="bbs_empty_view_txt_size">14sp</dimen>
+    <dimen name="bbs_header_txt_size">12sp</dimen>
+    <dimen name="bbs_footer_txt_size">12sp</dimen>
+    <!-- 版块tab字体大小 -->
+    <dimen name="bbs_menu_tab_txt_size">14sp</dimen>
+    <!-- 版块tab单个左右padding -->
+    <dimen name="bbs_menu_tab_txt_padding">10dp</dimen>
+    <!-- 版块tab的高度 -->
+    <dimen name="bbs_menu_tab_height">35dp</dimen>
+    <!-- 版块tab选中的下标线高度 -->
+    <dimen name="bbs_menu_tab_selected_line_height">2dp</dimen>
+    <dimen name="bbs_menu_tab_under_line_height">1dp</dimen>
+    <!-- 帖子列表分隔线的高度 -->
+    <dimen name="bbs_forum_thread_list_divider_height">10dp</dimen>
+    <!-- 帖子列表中用户头像的大小 -->
+    <dimen name="bbs_forum_thread_list_item_avatar_size">25dp</dimen>
+    <!-- 图片选择对话框 -->
+    <dimen name="bbs_chooser_dialog_txt_size">14sp</dimen>
+    <dimen name="bbs_chooser_dialog_item_height">40dp</dimen>
+    <dimen name="bbs_chooser_dialog_divider_height">1dp</dimen>
+    <!-- 附件默认打开界面 -->
+    <dimen name="bbs_attachment_name_txt_size">15sp</dimen>
+    <dimen name="bbs_attachment_load_txt_size">13sp</dimen>
+    <dimen name="bbs_attachment_btn_txt_size">13sp</dimen>
+
+</resources>

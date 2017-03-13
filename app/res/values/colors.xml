@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 状态栏颜色，这里与titlebar颜色保持一致 -->
+    <color name="status_bar_bg">#F5F5F5</color>
+    <!-- 所有界面默认的背景颜色 -->
+    <color name="content_bg">#FFFFFF</color>
+    <!-- 打开附件界面，加载字体颜色 -->
+    <color name="attachment_load_txt_color">#666666</color>
+</resources>

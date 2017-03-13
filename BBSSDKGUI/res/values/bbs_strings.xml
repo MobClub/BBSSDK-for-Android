@@ -1,0 +1,34 @@
+<resources>
+    <!-- 刷新列表控件 -->
+    <string name="bbs_pull_to_refresh">下拉刷新</string>
+    <string name="bbs_release_to_refresh">释放刷新</string>
+    <string name="bbs_requesting">正在加载中…</string>
+    <string name="bbs_pull_to_request">取消更新</string>
+    <string name="bbs_release_to_request">释放请求</string>
+    <string name="bbs_load_finished">加载完成</string>
+    <string name="bbs_loaded_no_more_data">以上已为全部内容</string>
+    <!-- 加载界面提示语 -->
+    <string name="bbs_empty_view_str">暂无内容</string>
+    <string name="bbs_error_view_str">网络不佳，请再次刷新</string>
+    <string name="bbs_loading">正在加载中...</string>
+    <string name="bbs_loading_empty">暂无内容</string>
+    <string name="bbs_loading_failed">网络不佳，请再次刷新</string>
+    <!-- 选择对话框 -->
+    <string name="bbs_cancel">取消</string>
+    <string name="bbs_open_file_chooser">选择打开方式</string>
+    <string name="bbs_save_photo_to_local">保存到手机</string>
+    <!-- 保存图片提示语 -->
+    <string name="bbs_toast_save_pic_success">保存成功</string>
+    <string name="bbs_toast_save_pic_failed">保存失败</string>
+    <!-- 附件默认打开界面 -->
+    <string name="bbs_attachment_btn_download">下载附件(%1$s)</string>
+    <string name="bbs_attachment_btn_download_again">重新下载(%1$s)</string>
+    <string name="bbs_attachment_btn_open_with_other_app">其它应用打开</string>
+    <string name="bbs_attachment_download_ing">下载中...(%1$s/%2$s)</string>
+    <string name="bbs_attachment_download_failed">下载失败</string>
+    <string name="bbs_attachment_download_canceled">已暂停下载</string>
+    <string name="bbs_attachment_load_ing">加载中...</string>
+    <string name="bbs_attachment_load_failed">打开附件失败</string>
+    <string name="bbs_attachment_none">未知文件</string>
+    <string name="bbs_thread_details_title">帖子详情</string>
+</resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 打开附件界面，加载字体大小 -->
+    <dimen name="attachment_load_txt_size">16sp</dimen>
+</resources>

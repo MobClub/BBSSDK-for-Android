@@ -1,0 +1,32 @@
+apply plugin: 'com.android.application'
+apply from: "${project.rootProject.file('buildCommon.gradle')}"
+
+android {
+    defaultConfig {
+        applicationId "com.mob.bbssdk.sample.code4app"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+
+    dexOptions {
+//        incremental true
+//        javaMaxHeapSize "4g"
+        preDexLibraries = false
+        additionalParameters = ['--core-library']
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+}
+
+dependencies {
+    compile project(':BBSSDKGUI')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.github.barteksc:android-pdf-viewer:2.4.0'
+    compile 'com.android.support:multidex:1.0.1'
+}
