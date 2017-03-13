@@ -86,17 +86,7 @@ public class JsViewClient {
 		} else {
 			js = "window.BBSSDKNative.showImage(" + index + ", \"" + Data.MD5(imageUrl) + "\");";
 		}
-		if (refWebView != null && refWebView.get() != null) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				refWebView.get().evaluateJavascript(js, new ValueCallback<String>() {
-					public void onReceiveValue(String value) {
-
-					}
-				});
-			} else {
-				refWebView.get().loadUrl("javascript:" + js);
-			}
-		}
+		evaluateJavascript(js);
 	}
 
 	public ImageDownloader.ImageDownloaderListener getImageDownloadListener() {
@@ -114,7 +104,17 @@ public class JsViewClient {
 		return refContext == null ? null : refContext.get();
 	}
 
-	public WebView getWebView() {
-		return refWebView == null ? null : refWebView.get();
+	public void evaluateJavascript(String javascript) {
+		if (refWebView != null && refWebView.get() != null) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				refWebView.get().evaluateJavascript(javascript, new ValueCallback<String>() {
+					public void onReceiveValue(String value) {
+
+					}
+				});
+			} else {
+				refWebView.get().loadUrl("javascript:" + javascript);
+			}
+		}
 	}
 }

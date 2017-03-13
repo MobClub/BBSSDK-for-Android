@@ -38,7 +38,13 @@ function getCommonHtml(page,fid,tid){
 				});
 				$(".common-content ul").append(html);
 				$(".dz-loading-over span").text("以上已为全部内容");
-				$(".dz-loading-over").hide();
+				if (data.length != pageSize) {
+				    $.detachInfiniteScroll($('.infinite-scroll'));
+                    $('.infinite-scroll-preloader').remove();
+                    $(".dz-loading-over").show();
+				} else {
+                    $(".dz-loading-over").hide();
+                }
 			}else{
 				// 获取数据失败
 				$.detachInfiniteScroll($('.infinite-scroll'));

@@ -106,7 +106,9 @@ public class ForumThreadDetailView extends BaseView {
 						long tid = ResHelper.forceCast(map.get("tid"), 0L);
 						int page = ResHelper.forceCast(map.get("page"), 0);
 						int pageSize = ResHelper.forceCast(map.get("pageSize"), 0);
-						result.confirm(jsInterfaceForumThread.getPosts(fid, tid, page, pageSize));
+						String callback = ResHelper.forceCast(map.get("callback"));
+						jsInterfaceForumThread.getPosts(fid, tid, page, pageSize, callback);
+						result.confirm();
 						return true;
 					} else if ("openImage".equals(message)) {
 						HashMap<String, Object> map = jsInterfaceForumThread.parseJsonToMap(defaultValue);

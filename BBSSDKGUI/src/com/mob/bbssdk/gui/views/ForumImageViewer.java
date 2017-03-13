@@ -6,7 +6,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.JsPromptResult;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
@@ -57,17 +56,7 @@ public class ForumImageViewer extends BaseView {
 				} else {
 					js = "window.BBSSDKNative.showImage(" + index + ", \"" + Data.MD5(imageUrl) + "\", " + false + ", " + true + ");";
 				}
-				if (getWebView() != null) {
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-						getWebView().evaluateJavascript(js, new ValueCallback<String>() {
-							public void onReceiveValue(String value) {
-
-							}
-						});
-					} else {
-						getWebView().loadUrl("javascript:" + js);
-					}
-				}
+				evaluateJavascript(js);
 			}
 		};
 		jsViewClient.setWebView(webView);

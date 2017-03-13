@@ -15,27 +15,23 @@
 
     /*获取主题帖子回帖列表*/
     function getPosts(fid, tid, page, pageSize, callback) {
-       try {
-            var postList = [];
+        var func = $mob.ext._bindCallbackFunc(callback);
+        try {
             if (window.forumThread) {
-                postList = JSON.parse(window.forumThread.getPosts(fid, tid, page, pageSize));
+                window.forumThread.getPosts(fid, tid, page, pageSize, func);
             } else {
                 var map = {
                     fid: fid,
                     tid: tid,
                     page: page,
-                    pageSize: pageSize
+                    pageSize: pageSize,
+                    callback: func
                 };
-                postList = JSON.parse(prompt("getPosts", JSON.stringify(map)));
+                prompt("getPosts", JSON.stringify(map));
             }
-            if (postList && postList.length > 0) {
-                callback(postList);
-                return;
-            }
-       } catch(err) {
-            err.toString();
-       }
-       callback(false);
+        } catch(err) {
+            func(null);
+        }
     }
 
     /*打开图片*/
