@@ -4,6 +4,6 @@
 
 [点击下载BBSSDK](http://wiki.mob.com/快速集成/)  
 
-[点击查看BBSSDK集成指南](http://wiki.mob.com/快速集成/)
+[点击查看BBSSDK集成指南](http://www.mob.com/downloadDetail/BBSSDK/android)
 
 
