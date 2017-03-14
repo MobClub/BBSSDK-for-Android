@@ -269,19 +269,23 @@ public class PageAttachmentViewer extends BasePageWithTitle implements View.OnCl
 				//2. 显示下载状态，并显示其他应用入口
 				UIHandler.sendEmptyMessage(0, new Handler.Callback() {
 					public boolean handleMessage(Message msg) {
-						tvLoad.setVisibility(View.GONE);
-						pbDownload.setVisibility(View.GONE);
-						vCancelDownload.setVisibility(View.GONE);
-						if (TextUtils.isEmpty(filePath) || !new File(filePath).exists()) {
-							//filePath == null 表示下载已经取消了
-							Toast.makeText(getContext(), ResHelper.getStringRes(getContext(),
-									downloadFailed ? "bbs_attachment_download_failed" : "bbs_attachment_download_canceled"), Toast.LENGTH_SHORT).show();
-							btnDownload.setText(getContext().getResources().getString(ResHelper.getStringRes(getContext(),
-									"bbs_attachment_btn_download_again"), CommonUtils.formatFileSize(attachment.fileSize)));
-							btnDownload.setVisibility(View.VISIBLE);
-							downloadSuccess = false;
-						} else {
-							openDownloadedFile();
+						try {
+							tvLoad.setVisibility(View.GONE);
+							pbDownload.setVisibility(View.GONE);
+							vCancelDownload.setVisibility(View.GONE);
+							if (TextUtils.isEmpty(filePath) || !new File(filePath).exists()) {
+								//filePath == null 表示下载已经取消了
+								Toast.makeText(getContext(), ResHelper.getStringRes(getContext(),
+										downloadFailed ? "bbs_attachment_download_failed" : "bbs_attachment_download_canceled"), Toast.LENGTH_SHORT).show();
+								btnDownload.setText(getContext().getResources().getString(ResHelper.getStringRes(getContext(),
+										"bbs_attachment_btn_download_again"), CommonUtils.formatFileSize(attachment.fileSize)));
+								btnDownload.setVisibility(View.VISIBLE);
+								downloadSuccess = false;
+							} else {
+								openDownloadedFile();
+							}
+						} catch (Throwable t) {
+							t.printStackTrace();
 						}
 						return false;
 					}
@@ -307,14 +311,16 @@ public class PageAttachmentViewer extends BasePageWithTitle implements View.OnCl
 	private FileDownloadListener initDownloadListener() {
 		downloadListener = new FileDownloadListener() {
 			public void onProgress(final int progress, final long curSize, final long totalSize) {
-				UIHandler.sendEmptyMessage(0, new Handler.Callback() {
-					public boolean handleMessage(Message msg) {
-						tvLoad.setText(getContext().getResources().getString(ResHelper.getStringRes(getContext(), "bbs_attachment_download_ing"),
-								String.valueOf(CommonUtils.formatFileSize(curSize)), CommonUtils.formatFileSize(totalSize)));
-						pbDownload.setProgress(progress);
-						return false;
-					}
-				});
+				if (progress > 0 && progress % 10 == 0) {
+					UIHandler.sendEmptyMessage(0, new Handler.Callback() {
+						public boolean handleMessage(Message msg) {
+							tvLoad.setText(getContext().getResources().getString(ResHelper.getStringRes(getContext(), "bbs_attachment_download_ing"),
+									String.valueOf(CommonUtils.formatFileSize(curSize)), CommonUtils.formatFileSize(totalSize)));
+							pbDownload.setProgress(progress);
+							return false;
+						}
+					});
+				}
 			}
 		};
 		return downloadListener;
