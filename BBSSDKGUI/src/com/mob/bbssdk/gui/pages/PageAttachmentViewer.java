@@ -47,13 +47,11 @@ public class PageAttachmentViewer extends BasePageWithTitle implements View.OnCl
 	private ImageView vCancelDownload;
 	private View contentView;
 	private ScrollView svLoading;
-
 	private FileDownloadListener downloadListener;
 	private LoadContentListener loadContentListener;
 	private boolean hasSetDownloadImmediately = false;
 	private boolean downloadImmediately = false;
 	private boolean downloadSuccess = false;
-
 	private DefaultChooserDialog chooserDialog;
 
 	public void setAttachment(ForumThreadAttachment attachment) {

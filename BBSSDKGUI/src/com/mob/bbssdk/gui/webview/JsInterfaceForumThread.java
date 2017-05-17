@@ -50,8 +50,15 @@ public class JsInterfaceForumThread {
 				object.put("tid", forumThread.tid);
 				object.put("fid", forumThread.fid);
 				object.put("subject", forumThread.subject);
+				object.put("forumName", forumThread.forumName);
 				object.put("message", forumThread.message);
 				object.put("summary", forumThread.summary);
+				object.put("heatLevel", forumThread.heatLevel);
+				object.put("displayOrder", forumThread.displayOrder);
+				object.put("digest", forumThread.digest);
+				object.put("highlight", forumThread.highlight);
+				object.put("deviceName", forumThread.deviceName);
+				object.put("lastPost", forumThread.lastPost);
 				if (forumThread.images != null && forumThread.images.size() > 0) {
 					try {
 						JSONArray tmpArray = new JSONArray();
@@ -105,12 +112,12 @@ public class JsInterfaceForumThread {
 	}
 
 	@JavascriptInterface
-	public void getPosts(final long fid, final long tid, final int page, final int pageSize, final String callback) {
+	public void getPosts(final long fid, final long tid, final int page, final int pageSize, final long authorId, final String callback) {
 		if (forumThread == null) {
-			loadJs(callback, null);
+			loadJs(callback, (Object) null);
 		} else {
 			ForumAPI forumAPI = BBSSDK.getApi(ForumAPI.class);
-			forumAPI.getPostListByThreadId(fid, tid, page, pageSize, false, new APICallback<ArrayList<ForumPost>>() {
+			forumAPI.getPostListByThreadId(fid, tid, authorId, page, pageSize, false, new APICallback<ArrayList<ForumPost>>() {
 				public void onSuccess(API api, int action, ArrayList<ForumPost> result) {
 					if (result != null) {
 						JSONArray array = new JSONArray();
@@ -126,12 +133,14 @@ public class JsInterfaceForumThread {
 									object.put("author", item.author);
 									object.put("avatar", item.avatar);
 									object.put("message", item.message);
+									object.put("deviceName", item.deviceName);
 									object.put("position", item.position);
 									if (item.prePost != null) {
 										JSONObject prePostObj = new JSONObject();
 										prePostObj.put("createdOn", item.prePost.createdOn);
 										prePostObj.put("author", item.prePost.author);
 										prePostObj.put("message", item.prePost.message);
+										prePostObj.put("position", item.prePost.position);
 										object.put("prePost", prePostObj);
 									}
 									array.put(object);
@@ -143,11 +152,11 @@ public class JsInterfaceForumThread {
 							e.printStackTrace();
 						}
 					}
-					loadJs(callback, null);
+					loadJs(callback, (Object) null);
 				}
 
 				public void onError(API api, int action, int errorCode, Throwable details) {
-					loadJs(callback, null);
+					loadJs(callback, (Object) null);
 				}
 			});
 		}
@@ -188,6 +197,79 @@ public class JsInterfaceForumThread {
 		}
 	}
 
+	@JavascriptInterface
+	public void replyPost(String prePost) {
+		HashMap<String, Object> map = parseJsonToMap(prePost);
+		final ForumPost forumPost = new ForumPost();
+		forumPost.author = ResHelper.forceCast(map.get("author"));
+		forumPost.authorId = ResHelper.forceCast(map.get("authorId"), 0L);
+		forumPost.createdOn = ResHelper.forceCast(map.get("createdOn"), 0L);
+		forumPost.message = ResHelper.forceCast(map.get("message"));
+		forumPost.deviceName = ResHelper.forceCast(map.get("deviceName"));
+		forumPost.avatar = ResHelper.forceCast(map.get("avatar"));
+		forumPost.pid = ResHelper.forceCast(map.get("pid"), 0L);
+		forumPost.position = ResHelper.forceCast(map.get("position"), 0);
+		forumPost.tid = ResHelper.forceCast(map.get("tid"), 0L);
+		if (refViewClient != null && refViewClient.get() != null) {
+			UIHandler.sendEmptyMessage(0, new Handler.Callback() {
+				public boolean handleMessage(Message msg) {
+					refViewClient.get().onReplyPostClick(forumPost);
+					return false;
+				}
+			});
+		}
+	}
+
+	@JavascriptInterface
+	public void onImageLongPressed(final String imgPath) {
+		if (refViewClient != null && refViewClient.get() != null) {
+			UIHandler.sendEmptyMessage(0, new Handler.Callback() {
+				public boolean handleMessage(Message msg) {
+					refViewClient.get().onImageLongPressed(imgPath);
+					return false;
+				}
+			});
+		}
+	}
+
+	/* 只看楼主 */
+	public void getOwnerPosts() {
+		loadJs("BBSSDKNative.updateCommentHtml", (forumThread == null ? 0L : forumThread.authorId));
+	}
+
+	public void addPost(ForumPost forumPost) {
+		String post = null;
+		try {
+			JSONObject object = new JSONObject();
+			object.put("author", forumPost.author);
+			object.put("authorId", forumPost.authorId);
+			object.put("avatar", forumPost.avatar);
+			object.put("createdOn", forumPost.createdOn);
+			object.put("fid", forumPost.fid);
+			object.put("message", forumPost.message);
+			object.put("pid", forumPost.pid);
+			object.put("position", forumPost.position);
+			object.put("tid", forumPost.tid);
+			object.put("deviceName", forumPost.deviceName);
+			if (forumPost.prePost != null) {
+				JSONObject preObj = new JSONObject();
+				preObj.put("createdOn", forumPost.prePost.createdOn);
+				preObj.put("author", forumPost.prePost.author);
+				preObj.put("message", forumPost.prePost.message);
+				preObj.put("position", forumPost.prePost.position);
+				object.put("prePost", preObj);
+			}
+			post = object.toString();
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		long authorId = 0;
+		if (forumThread != null) {
+			authorId = forumThread.authorId;
+		}
+		loadJs("BBSSDKNative.addNewCommentHtml", post, authorId);
+	}
+
 	public HashMap<String, Object> parseJsonToMap(String json) {
 		try {
 			return hashon.fromJson(json);
@@ -196,18 +278,35 @@ public class JsInterfaceForumThread {
 		}
 	}
 
-	private void loadJs(String callback, String data) {
+	private void loadJs(String callback, Object... data) {
 		if (refViewClient != null && refViewClient.get() != null) {
-			final String js = callback + "(" + data + ");";
+			final StringBuilder jsSB = new StringBuilder();
+			jsSB.append(callback);
+			jsSB.append("(");
+			if (data == null || data.length < 1) {
+				jsSB.append("null");
+			} else {
+				for (int i = 0; i < data.length; i ++) {
+					if (data[i] == null) {
+						jsSB.append("null");
+					} else {
+						jsSB.append(data[i]);
+					}
+					if (i != data.length - 1) {
+						jsSB.append(", ");
+					}
+				}
+			}
+			jsSB.append(");");
 			if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
 				UIHandler.sendEmptyMessage(0, new Handler.Callback() {
 					public boolean handleMessage(Message msg) {
-						refViewClient.get().evaluateJavascript(js);
+						refViewClient.get().evaluateJavascript(jsSB.toString());
 						return false;
 					}
 				});
 			} else {
-				refViewClient.get().evaluateJavascript(js);
+				refViewClient.get().evaluateJavascript(jsSB.toString());
 			}
 		}
 	}

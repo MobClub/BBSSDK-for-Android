@@ -1,22 +1,21 @@
 package com.mob.bbssdk.sample;
 
-import android.app.Activity;
+
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
+import com.mob.bbssdk.gui.BaseActivity;
 import com.mob.bbssdk.gui.pages.PageAttachmentViewer;
+import com.mob.bbssdk.gui.pages.PageForumThread;
 import com.mob.bbssdk.gui.pages.PageForumThreadDetail;
-import com.mob.bbssdk.gui.views.ForumMenuView;
-import com.mob.bbssdk.gui.views.ForumThreadListView;
-import com.mob.bbssdk.gui.views.TitleBar;
+import com.mob.bbssdk.gui.views.MainView;
 import com.mob.bbssdk.gui.webview.JsViewClient;
+import com.mob.bbssdk.model.ForumForum;
 import com.mob.bbssdk.model.ForumThread;
 import com.mob.bbssdk.model.ForumThreadAttachment;
 import com.mob.bbssdk.sample.viewer.PageOfficeViewer;
@@ -27,13 +26,13 @@ import com.mob.tools.utils.ResHelper;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
+	private MainView mainView;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		//设置沉浸式风格
-		setTheme(ResHelper.getStyleRes(this, "BBS_AppTheme"));
+		//通过AndroidManifest.xml设置主题，防止启动时有黑色背景框的效果。
+//		setTheme(ResHelper.getStyleRes(this, "BBS_AppTheme"));
 		Window window = getWindow();
 		if (Build.VERSION.SDK_INT >= 21) {
 			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
@@ -42,44 +41,32 @@ public class MainActivity extends Activity {
 					| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 					| View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			window.setStatusBarColor(getResources().getColor(ResHelper.getColorRes(this, "bbs_title_bg")));
 		}
 
-		LinearLayout flContent = new LinearLayout(this);
-		flContent.setBackgroundResource(ResHelper.getColorRes(this, "bbs_title_bg"));
-		flContent.setOrientation(LinearLayout.VERTICAL);
-		flContent.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-		TitleBar titleBar = new TitleBar(this);
-		titleBar.setTitle(R.string.app_name);
-		LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		flContent.addView(titleBar, llp);
-
-		ForumMenuView forumMenuView = new ForumMenuView(this);
-		forumMenuView.setBackgroundResource(ResHelper.getColorRes(this, "bbs_bg"));
-		llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-		llp.weight = 1;
-		flContent.addView(forumMenuView, llp);
-
-		if (Build.VERSION.SDK_INT >= 14) {
-			flContent.setFitsSystemWindows(true);
-		}
-
-		//设置界面
-		setContentView(flContent);
-		//检查使用权限
+		setContentView(ResHelper.getLayoutRes(this, "activity_main"));
 		checkPermissions();
+		mainView = (MainView) findViewById(ResHelper.getIdRes(this, "mainView"));
 
-		//设置主题帖子列表的点击事件
-		forumMenuView.setThreadListItemClickListener(new ForumThreadListView.OnItemClickListener() {
+		mainView.setThreadItemClickListener(new MainView.ThreadItemClickListener() {
 			public void onItemClick(int position, ForumThread item) {
 				if (item != null) {
 					showDetailsView(item);
 				}
 			}
 		});
-
+		mainView.setForumItemClickListener(new MainView.ForumItemClickListener() {
+			public void onItemClick(ForumForum forum) {
+				if (forum != null) {
+					showForumThreadView(forum);
+				}
+			}
+		});
 		//加载数据
-		forumMenuView.loadData();
+		if (mainView != null) {
+			mainView.onCreate();
+		}
+		mainView.loadData();
 	}
 
 	/* 展示详情页面 */
@@ -120,6 +107,17 @@ public class MainActivity extends Activity {
 		pageForumThreadDetail.show(this);
 	}
 
+	/* 展示帖子自版块列表 */
+	private void showForumThreadView(ForumForum forum) {
+		PageForumThread page = new PageForumThread(forum);
+		page.setItemClickListener(new MainView.ThreadItemClickListener() {
+			public void onItemClick(int position, ForumThread item) {
+				showDetailsView(item);
+			}
+		});
+		page.show(this);
+	}
+
 	/* 检查使用权限 */
 	private void checkPermissions() {
 		if (Build.VERSION.SDK_INT >= 23) {
@@ -141,6 +139,20 @@ public class MainActivity extends Activity {
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
+		}
+	}
+
+	protected void onRestart() {
+		super.onRestart();
+		if (mainView != null) {
+			mainView.updateTitleUserAvatar();
+		}
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		if (mainView != null) {
+			mainView.onDestroy();
 		}
 	}
 }

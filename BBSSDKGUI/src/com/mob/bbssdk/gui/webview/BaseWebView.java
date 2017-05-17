@@ -30,6 +30,7 @@ public class BaseWebView extends WebView {
 
 	private void initSettings() {
 		WebSettings settings = getSettings();
+		settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 		settings.setUseWideViewPort(true);
 		settings.setJavaScriptEnabled(true);
 		setVerticalScrollBarEnabled(false);

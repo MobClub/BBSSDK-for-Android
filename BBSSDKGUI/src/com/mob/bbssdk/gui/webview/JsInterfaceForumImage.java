@@ -45,7 +45,7 @@ public class JsInterfaceForumImage {
 		if (onPageChangedListener != null) {
 			new UIHandler().sendEmptyMessage(0, new Handler.Callback() {
 				public boolean handleMessage(Message msg) {
-					onPageChangedListener.onPageChanged(imageSrc, index);
+					onPageChangedListener.onPageChanged(imageSrc, index, false);
 					return false;
 				}
 			});
@@ -56,6 +56,18 @@ public class JsInterfaceForumImage {
 	public void downloadImages(String[] imageUrls) {
 		if (refViewClient != null && refViewClient.get() != null) {
 			refViewClient.get().downloadImages(imageUrls, refViewClient.get().getImageDownloadListener());
+		}
+	}
+
+	@JavascriptInterface
+	public void onImageLongPressed(final String imagePath) {
+		if (refViewClient != null && refViewClient.get() != null) {
+			new UIHandler().sendEmptyMessage(0, new Handler.Callback() {
+				public boolean handleMessage(Message msg) {
+					refViewClient.get().onImageLongPressed(imagePath);
+					return false;
+				}
+			});
 		}
 	}
 

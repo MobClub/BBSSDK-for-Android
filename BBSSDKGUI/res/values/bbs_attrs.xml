@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SlideableTabView">
+        <attr name="defaultColor" format="color"/>
+        <attr name="selectColor" format="color"/>
+        <attr name="bottomLineColor" format="color"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="textPadding" format="dimension"/>
+        <attr name="bottomLineHeight" format="dimension"/>
+    </declare-styleable>
+</resources>

@@ -12,69 +12,29 @@ function timeTodate(time){
 	m = minutes < 10 ? ('0' + minutes) : minutes;
 	return Y + '-' + M + '-' + D + ' ' + h + ':' + m;
 }
+// 计算时间差
+function timeDiff(time){
+	var diffdate = new Date().getTime() - time*1000;
+	var days = Math.floor(diffdate/(24*3600*1000));
+	var leave1 = diffdate%(24*3600*1000);   
+	var hours = Math.floor(leave1/(3600*1000));  
+
+	var leave2 = leave1%(3600*1000);
+	var minutes = Math.floor(leave2/(60*1000));
+	var leave3 = leave2%(60*1000);
+	var seconds = Math.round(leave3/1000);
+	return (days && days > 0) ? days + "天前" : (hours && hours > 0) ? hours + "小时前" : (minutes && minutes > 0) ? minutes + "分钟前" : "刚刚";
+}
 
 /* 渲染评论列表 */
-function getCommonHtml(page,fid,tid){
-	// 加载flag
-	var loading = false;
-	// 每次加载添加多少条目
-	var itemsPerLoad = 10;
-
-	var pagecout = 1;
-
-	/*获取主题帖子回帖列表*/
-	var getPosts = function (fid, tid, page, pageSize){
-		pagecout = page + 1;
-		BBSSDKNative.getPosts(fid, tid, page, pageSize, function(data){
-			if(data){
-				// 获取数据成功
-				var html = "";
-				$.each(data,function(index, item){
-					html += '<li><div class="header"><span class="headimg"><img src="'+ item.avatar +'"></span><span>'+ item.author +'</span><span class="tip">'+ item.position +'楼</span></div><div class="center">'+ item.message; 
-					if(item.prePost){
-						html += '<div class="reply"><p class="sub">'+ item.prePost.author +' ' + timeTodate(item.prePost.createdOn) +'</p><p>'+ item.prePost.message +'</p>'
-					}
-					html += '</div><div class="bottom"><span>'+ timeTodate(item.createdOn) +'</span></div></li>';
-				});
-				$(".common-content ul").append(html);
-				$(".dz-loading-over span").text("以上已为全部内容");
-				if (data.length != pageSize) {
-				    $.detachInfiniteScroll($('.infinite-scroll'));
-                    $('.infinite-scroll-preloader').remove();
-                    $(".dz-loading-over").show();
-				} else {
-                    $(".dz-loading-over").hide();
-                }
-			}else{
-				// 获取数据失败
-				$.detachInfiniteScroll($('.infinite-scroll'));
-				$('.infinite-scroll-preloader').remove();
-				$(".dz-loading-over").show();
-			}
-		});
-		
-	};
-	//预先加载10条
-    getPosts(fid,tid, pagecout, itemsPerLoad);
-
-    $(page).on('infinite', function(){
-    	if (loading) return;
-    	loading = true;
-    	// 模拟1s的加载过程
-	    setTimeout(function() {
-	       	// 重置加载flag
-	        loading = false;
-
-	        // 添加新条目
-	        getPosts(fid,tid, pagecout, itemsPerLoad);
-	        $.refreshScroller();
-	    }, 1000);
-
-    });
+function getCommonHtml(){
+	BBSSDKNative.getCommonHtml.apply(this, arguments);
 }
+
 
 /*打开附件*/
 function openAttachment(obj) {
+	//TODO 实现native交互，跳转打开附件的界面
 	BBSSDKNative.openAttachment(obj);
 }
 
@@ -115,13 +75,13 @@ function getDetailHtml(data){
 	}
 	var data = data;
 	if (data.createdOn) {
-	    data.createdOn = timeTodate(data.createdOn);
+		data.createdOn = timeDiff(data.createdOn);
 	}
 	if (data.avatar) {
-	    data.avatar = '<img src="'+ data.avatar +'">';
+		data.avatar = '<img src="'+ data.avatar +'">';
 	}
 	if (data.message) {
-	    data.message = data.message.replace(/<img/g, '<img dz-imgshow').replace(/<a /g, '<a dz-ahref class="external"');
+		data.message = data.message.replace(/<img/g, '<img dz-imgshow').replace(/<a /g, '<a dz-ahref class="external"');
 	}
 	$.each($("[dz-bind]"), function(index, item){
 		var getAttr = $(item).attr("dz-bind").split(".");
@@ -156,9 +116,9 @@ $(function(){
 	$(document).on("pageInit", ".detail-page", function(e, id, page){
 		// 页面初始化完成
 		BBSSDKNative.getForumThreadDetails(function(detailData) {
-		    getDetailHtml(detailData);
-            // 页面初始化完成，获取主题帖子列表
-            getCommonHtml(page, detailData.fid, detailData.tid);
+			getDetailHtml(detailData);
+			// 页面初始化完成，获取主题帖子列表
+			getCommonHtml(page, detailData.fid, detailData.tid, detailData.authorId);
 		});
 	});
 
@@ -170,13 +130,14 @@ $(function(){
 	var myPhotoBrowserStandalone;
 	/*打开图片*/
 	function openImage(imgList,index) {
-	    BBSSDKNative.openImage(imgList,index);
+	    // BBSSDKNative.openImage(imgList,index);
+	    // myPhotoBrowserStandalone.open(imgindex);
 	}		
 	win.ImgShow = {
 		init: function(){
 			var imgList = [];
             var downloadImgList = [];
-            $.each($("[dz-imgshow]"), function(index, item){
+            $.each($(".main-content [dz-imgshow]"), function(index, item){
                 imgList.push(item.src);
                 var lastIndex = item.src.lastIndexOf(".");
                 if (lastIndex > 0) {
@@ -186,11 +147,19 @@ $(function(){
                     item.srcset = "";
                 }
                 $(item).off("click").on("click", function(){
-                    openImage(imgList,index);
+                     BBSSDKNative.openImage(imgList,index);
+//                    myPhotoBrowserStandalone.open(index);
+                    // BBSSDKNative.downloadImages(item.src);
                 });
             });
             if (imgList.length > 0) {
-                BBSSDKNative.downloadImages(downloadImgList);
+//            	var myPhotoBrowserStandalone = $.photoBrowser({
+//            		photos : imgList,
+//            		onSlideChangeEnd: function(swiper){
+//            			BBSSDKNative.setCurrentImageSrc($(swiper.slides[swiper.activeIndex]).find("img").attr("src"),swiper.activeIndex);
+//            		}
+//            	});
+            	BBSSDKNative.downloadImages(downloadImgList);
             }
 		}
 	}

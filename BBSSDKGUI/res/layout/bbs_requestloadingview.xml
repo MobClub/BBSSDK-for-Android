@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/bbs_bg"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
+              android:paddingTop="121dp">
+
+    <LinearLayout
+        android:id="@+id/bbs_thread_loadingview_viewContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/bbs_thread_loadingview_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bbs_thread_loadingview_empty"/>
+
+        <TextView
+            android:id="@+id/bbs_thread_loadingview_textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/bbs_loadview_emptytitle"
+            android:textColor="#a7b6c5"
+            android:textSize="18sp"/>
+
+        <com.mob.bbssdk.gui.views.LoadingView
+            android:id="@+id/bbs_thread_loadingview_loadingView"
+            android:layout_width="70dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/bbs_thread_loadingview_textViewDes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/bbs_loadview_emptydes"
+            android:textColor="#b1b1b1"
+            android:textSize="14sp"/>
+
+        <ImageView
+            android:id="@+id/bbs_thread_loadingview_imageViewRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="21dp"
+            android:src="@drawable/bbs_thread_loadingview_refresh"/>
+    </LinearLayout>
+
+</LinearLayout>

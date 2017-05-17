@@ -15,6 +15,7 @@ import com.mob.bbssdk.gui.webview.JsViewClient;
 import com.mob.tools.utils.Data;
 import com.mob.tools.utils.ResHelper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -27,6 +28,7 @@ public class ForumImageViewer extends BaseView {
 	private int index = 0;
 	private JsViewClient jsViewClient;
 	private OnPageChangedListener onPageChangedListener;
+	private OnLongClickListener onLongClickListener;
 
 	public ForumImageViewer(Context context) {
 		super(context);
@@ -50,7 +52,7 @@ public class ForumImageViewer extends BaseView {
 				if (success) {
 					if (jsInterfaceForumImage.getCurrentIndex() == index && ForumImageViewer.this.index == index && onPageChangedListener != null) {
 						//如果当前页与index相同，并且跟第一次进入的index也相同，则执行一次onPageChanged方法，因为默认第一次进入界面时不会执行onPageChanged方法
-						onPageChangedListener.onPageChanged("file:///" + imagePath, index);
+						onPageChangedListener.onPageChanged("file:///" + imagePath, index, true);
 					}
 					js = "window.BBSSDKNative.showImage(" + index + ", \"" + Data.MD5(imageUrl) + "\", \"file:///" + imagePath + "\", " + true + ");";
 				} else {
@@ -58,33 +60,47 @@ public class ForumImageViewer extends BaseView {
 				}
 				evaluateJavascript(js);
 			}
+
+			public boolean onImageLongPressed(String imagePath) {
+				if (onLongClickListener != null) {
+					onLongClickListener.onLongClick(webView);
+				}
+				return super.onImageLongPressed(imagePath);
+			}
 		};
 		jsViewClient.setWebView(webView);
 		return webView;
 	}
 
 	public void setOnLongClickListener(OnLongClickListener l) {
+		this.onLongClickListener = l;
 		webView.setOnLongClickListener(l);
 	}
 
 	private void initWebView() {
 		webView.setWebChromeClient(new WebChromeClient() {
 			public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
-				if (jsInterfaceForumImage != null && Build.VERSION.SDK_INT < 17) {
-					if ("getImageUrlsAndIndex".equals(message)) {
+				if (jsInterfaceForumImage != null) {
+					if ("getImageUrlsAndIndex".equalsIgnoreCase(message)) {
 						result.confirm(jsInterfaceForumImage.getImageUrlsAndIndex());
 						return true;
-					} else if ("setCurrentImageSrc".equals(message)) {
+					} else if ("setCurrentImageSrc".equalsIgnoreCase(message)) {
 						HashMap<String, Object> map = jsInterfaceForumImage.parseJsonToMap(defaultValue);
 						String imagePath = ResHelper.forceCast(map.get("imageSrc"));
 						int curIndex = ResHelper.forceCast(map.get("index"), -1);
 						jsInterfaceForumImage.setCurrentImageSrc(imagePath, curIndex);
 						result.confirm();
 						return true;
-					} else if ("downloadImages".equals(message)) {
+					} else if ("downloadImages".equalsIgnoreCase(message)) {
 						HashMap<String, Object> map = jsInterfaceForumImage.parseJsonToMap(defaultValue);
-						String[] imageUrls = ResHelper.forceCast(map.get("imageUrls"));
-						jsInterfaceForumImage.downloadImages(imageUrls);
+						ArrayList<String> imageUrls = ResHelper.forceCast(map.get("imageUrls"));
+						if (imageUrls != null && imageUrls.size() > 0) {
+							jsInterfaceForumImage.downloadImages(imageUrls.toArray(new String[imageUrls.size()]));
+						}
+						result.confirm();
+						return true;
+					} else if ("onImageLongPressed".equalsIgnoreCase(message)) {
+						jsInterfaceForumImage.onImageLongPressed(defaultValue);
 						result.confirm();
 						return true;
 					}
@@ -99,7 +115,7 @@ public class ForumImageViewer extends BaseView {
 	}
 
 	public void setLoadingFailed() {
-		setLoadingStatus(LoadingView.LOAD_STATUS_FAILED);
+		setLoadingStatus(RequestLoadingView.LOAD_STATUS_FAILED);
 	}
 
 	/**
@@ -121,7 +137,7 @@ public class ForumImageViewer extends BaseView {
 			setLoadingFailed();
 			return;
 		}
-		setLoadingStatus(LoadingView.LOAD_STATUS_SUCCESS);
+		setLoadingStatus(RequestLoadingView.LOAD_STATUS_SUCCESS);
 		if (index < 0) {
 			index = 0;
 		}
@@ -140,6 +156,6 @@ public class ForumImageViewer extends BaseView {
 	}
 
 	public interface OnPageChangedListener {
-		void onPageChanged(String imagePath, int position);
+		void onPageChanged(String imagePath, int position, boolean forceChanged);
 	}
 }

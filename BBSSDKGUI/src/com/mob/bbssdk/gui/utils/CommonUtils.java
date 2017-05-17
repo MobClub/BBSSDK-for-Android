@@ -3,6 +3,7 @@ package com.mob.bbssdk.gui.utils;
 import java.text.DecimalFormat;
 
 public class CommonUtils {
+
 	public final static String formatFileSize(long fileLength) {
 		DecimalFormat df = new DecimalFormat("#.00");
 		String formatResultStr;

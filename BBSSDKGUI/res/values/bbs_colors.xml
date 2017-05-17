@@ -3,12 +3,12 @@
     <color name="bbs_bg">#F5F6FA</color>
     <!-- 标题栏背景 -->
     <!--<color name="bbs_title_bg">#F5F5F5</color>-->
-    <color name="bbs_title_bg">#373B3E</color>
+    <color name="bbs_title_bg">#3c445e</color>
     <color name="bbs_title_under_line_bg">#DDDEE2</color>
     <!-- 标题字体颜色 -->
     <!--<color name="bbs_title_txt_title">#777777</color>-->
     <color name="bbs_title_txt_title">#FFFFFF</color>
-    <color name="bbs_title_txt_btn">#999999</color>
+    <color name="bbs_title_txt_btn">#ffffff</color>
     <color name="bbs_empty_view_txt_color">#999999</color>
     <color name="bbs_header_txt_color">#A3A3A3</color>
     <color name="bbs_footer_txt_color">#A3A3A3</color>
@@ -21,12 +21,12 @@
     <!-- 版块tab背景颜色 -->
     <color name="bbs_menu_tab_bg">#FFFFFF</color>
     <!-- 版块tab字体颜色 -->
-    <color name="bbs_menu_tab_txt_color_n">#333333</color>
+    <color name="bbs_menu_tab_txt_color_n">#3a4045</color>
     <!-- 版块tab选中的下标线颜色 -->
-    <color name="bbs_menu_tab_txt_color_p">#88BE66</color>
+    <color name="bbs_menu_tab_txt_color_p">#50a3d3</color>
     <!-- 版块tab小标 -->
-    <color name="bbs_menu_tab_selected_line_color">#88BE66</color>
-    <color name="bbs_menu_tab_under_line_color">#E2E3E7</color>
+    <color name="bbs_menu_tab_selected_line_color">#50a3d3</color>
+    <color name="bbs_menu_tab_under_line_color">#FFFFFF</color>
     <!-- 默认的点击效果背景颜色 -->
     <color name="bbs_normal_bg_p">#D4D4D4</color>
     <!-- 选择对话框 -->
@@ -41,4 +41,45 @@
     <color name="bbs_attachment_progress_bar_bg">#88BE66</color>
     <color name="bbs_attachment_progress_bar_bg_back">#E0E0E2</color>
     <color name="bbs_attachment_btn_bg_color">#88BE66</color>
+    <!-- 常用色彩 -->
+    <color name="bbs_white">#ffffff</color>
+    <color name="bbs_black">#000000</color>
+    <color name="bbs_blue">#4e9ee4</color>
+    <color name="bbs_red">#c61f01</color>
+    <color name="bbs_grey">#9c9fa3</color>
+    <color name="bbs_green">#56bc8a</color>
+    <!-- 特定色彩 -->
+    <color name="bbs_textblack">#3a4045</color>
+    <color name="bbs_textblue">#50a3d3</color>
+    <color name="bbs_textgrey">#b4b4b4</color>
+    <color name="bbs_divider">#d8d8d8</color>
+    <color name="bbs_texthint">#b4b4b4</color>
+    <!-- 版块颜色 -->
+    <color name="bbs_subject_unsticktop_bg">#dbdbdb</color>
+    <color name="bbs_subject_title">#a3a2aa</color>
+    <color name="bbs_subject_item_name">#3a4045</color>
+    <!-- 操作版块颜色 -->
+    <color name="bbs_selectsubject_title">#3a4045</color>
+    <!-- 编辑帖子颜色 -->
+    <color name="bbs_writepost_name">#3a4045</color>
+    <color name="bbs_writepost_text">#3a4045</color>
+    <!-- 帖子详情颜色 -->
+    <color name="bbs_postdetail_title">#323232</color>
+    <color name="bbs_postdetail_textbody">#7a7a7a</color>
+    <color name="bbs_postdetail_reply">#787878</color>
+    <color name="bbs_postdetail_reply_name">#3a4045</color>
+    <!-- 帖子列表颜色-->
+    <color name="bbs_postlist_title_color">#3a4045</color>
+    <color name="bbs_postlist_summary_color">#787878</color>
+    <color name="bbs_myprofile_inactive_red">#ff6b71</color>
+    <color name="bbs_btn_selectpic_active">#d1d1d1</color>
+
+    <color name="bbs_subject_titlecenter">#323232</color>
+    <color name="bbs_confim_resend">#00abff</color>
+    <!-- 已读帖子颜色 -->
+    <color name="bbs_threaditem_readed">#b4b4b4</color>
+    <color name="bbs_forumpostitemtag_heat">#ee584b</color>
+    <color name="bbs_forumpostitemtag_sticktop">#00d497</color>
+    <color name="bbs_forumpostitemtag_essence">#b34bee</color>
+
 </resources>

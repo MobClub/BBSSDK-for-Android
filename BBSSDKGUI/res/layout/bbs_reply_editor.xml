@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bbs_white"
+            android:gravity="center_vertical"
+            android:minHeight="49dp"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <EditText
+                android:id="@+id/etContent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:maxLines="3"
+                android:textColor="#3a4540"
+                android:textColorHint="#b4b4b4"
+                android:textSize="13sp">
+
+                <requestFocus/>
+            </EditText>
+
+            <TextView
+                android:id="@+id/tvSend"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bbs_bg_solidgreen"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@string/bbs_viewthreaddetail_btn_send"
+                android:textColor="#ffffff"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <include layout="@layout/bbs_divider"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/bbs_white">
+
+            <ImageView
+                android:id="@+id/ivImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/bbs_reply_addpic"/>
+
+            <TextView
+                android:id="@+id/tvImgCount"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bbs_bg_reply_addpic"
+                android:gravity="center"
+                tools:text="9"
+                android:textColor="@color/bbs_white"
+                android:textSize="12sp"/>
+        </RelativeLayout>
+
+        <GridView
+            android:id="@+id/gvImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F2F4F7"
+            android:numColumns="4"
+            android:visibility="gone"/>
+    </LinearLayout>
+</RelativeLayout>

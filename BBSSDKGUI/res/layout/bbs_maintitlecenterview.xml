@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="horizontal">
+
+    <RelativeLayout
+        android:id="@+id/bbs_maintitlcenterview_viewBtn0"
+        android:layout_width="38dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/bbs_maintitlecenterview_post"
+            android:textColor="@color/bbs_white"
+            android:textSize="16sp"/>
+
+        <View
+            android:id="@+id/bbs_maintitlcenterview_viewMark0"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="2dp"
+            android:background="@color/bbs_white"
+            />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/bbs_maintitlcenterview_viewBtn1"
+        android:layout_marginLeft="45dp"
+        android:layout_width="38dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/bbs_maintitlecenterview_subject"
+            android:textColor="@color/bbs_white"
+            android:textSize="16sp"/>
+
+        <View
+            android:id="@+id/bbs_maintitlcenterview_viewMark1"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="2dp"
+            android:background="@color/bbs_white"
+            />
+
+    </RelativeLayout>
+</LinearLayout>

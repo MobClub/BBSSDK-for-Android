@@ -27,4 +27,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.github.barteksc:android-pdf-viewer:2.4.0'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'org.jetbrains:annotations-java5:15.0'
 }

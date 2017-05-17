@@ -17,6 +17,7 @@ import java.io.File;
  * 图片下载，缓存同AsyncImage
  */
 public class ImageDownloader {
+
 	public static void downloadImage(final Context context, final int index, final String imageUrl, final ImageDownloaderListener downloaderListener) {
 		BitmapProcessor.prepare(context);
 		if (TextUtils.isEmpty(imageUrl)) {

@@ -22,4 +22,16 @@
         <item name="android:windowEnterAnimation">@anim/bbs_roll_up</item>
         <item name="android:windowExitAnimation">@anim/bbs_roll_down</item>
     </style>
+    <style name="BBS_BlueSolidButton">
+        <item name="android:background">@drawable/bbs_bg_rectsolidblue</item>
+        <item name="android:textColor">@color/bbs_white</item>
+        <item name="android:textSize">18sp</item>
+        <!--<item name="android:height">42dp</item>-->
+    </style>
+    <style name="BBS_BlueRectButton">
+        <item name="android:background">@drawable/bbs_bg_rectrimblue</item>
+        <item name="android:textColor">@color/bbs_blue</item>
+        <item name="android:textSize">18sp</item>
+        <!--<item name="android:height">42dp</item>-->
+    </style>
 </resources>

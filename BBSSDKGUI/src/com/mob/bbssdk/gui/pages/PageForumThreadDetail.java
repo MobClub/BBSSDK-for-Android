@@ -1,19 +1,19 @@
 package com.mob.bbssdk.gui.pages;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 
 import com.mob.bbssdk.gui.views.ForumThreadDetailView;
 import com.mob.bbssdk.gui.webview.JsViewClient;
 import com.mob.bbssdk.model.ForumThread;
 import com.mob.bbssdk.model.ForumThreadAttachment;
-import com.mob.tools.utils.ResHelper;
 
 /**
  * 默认帖子详情界面
  */
-public class PageForumThreadDetail extends BasePageWithTitle {
-	private ForumThreadDetailView forumThreadDetail;
+public class PageForumThreadDetail extends SelectPicBasePageWithTitle {
+	private ForumThreadDetailView forumThreadDetailView;
 	private ForumThread forumThread;
 	private JsViewClient jsViewClient;
 
@@ -32,7 +32,7 @@ public class PageForumThreadDetail extends BasePageWithTitle {
 	}
 
 	protected View onCreateContentView(Context context) {
-		forumThreadDetail = new ForumThreadDetailView(context);
+		forumThreadDetailView = new ForumThreadDetailView(context);
 		if (jsViewClient == null) {
 			jsViewClient = new JsViewClient(context) {
 				public void onItemAttachmentClick(ForumThreadAttachment attachment) {
@@ -54,22 +54,36 @@ public class PageForumThreadDetail extends BasePageWithTitle {
 				}
 			};
 		}
-		forumThreadDetail.setJsViewClient(jsViewClient);
-		return forumThreadDetail;
+		forumThreadDetailView.setJsViewClient(jsViewClient);
+		forumThreadDetailView.setChoosePicListener(new ForumThreadDetailView.ChoosePicClickListener() {
+			public void onChooseClick() {
+				choose();
+			}
+		});
+		return forumThreadDetailView;
 	}
 
 	protected void onViewCreated(View contentView) {
+		super.onViewCreated(contentView);
 		titleBar.setLeftImageResourceDefaultBack();
-		titleBar.setTitle(ResHelper.getStringRes(getContext(), "bbs_thread_details_title"));
+		titleBar.setTitle(getStringRes("bbs_thread_details_title"));
 		if (forumThread == null) {
-			forumThreadDetail.setLoadingFailed();
+			forumThreadDetailView.setLoadingFailed();
 			return;
 		}
-		forumThreadDetail.setForumThread(forumThread);
-		forumThreadDetail.loadData();
+		forumThreadDetailView.onCreate();
+		forumThreadDetailView.setForumThread(forumThread);
+		forumThreadDetailView.loadData();
+	}
+
+	protected void onPicGot(Uri source, String realpath) {
+		forumThreadDetailView.setSelectedPicPath(realpath);
 	}
 
 	public void onDestroy() {
 		super.onDestroy();
+		if (forumThreadDetailView != null) {
+			forumThreadDetailView.onDestroy();
+		}
 	}
 }

@@ -17,18 +17,21 @@
     <div class="page detail-page">
         <div class="content">
             <div class="main-content">
-                <div class="title-content">
-                    <h1 dz-bind="data.subject"></h1>
-                    <p class="sub">
-                        <span dz-bind="data.createdOn"></span>
-                        <span dz-bind="data.replies"><i class="mobicon mobicon-common"></i></span>
-                    </p>
+                <div class="title-content row">
+                    <div class="left">
+                        <div class="headimg" dz-bind="data.avatar"></div>
+                        <div class="userinfo">
+                            <h3><span dz-bind="data.author"></span><span class="tip">楼主</span></h3>
+                            <p dz-bind="data.createdOn"></p>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <span class="category" dz-bind="data.forumName"></span>
+                    </div>
                 </div>
                 <div class="detail-content">
                     <div class="header">
-                        <span class="headimg" dz-bind="data.avatar"></span>
-                        <span dz-bind="data.author"></span>
-                        <span class="tip">楼主</span>
+                        <h1 dz-bind="data.subject"></h1>
                     </div>
                     <div class="center" dz-bind="data.message"></div>
                     <div class="bottom" dz-repeat="data.attachments">
@@ -38,9 +41,12 @@
                             <a href="javascript:;" class="external dz-filehref">打开附件</a>
                         </p>
                     </div>
+                    <div class="tip-list">
+                        <div class="tip common" dz-bind="data.replies"></div>
+                        <div class="tip views" dz-bind="data.views"></div>
+                    </div>
                 </div>
             </div>
-            <div class="content-block-title">评论</div>
             <div class="common-content infinite-scroll" data-distance="10">
                 <ul></ul>
                 <!-- 加载提示符 -->
@@ -53,11 +59,7 @@
                 </div>
             </div>
         </div>
-       <!--  <div class="bar bar-footer">
-          <button class="button button-block"><i class="mobicon mobicon-common-green"></i>我要评论</button>
-        </div> -->
     </div>
-
     <script type="text/javascript" src="./js/base.js"></script>
     <script type="text/javascript" src="./js/NativeExt.js"></script>
     <script type="text/javascript" src="./js/BBSSDK.js"></script>

@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import com.mob.bbssdk.gui.pages.PageAttachmentViewer;
 import com.mob.bbssdk.gui.pages.PageImageViewer;
 import com.mob.bbssdk.gui.utils.ImageDownloader;
+import com.mob.bbssdk.model.ForumPost;
 import com.mob.bbssdk.model.ForumThreadAttachment;
 import com.mob.tools.utils.Data;
 
@@ -71,7 +72,7 @@ public class JsViewClient {
 	}
 
 	/**
-	 * 显示图片
+	 * 显示图片(下载成功后，显示图片)
 	 *
 	 * @param success   图片是否下载成功
 	 * @param index     图片索引
@@ -87,6 +88,19 @@ public class JsViewClient {
 			js = "window.BBSSDKNative.showImage(" + index + ", \"" + Data.MD5(imageUrl) + "\");";
 		}
 		evaluateJavascript(js);
+	}
+
+	/**
+	 * 回复回帖（如果自己实现此功能请重写并返回true）
+	 * @param forumPost	回帖内容
+	 * @return 返回true则用户自己拦截，否则采用{@link com.mob.bbssdk.gui.pages.PageForumThreadDetail}中的innerJsViewClient处理，默认返回false
+	 */
+	public boolean onReplyPostClick(ForumPost forumPost) {
+		return false;
+	}
+
+	public boolean onImageLongPressed(String imagePath) {
+		return false;
 	}
 
 	public ImageDownloader.ImageDownloaderListener getImageDownloadListener() {

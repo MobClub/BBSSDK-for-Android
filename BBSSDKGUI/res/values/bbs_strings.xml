@@ -13,6 +13,10 @@
     <string name="bbs_loading">正在加载中...</string>
     <string name="bbs_loading_empty">暂无内容</string>
     <string name="bbs_loading_failed">网络不佳，请再次刷新</string>
+    <string name="bbs_loadview_emptytitle">这里还是一片空地</string>
+    <string name="bbs_loadview_emptydes">既然来了，试试做第一个发言的人吧</string>
+    <string name="bbs_loadview_nonetworktitle">网络不给力</string>
+    <string name="bbs_loadview_nonetworkdes">请检查网络后点击刷新重试</string>
     <!-- 选择对话框 -->
     <string name="bbs_cancel">取消</string>
     <string name="bbs_open_file_chooser">选择打开方式</string>
@@ -31,4 +35,152 @@
     <string name="bbs_attachment_load_failed">打开附件失败</string>
     <string name="bbs_attachment_none">未知文件</string>
     <string name="bbs_thread_details_title">帖子详情</string>
+    <!-- 页面标题 -->
+    <string name="bbs_pagelogin_title">登录</string>
+    <string name="bbs_pageregister_title">注册</string>
+    <string name="bbs_pageregisterconfirm_title">激活邮箱</string>
+    <string name="bbs_pageretrievepassword_title">找回密码</string>
+    <string name="bbs_pageretrievepasswordconfirm_title">找回密码</string>
+    <string name="bbs_pageractiveconfirm_title">验证激活</string>
+    <string name="bbs_pagesetprofile_title">设置资料</string>
+    <string name="bbs_pageuserprofile_title">我的</string>
+    <string name="bbs_pageuserprofile_title_edit">编辑</string>
+    <string name="bbs_pagewritepost_title">快速发帖</string>
+    <string name="bbs_pagewritepost_title_left">取消</string>
+    <string name="bbs_pagewritepost_title_right">确定</string>
+    <string name="bbs_invalid_username_pwd">用户名或密码不能为空！</string>
+    <string name="bbs_invalid_username">用户名不能为空！</string>
+    <string name="bbs_invalid_username_pwd_mail">用户名，密码或邮箱不能为空！</string>
+    <string name="bbs_username_wrongformat">用户名格式不正确！</string>
+    <string name="bbs_pwd_wrongformat">密码格式不正确！</string>
+    <string name="bbs_email_wrongformat">邮箱格式不正确！</string>
+    <string name="bbs_register_success">用户注册成功！</string>
+    <string name="bbs_selectsubject_title">选择版块</string>
+    <string name="bbs_retrievepassword_resend_success">成功发送找回密码邮件！</string>
+    <string name="bbs_registeractive_resend_success">成功发送注册激活邮件！</string>
+    <string name="bbs_setuserprofile_title">设置资料</string>
+    <string name="bbs_activeaccount_alreadysendmail">我们已经发送一封激活邮件到您的邮箱</string>
+    <string name="bbs_activeaccount_donotreceivemail">没有收到邮件？</string>
+    <string name="bbs_activeaccount_gotomail">前往邮箱</string>
+    <string name="bbs_activeaccount_backtologin">返回登录</string>
+    <string name="bbs_editprofile_male">男</string>
+    <string name="bbs_editprofile_female">女</string>
+    <string name="bbs_editprofile_submit">提交</string>
+    <string name="bbs_editprofile_setlater">稍后设置</string>
+    <string name="bbs_login_username_hint">用户名/邮箱</string>
+    <string name="bbs_login_password_hint">密码</string>
+    <string name="bbs_login_forgetpassword">忘记密码</string>
+    <string name="bbs_login_question">验证提问（未设置可忽略)</string>
+    <string name="bbs_login_answer_hint">验证答案</string>
+    <string name="bbs_login_login">登录</string>
+    <string name="bbs_login_register">没有帐号？立即去注册</string>
+    <string name="bbs_maintitlecenterview_post">帖子</string>
+    <string name="bbs_maintitlecenterview_subject">版块</string>
+    <string name="bbs_register_username_hint">用户名</string>
+    <string name="bbs_register_email_hint">邮箱</string>
+    <string name="bbs_register_password_hint">密码</string>
+    <string name="bbs_register_regiseter">注册</string>
+    <string name="bbs_register_backlogin">已有帐号?返回登录</string>
+    <string name="bbs_registerconfirm_des">系统已经向该邮箱发送了一封验证激活邮件，请查收邮件，进行验证激活。</string>
+    <string name="bbs_registerconfirm_email">邮箱地址</string>
+    <string name="bbs_registerconfirm_nomail">没有收到邮件？</string>
+    <string name="bbs_registerconfirm_resend">点击这里重发</string>
+    <string name="bbs_registerconfirm_finish">完成</string>
+    <string name="bbs_reactiveconfirm_des">您的邮箱尚未验证，请查收激活邮件，进行验证激活。</string>
+    <string name="bbs_reactiveconfirm_email">邮箱地址</string>
+    <string name="bbs_reactiveconfirm_nomail">没有收到邮件？</string>
+    <string name="bbs_reactiveconfirm_resend">点击这里重发</string>
+    <string name="bbs_reactiveconfirm_finish">完成</string>
+    <string name="bbs_requestloadingview_empty">这里还是一片空地</string>
+    <string name="bbs_requestloadingview_empty_desc">既然来了，试试做第一个发言的人吧</string>
+    <string name="bbs_retrievepassword_username">用户名</string>
+    <string name="bbs_retrievepassword_mail">请输入注册邮箱</string>
+    <string name="bbs_retrievepassword_submit">提交</string>
+    <string name="bbs_retrievepasswordconfirm_desc">系统已经向该邮箱发送了一封找回密码邮件，请查收邮件，进行验证。</string>
+    <string name="bbs_retrievepasswordconfirm_mail">邮箱地址</string>
+    <string name="bbs_retrievepasswordconfirm_nomail">没有收到邮件？</string>
+    <string name="bbs_retrievepasswordconfirm_resend">点击这里重发</string>
+    <string name="bbs_retrievepasswordconfirm_backlogin">返回登录</string>
+    <string name="bbs_setuserprofile_nickname_hint">给自己起个昵称</string>
+    <string name="bbs_setuserprofile_male">男</string>
+    <string name="bbs_setuserprofile_female">女</string>
+    <string name="bbs_setuserprofile_finish">完成</string>
+    <string name="bbs_setuserprofile_setlater">稍后设置</string>
+    <string name="bbs_subject_sortbyreplytime">按回复时间排序</string>
+    <string name="bbs_subject_sortbyposttime">按发帖时间排序</string>
+    <string name="bbs_subjectlistitem_sticktop">置顶</string>
+    <string name="bbs_subjectlistitem_unsticktop">取消置顶</string>
+    <string name="bbs_subjectsettings_sticksubject">置顶版块</string>
+    <string name="bbs_subjectsettings_forumlist">论坛列表</string>
+    <string name="bbs_subjectsettings_finishedit">完成编辑</string>
+    <string name="bbs_subjectsettings_editsticktop">编辑置顶</string>
+    <string name="bbs_userprofile_nickname">昵称</string>
+    <string name="bbs_userprofile_gender">性别</string>
+    <string name="bbs_userprofile_mail">邮箱</string>
+    <string name="bbs_userprofile_usergroup">用户组</string>
+    <string name="bbs_userprofile_status">状态</string>
+    <string name="bbs_userprofile_status_inactive">未激活</string>
+    <string name="bbs_userprofile_quit">退出</string>
+    <string name="bbs_userprofile_gender_male">男</string>
+    <string name="bbs_userprofile_gender_female">女</string>
+    <string name="bbs_userprofile_gender_secret">保密</string>
+    <string name="bbs_editprofile_success">修改用户信息成功</string>
+    <string name="bbs_editprofile_fail">修改用户信息失败</string>
+    <string name="bbs_editprofile_invalidpic">选择的图片无效</string>
+    <string name="bbs_editprofile_toast_userinfo_not_changed">用户信息未发生改变</string>
+    <string name="bbs_pagewritethread_edit_content_hint">写点什么吧...</string>
+    <string name="bbs_pagewritethread_edit_title_hint">请输入帖子标题</string>
+    <string name="bbs_pagewritethread_choose_category">选择分类</string>
+    <string name="bbs_pagesubjectview_cantadd_toomanyitems">置顶版块最多添加8个</string>
+    <string name="bbs_login_fail">登录失败</string>
+    <string name="bbs_login_success">登录成功</string>
+    <string name="bbs_logout">已退出登录</string>
+    <string name="bbs_dont_allowpost">没有发帖权限</string>
+    <string name="bbs_dont_allowreply">没有回帖权限</string>
+    <string name="bbs_useraacount_unverified">未激活</string>
+    <string name="bbs_useraacount_verified">已验证</string>
+
+    <string name="bbs_viewthreaddetail_btn_reply">回复</string>
+    <string name="bbs_viewthreaddetail_btn_owner">只看楼主</string>
+    <string name="bbs_viewthreaddetail_btn_send">发送</string>
+
+    <string name="bbs_pagewritethread_tip_subject_null">请填写标题</string>
+    <string name="bbs_pagewritethread_tip_content_null">请填写内容</string>
+    <string name="bbs_pagewritethread_tip_forum_null">请选择版块</string>
+    <string name="bbs_pagewritethread_send_ing">发帖提交中&#8230;</string>
+    <string name="bbs_pagewritethread_send_success">发帖成功</string>
+    <string name="bbs_pagewritethread_send_failed">发帖失败</string>
+    <string name="bbs_pagewritethread_send_failed_tip">前一个发帖失败，失败原因：</string>
+    <string name="bbs_writepost_send_ing">回帖提交中&#8230;</string>
+    <string name="bbs_writepost_send_ing_waiting">回帖提交中，请稍后</string>
+    <string name="bbs_writepost_send_status_ing">正在提交</string>
+    <string name="bbs_writepost_send_success">回帖成功</string>
+    <string name="bbs_writepost_send_failed">回帖失败</string>
+    <string name="bbs_writepost_send_failed_tip">前一个回帖失败，失败原因：</string>
+
+    <string name="bbs_common_prompt">提示</string>
+    <string name="bbs_common_ok">确定</string>
+    <string name="bbs_common_cancel">取消</string>
+    <string name="bbs_common_resend">重新发送</string>
+    <string name="bbs_tip_net_timeout">网络超时</string>
+    <string name="bbs_tip_upload_img_failed">上传图片失败</string>
+    <string name="bbs_tip_get_cache_failed">获取缓存失败</string>
+    <string name="bbs_tip_upload_img_oversize">上传图片限制10M以内</string>
+
+    <string name="bbs_forumpostitemtag_heat">热门</string>
+    <string name="bbs_forumpostitemtag_sticktop">置顶</string>
+    <string name="bbs_forumpostitemtag_essence">精华</string>
+    <string name="bbs_password_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`~!@#$%^&amp;*()_+-={}|[]\:&quot;;&apos;&gt;&lt;?,./</string>
+
+    <string-array name="bbs_forumview_tabtitle">
+        <item>最新</item>
+        <item>热门</item>
+        <item>精华</item>
+        <item>置顶</item>
+    </string-array>
+
+    <string-array name="bbs_chooserpic_items">
+        <item>拍摄</item>
+        <item>从手机相册选择</item>
+    </string-array>
 </resources>
