@@ -20,6 +20,10 @@ public abstract class BasePageWithTitle extends BasePage {
 	protected View vLine;
 	private ModelLoadingDialog modelLoadingDialog;
 
+	protected int getStatusBarColor() {
+		return getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_title_bg"));
+	}
+
 	protected View onCreateView(Context context) {
 		LinearLayout flContent = new LinearLayout(context);
 		flContent.setBackgroundResource(ResHelper.getColorRes(context, "bbs_title_bg"));

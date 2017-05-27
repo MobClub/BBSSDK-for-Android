@@ -52,10 +52,10 @@
         </activity>
         <meta-data
             android:name="Mob-AppKey"
-            android:value="1bbd456d78f24"/>
+            android:value="@string/BBS_APPKEY"/>
         <meta-data
             android:name="Mob-AppSecret"
-            android:value="cee607fd53bc73ffbc73bbc753540526"/>
+            android:value="@string/BBS_APPSECRET"/>
     </application>
 
 </manifest>

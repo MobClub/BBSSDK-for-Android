@@ -48,6 +48,10 @@ public class PageForumThread extends BasePageWithTitle {
 	private MainView.ThreadItemClickListener itemClickListener;
 	private BroadcastReceiver sendThreadReceiver;
 
+	protected int getStatusBarColor() {
+		return getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_white"));
+	}
+
 	public PageForumThread(ForumForum forum) {
 		this.forumForum = forum;
 	}

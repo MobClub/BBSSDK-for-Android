@@ -41,6 +41,10 @@ public abstract class BasePage extends FakeActivity {
 					| 0x00000200										  // View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 					| 0x00000100);										// View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 			window.addFlags(0x80000000);								  // LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+			int statusBarColor = getStatusBarColor();
+			if (statusBarColor != 0) {
+				window.setStatusBarColor(statusBarColor);
+			}
 		}
 
 		View contentView = onCreateView(activity);
@@ -51,6 +55,10 @@ public abstract class BasePage extends FakeActivity {
 			activity.setContentView(contentView);
 			onViewCreated(contentView);
 		}
+	}
+
+	protected int getStatusBarColor() {
+		return 0;
 	}
 
 	protected abstract View onCreateView(Context context);

@@ -3,7 +3,6 @@ apply from: "${project.rootProject.file('buildCommon.gradle')}"
 
 android {
     defaultConfig {
-        applicationId "com.mob.bbssdk.sample.code4app"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -19,6 +18,18 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+    }
+    buildTypes {
+        release {
+        }
+    }
+
+    productFlavors {
+        code4app {
+            applicationId "com.mob.bbssdk.sample.code4app"
+            resValue "string", "BBS_APPKEY", "\"1bbd456d78f24\""
+            resValue "string", "BBS_APPSECRET", "\"cee607fd53bc73ffbc73bbc753540526\""
+        }
     }
 }
 

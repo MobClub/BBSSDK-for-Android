@@ -138,7 +138,7 @@
     <string name="bbs_dont_allowpost">没有发帖权限</string>
     <string name="bbs_dont_allowreply">没有回帖权限</string>
     <string name="bbs_useraacount_unverified">未激活</string>
-    <string name="bbs_useraacount_verified">已验证</string>
+    <string name="bbs_useraacount_verified">已激活</string>
 
     <string name="bbs_viewthreaddetail_btn_reply">回复</string>
     <string name="bbs_viewthreaddetail_btn_owner">只看楼主</string>
