@@ -34,4 +34,9 @@
         <item name="android:textSize">18sp</item>
         <!--<item name="android:height">42dp</item>-->
     </style>
+    <style name="BBS_PageAnimUpDown" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/bbs_activity_roll_up</item>
+        <item name="android:windowExitAnimation">@anim/bbs_activity_roll_down</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

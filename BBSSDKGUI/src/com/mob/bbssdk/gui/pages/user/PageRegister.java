@@ -46,6 +46,7 @@ public class PageRegister extends BasePageWithTitle {
 	protected View onCreateContentView(Context context) {
 		titleBar.setTitle(getStringRes("bbs_pageregister_title"));
 		titleBar.setRightImageResource(getDrawableId("bbs_titlebar_close"));
+		titleBar.setLeftImageResourceDefaultBack();
 
 		View view = LayoutInflater.from(context).inflate(getLayoutId("bbs_register"), null);
 		editTextUserName = (EditText) view.findViewById(getIdRes("bbs_register_edittextusername"));

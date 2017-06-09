@@ -2,7 +2,7 @@
 <resources>
     <!-- 标题字体大小 -->
     <dimen name="bbs_title_txt_size">16sp</dimen>
-    <item name="bbs_title_bg_alpha" format="float" type="dimen">0.9</item>
+    <item name="bbs_title_bg_alpha" format="float" type="dimen">1.0</item>
     <dimen name="bbs_title_right_txt_size">15sp</dimen>
     <dimen name="bbs_title_left_txt_size">15sp</dimen>
     <!-- 标题高度 -->
@@ -11,7 +11,7 @@
     <dimen name="bbs_header_txt_size">12sp</dimen>
     <dimen name="bbs_footer_txt_size">12sp</dimen>
     <!-- 版块tab字体大小 -->
-    <dimen name="bbs_menu_tab_txt_size">15sp</dimen>
+    <dimen name="bbs_menu_tab_txt_size">16sp</dimen>
     <!-- 版块tab单个左右padding -->
     <dimen name="bbs_menu_tab_txt_padding">10dp</dimen>
     <!-- 版块tab的高度 -->

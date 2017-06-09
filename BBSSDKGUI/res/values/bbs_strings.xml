@@ -130,7 +130,7 @@
     <string name="bbs_editprofile_toast_userinfo_not_changed">用户信息未发生改变</string>
     <string name="bbs_pagewritethread_edit_content_hint">写点什么吧...</string>
     <string name="bbs_pagewritethread_edit_title_hint">请输入帖子标题</string>
-    <string name="bbs_pagewritethread_choose_category">选择分类</string>
+    <string name="bbs_pagewritethread_choose_category">选择板块</string>
     <string name="bbs_pagesubjectview_cantadd_toomanyitems">置顶版块最多添加8个</string>
     <string name="bbs_login_fail">登录失败</string>
     <string name="bbs_login_success">登录成功</string>
@@ -142,6 +142,7 @@
 
     <string name="bbs_viewthreaddetail_btn_reply">回复</string>
     <string name="bbs_viewthreaddetail_btn_owner">只看楼主</string>
+    <string name="bbs_viewthreaddetail_btn_all">全部评论</string>
     <string name="bbs_viewthreaddetail_btn_send">发送</string>
 
     <string name="bbs_pagewritethread_tip_subject_null">请填写标题</string>
@@ -171,7 +172,10 @@
     <string name="bbs_forumpostitemtag_sticktop">置顶</string>
     <string name="bbs_forumpostitemtag_essence">精华</string>
     <string name="bbs_password_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`~!@#$%^&amp;*()_+-={}|[]\:&quot;;&apos;&gt;&lt;?,./</string>
-
+    <string name="bbs_timediff_daybefore">天前</string>
+    <string name="bbs_timediff_hourbefore">小时前</string>
+    <string name="bbs_timediff_minutebefore">分钟前</string>
+    <string name="bbs_timediff_just">刚刚</string>
     <string-array name="bbs_forumview_tabtitle">
         <item>最新</item>
         <item>热门</item>

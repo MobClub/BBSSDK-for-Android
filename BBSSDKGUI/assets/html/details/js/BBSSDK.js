@@ -292,13 +292,13 @@
 
 
     /* 刷新评论列表 */
-    function updateCommentHtml(authorId){
-        if(_PAGE && _FID && _TID) {
+    function updateCommentHtml(authorId, filter){
+        if(_PAGE && _FID && _TID){
             $(".common-content ul").html("");
             $(".content").scrollTop(0);
             window.clearTimeout(_T);
-            getCommonHtml(_PAGE,_FID,_TID,authorId,true);
-        } else {
+            getCommonHtml(_PAGE,_FID,_TID,authorId, filter);
+        }else{
             return;
         }
     }

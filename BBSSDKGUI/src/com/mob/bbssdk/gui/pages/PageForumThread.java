@@ -22,6 +22,7 @@ import com.mob.bbssdk.gui.utils.SendForumThreadManager;
 import com.mob.bbssdk.gui.utils.ToastUtils;
 import com.mob.bbssdk.gui.views.ForumThreadListView;
 import com.mob.bbssdk.gui.views.ForumThreadView;
+import com.mob.bbssdk.gui.views.ForumThreadViewType;
 import com.mob.bbssdk.gui.views.MainView;
 import com.mob.bbssdk.gui.views.TitleBar;
 import com.mob.bbssdk.model.ForumForum;
@@ -48,10 +49,6 @@ public class PageForumThread extends BasePageWithTitle {
 	private MainView.ThreadItemClickListener itemClickListener;
 	private BroadcastReceiver sendThreadReceiver;
 
-	protected int getStatusBarColor() {
-		return getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_white"));
-	}
-
 	public PageForumThread(ForumForum forum) {
 		this.forumForum = forum;
 	}
@@ -64,7 +61,7 @@ public class PageForumThread extends BasePageWithTitle {
 	}
 
 	protected View onCreateContentView(final Context context) {
-		titleBar.setLeftImageResource(ResHelper.getBitmapRes(getContext(), "bbs_subject_back"));
+		titleBar.setLeftImageResource(ResHelper.getBitmapRes(getContext(), "bbs_subject_back_black"));
 		titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_subject_writepost"));
 		titleBar.setBackgroundResource(ResHelper.getColorRes(context, "bbs_white"));
 		titleBar.setAlpha(1.0f);
@@ -84,6 +81,7 @@ public class PageForumThread extends BasePageWithTitle {
 				}
 			}
 		});
+		forumThreadView.setType(ForumThreadViewType.FORUM_SUBJECT);
 		imageViewRefresh = (ImageView) view.findViewById(getIdRes("bbs_pagesubject_imageViewRefresh"));
 		imageViewRefresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {

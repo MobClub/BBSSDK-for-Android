@@ -81,6 +81,8 @@ public class ForumThreadDetailView extends BaseView {
 	private ForumAPI forumAPI;
 	private ForumPost tmpPrePost = null;
 	private BroadcastReceiver sendPostReceiver;
+	private boolean showOwner = false;//只看楼主和
+	private TextView tvOwner;
 
 	public ForumThreadDetailView(Context context) {
 		super(context);
@@ -98,12 +100,12 @@ public class ForumThreadDetailView extends BaseView {
 		rlContainer = new RelativeLayout(context, attrs, defStyleAttr);
 
 		int bottomBarHeight = ResHelper.dipToPx(context, 49);
-		TextView tvOwner = new TextView(context);
+		tvOwner = new TextView(context);
 		int textSize = ResHelper.dipToPx(context, 14);
 		tvOwner.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-		tvOwner.setTextColor(0xFF59A3D3);
+		tvOwner.setTextColor(0xFF1d8ac7);
 		tvOwner.setGravity(Gravity.CENTER);
-		tvOwner.setId(1);
+		tvOwner.setId(ResHelper.getIdRes(context, "tvOwner"));
 		tvOwner.setText(getStringRes("bbs_viewthreaddetail_btn_owner"));
 		int paddingLeft = ResHelper.dipToPx(context, 10);
 		tvOwner.setPadding(paddingLeft, 0, paddingLeft, 0);
@@ -119,13 +121,15 @@ public class ForumThreadDetailView extends BaseView {
 		rlContainer.addView(rlReply, rlp);
 		TextView tvReply = new TextView(context);
 		tvReply.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-		tvReply.setTextColor(0xFF3A4045);
+		tvReply.setTextColor(0xFFc5c8cc);
 		tvReply.setGravity(Gravity.CENTER);
 		tvReply.setText(getStringRes("bbs_viewthreaddetail_btn_reply"));
 		tvReply.setCompoundDrawablePadding(paddingLeft);
-		tvReply.setCompoundDrawablesWithIntrinsicBounds(getDrawableId("bbs_pagesubject_titlecenter_comment"), 0, 0, 0);
+		tvReply.setCompoundDrawablesWithIntrinsicBounds(getDrawableId("bbs_pagesubject_reply"), 0, 0, 0);
 		rlp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		rlp.addRule(CENTER_IN_PARENT, TRUE);
+		rlp.addRule(ALIGN_PARENT_LEFT, TRUE);
+		rlp.addRule(CENTER_VERTICAL, TRUE);
+		rlp.leftMargin = ResHelper.dipToPx(context, 10);
 		rlReply.addView(tvReply, rlp);
 
 		rlReplyIng = new RelativeLayout(context);
@@ -193,17 +197,9 @@ public class ForumThreadDetailView extends BaseView {
 		rlp.addRule(CENTER_IN_PARENT, TRUE);
 		rlReplyFailed.addView(tvFailed, rlp);
 
-		View vIndicator = new View(context);
-		vIndicator.setBackgroundColor(0xFFEDEFF2);
-		rlp = new LayoutParams(ResHelper.dipToPx(context, 2), ResHelper.dipToPx(context, 35));
-		rlp.addRule(ALIGN_PARENT_BOTTOM, TRUE);
-		rlp.addRule(LEFT_OF, tvOwner.getId());
-		rlp.bottomMargin = ResHelper.dipToPx(context, 7);
-		rlContainer.addView(vIndicator, rlp);
-
 		View vLine = new View(context);
 		vLine.setBackgroundColor(0xFFE3E4E4);
-		vLine.setId(2);
+		vLine.setId(ResHelper.getIdRes(context, "vLine"));
 		rlp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ResHelper.dipToPx(context, 1));
 		rlp.addRule(ABOVE, tvOwner.getId());
 		rlContainer.addView(vLine, rlp);
@@ -479,8 +475,15 @@ public class ForumThreadDetailView extends BaseView {
 	}
 
 	private void onOwnerClick() {
-		if (jsInterfaceForumThread != null) {
-			jsInterfaceForumThread.getOwnerPosts();
+		if (jsInterfaceForumThread != null && tvOwner != null) {
+			if(showOwner) {
+				jsInterfaceForumThread.getAllPosts();
+				tvOwner.setText(getStringRes("bbs_viewthreaddetail_btn_owner"));
+			} else {
+				jsInterfaceForumThread.getOwnerPosts();
+				tvOwner.setText(getStringRes("bbs_viewthreaddetail_btn_all"));
+			}
+			showOwner = !showOwner;
 		}
 	}
 

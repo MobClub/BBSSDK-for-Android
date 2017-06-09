@@ -42,6 +42,7 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 	private TextView tvImgCount;
 	private ImageView ivImg;
 	private TextView tvSend;
+	private View viewFiller;
 
 	private PopupWindow.OnDismissListener dismissListener;
 	private boolean isImgClick = false;
@@ -64,10 +65,16 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 		tvImgCount = (TextView) contentView.findViewById(ResHelper.getIdRes(context, "tvImgCount"));
 		ivImg = (ImageView) contentView.findViewById(ResHelper.getIdRes(context, "ivImg"));
 		tvSend = (TextView) contentView.findViewById(ResHelper.getIdRes(context, "tvSend"));
+		viewFiller = contentView.findViewById(ResHelper.getIdRes(context, "viewFiller"));
+		viewFiller.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ReplyEditorPopWindow.this.dismiss();
+			}
+		});
 
 		popupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.MATCH_PARENT);
-
 		popupWindow.setFocusable(true);
 		popupWindow.setOutsideTouchable(true);
 		popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN

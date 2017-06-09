@@ -35,11 +35,13 @@
                     </div>
                     <div class="center" dz-bind="data.message"></div>
                     <div class="bottom" dz-repeat="data.attachments">
-                        <p>
-                            <i class="mobicon mobicon-dz{{item.extension}}"></i>
-                            <span class="filename">{{item.fileName}}</span>
-                            <a href="javascript:;" class="external dz-filehref">打开附件</a>
-                        </p>
+                        <div class="bottom-box">
+                            <p>
+                                <i class="mobicon mobicon-dz{{item.extension}}"></i>
+                                <span class="filename">{{item.fileName}}</span>
+                                <a href="javascript:;" class="external dz-filehref">打开附件</a>
+                            </p>
+                        </div>
                     </div>
                     <div class="tip-list">
                         <div class="tip common" dz-bind="data.replies"></div>

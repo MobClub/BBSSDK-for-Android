@@ -149,6 +149,7 @@ public class MainView extends LinearLayout {
 				}
 			}
 		});
+		titleBar.setBackgroundResource(ResHelper.getColorRes(getContext(), "bbs_mainviewtitle_bg"));
 		addView(titleBar, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
 		View view = LayoutInflater.from(context).inflate(ResHelper.getLayoutRes(context, "bbs_main"), null);
