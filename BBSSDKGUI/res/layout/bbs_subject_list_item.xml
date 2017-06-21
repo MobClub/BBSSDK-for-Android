@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="60dp"
               xmlns:tools="http://schemas.android.com/tools"
               android:background="@color/bbs_white"
               android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="58dp"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="15dp"
@@ -21,20 +21,22 @@
             android:src="@drawable/bbs_selectsubject_item_default"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
                 android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/bbs_subject_listitem_textViewTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
                     tools:text="摄影大赛"
                     android:textColor="@color/bbs_selectsubject_title"
                     android:textSize="15sp"/>
@@ -44,7 +46,7 @@
                     android:id="@+id/bbs_subject_listitem_textViewLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="12dp"
                     android:background="@drawable/bbs_bg_solidbg"
                     android:paddingBottom="2dp"
                     android:paddingLeft="4dp"
@@ -61,15 +63,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
-                tools:text="第九届摄影大赛第一季"
+                tools:text="第九届摄影大赛第一季adsfasdfasdfas"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:textColor="@color/bbs_textgrey"
-                android:textSize="11sp"/>
+                android:textSize="12sp"/>
         </LinearLayout>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
         <LinearLayout
             android:id="@+id/bbs_subject_listitem_viewEdit"
             android:layout_width="wrap_content"

@@ -5,117 +5,93 @@
               android:orientation="vertical"
               android:padding="15dp">
 
-    <RelativeLayout
-        android:layout_marginTop="4dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bbs_bg_input"
+        android:orientation="vertical"
+        >
 
-        <ImageView
-            android:id="@+id/imageViewAccount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/bbs_register_account"/>
-
-        <EditText
-            android:id="@+id/bbs_register_edittextusername"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/imageViewAccount"
-            android:background="@null"
-            android:hint="@string/bbs_register_username_hint"
-            android:inputType="text"
-            android:textColorHint="@color/bbs_texthint"
-            android:textSize="13sp"/>
+            android:layout_height="50dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/bbs_register_edittextusername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@null"
+                android:hint="@string/bbs_register_username_hint"
+                android:inputType="text"
+                android:textColorHint="@color/bbs_texthint"
+                android:textSize="13sp"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/bbs_divider"
-        />
+        </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imageViewEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/bbs_register_email"/>
-
-        <EditText
-            android:id="@+id/bbs_register_edittextmail"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/imageViewEmail"
-            android:background="@null"
-            android:hint="@string/bbs_register_email_hint"
-            android:inputType="text"
-            android:textColorHint="@color/bbs_texthint"
-            android:textSize="13sp"/>
+            android:layout_height="0.5dp"
+            android:background="@color/bbs_divider"
+            />
 
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/bbs_divider"
-        />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imageViewPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/bbs_register_password"/>
-
-        <EditText
-            android:id="@+id/bbs_register_edittextpassword"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/imageViewPassword"
-            android:background="@null"
-            android:hint="@string/bbs_register_password_hint"
-            android:inputType="textPassword"
-            android:textColorHint="@color/bbs_texthint"
-            android:digits="@string/bbs_password_digits"
-            android:textSize="13sp"/>
+            android:layout_height="50dp"
+            android:orientation="horizontal">
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/bbs_register_edittextmail"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@null"
+                android:hint="@string/bbs_register_email_hint"
+                android:inputType="text"
+                android:textColorHint="@color/bbs_texthint"
+                android:textSize="13sp"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/bbs_divider"
-        />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/bbs_divider"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/bbs_register_edittextpassword"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@null"
+                android:digits="@string/bbs_password_digits"
+                android:hint="@string/bbs_register_password_hint"
+                android:inputType="textPassword"
+                android:textColorHint="@color/bbs_texthint"
+                android:textSize="13sp"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/bbs_register_btnregister"
+        style="@style/BBS_BlueSolidButton"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_marginTop="27dp"
         android:text="@string/bbs_register_regiseter"
-        style="@style/BBS_BlueSolidButton"
         />
 
     <View

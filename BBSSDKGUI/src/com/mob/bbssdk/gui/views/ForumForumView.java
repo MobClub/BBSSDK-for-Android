@@ -47,6 +47,7 @@ public class ForumForumView extends PullToRequestView {
 
 	private int defaultForumPic;
 	private int defaultTotalForumPic;
+	private TextView tvStickTop;
 	private LinearLayout llTopContainer;
 	private MyGridView gvTopView;
 	private BaseAdapter topAdapter;
@@ -149,13 +150,13 @@ public class ForumForumView extends PullToRequestView {
 	private void initHeaderView(Context context) {
 		llTopContainer = new LinearLayout(context);
 		llTopContainer.setOrientation(LinearLayout.VERTICAL);
-		TextView tvTop = new TextView(context);
-		tvTop.setTextColor(0xffa3a2aa);
-		tvTop.setPadding(ResHelper.dipToPx(context, 15), 0, 0, 0);
-		tvTop.setGravity(Gravity.CENTER_VERTICAL);
-		tvTop.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(context, 14));
-		tvTop.setText(ResHelper.getStringRes(context, "bbs_subjectsettings_sticksubject"));
-		llTopContainer.addView(tvTop, ViewGroup.LayoutParams.WRAP_CONTENT, ResHelper.dipToPx(context, 40));
+		tvStickTop = new TextView(context);
+		tvStickTop.setTextColor(0xffa3a2aa);
+		tvStickTop.setPadding(ResHelper.dipToPx(context, 15), 0, 0, 0);
+		tvStickTop.setGravity(Gravity.CENTER_VERTICAL);
+		tvStickTop.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(context, 12));
+		tvStickTop.setText(ResHelper.getStringRes(context, "bbs_subjectsettings_sticksubject"));
+		llTopContainer.addView(tvStickTop, ViewGroup.LayoutParams.WRAP_CONTENT, ResHelper.dipToPx(context, 40));
 
 		gvTopView = new MyGridView(context);
 		gvTopView.setNumColumns(4);
@@ -168,11 +169,11 @@ public class ForumForumView extends PullToRequestView {
 
 		RelativeLayout rlEdit = new RelativeLayout(context);
 		rlEdit.setBackgroundColor(0xFFF5F6FA);
-		llTopContainer.addView(rlEdit, ViewGroup.LayoutParams.MATCH_PARENT, ResHelper.dipToPx(context, 40));
+		llTopContainer.addView(rlEdit, ViewGroup.LayoutParams.MATCH_PARENT, ResHelper.dipToPx(context, 30));
 
 		TextView tvForumList = new TextView(context);
-		tvForumList.setTextColor(0xffb4b4b4);
-		tvForumList.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(context, 14));
+		tvForumList.setTextColor(0xffa3a2aa);
+		tvForumList.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(context, 12));
 		tvForumList.setText(ResHelper.getStringRes(context, "bbs_subjectsettings_forumlist"));
 		RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		rlp.leftMargin = ResHelper.dipToPx(context, 15);
@@ -180,8 +181,8 @@ public class ForumForumView extends PullToRequestView {
 		rlEdit.addView(tvForumList, rlp);
 
 		final TextView tvEdit = new TextView(context);
-		tvEdit.setTextColor(0xff50a3d3);
-		tvEdit.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(context, 14));
+		tvEdit.setTextColor(0xff1d8ac7);
+		tvEdit.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(context, 12));
 		tvEdit.setText(ResHelper.getStringRes(context, "bbs_subjectsettings_editsticktop"));
 		rlp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		rlp.rightMargin = ResHelper.dipToPx(context, 15);
@@ -263,12 +264,12 @@ public class ForumForumView extends PullToRequestView {
 
 					TextView tvForumName = new TextView(getContext());
 					tvForumName.setTextColor(0xff3a4045);
-					tvForumName.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(getContext(), 15));
+					tvForumName.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(getContext(), 14));
 					tvForumName.setEllipsize(TextUtils.TruncateAt.MIDDLE);
 					tvForumName.setSingleLine();
 					llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 					llp.gravity = Gravity.CENTER_HORIZONTAL;
-					llp.topMargin = ResHelper.dipToPx(getContext(), 10);
+					llp.topMargin = ResHelper.dipToPx(getContext(), 8);
 					llContent.addView(tvForumName, llp);
 
 					ForumForum forum = getItem(position);
@@ -291,6 +292,15 @@ public class ForumForumView extends PullToRequestView {
 			gvTopView.setVisibility(View.GONE);
 		} else {
 			gvTopView.setVisibility(View.VISIBLE);
+		}
+		if(listStickTop != null && listStickTop.size() > 0) {
+			if(tvStickTop != null) {
+				tvStickTop.setVisibility(VISIBLE);
+			}
+		} else {
+			if(tvStickTop != null) {
+				tvStickTop.setVisibility(GONE);
+			}
 		}
 		topAdapter.notifyDataSetChanged();
 	}

@@ -57,12 +57,13 @@ public class PageLogin extends BasePageWithTitle {
 	public void onCreate() {
 		super.onCreate();
 		activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+		activity.getWindow().setWindowAnimations(ResHelper.getStyleRes(getContext(), "BBS_PageAnimUpDown"));
 	}
 
 	@Override
 	protected View onCreateContentView(final Context context) {
 		titleBar.setTitle(getStringRes("bbs_pagelogin_title"));
-		titleBar.setRightImageResource(getDrawableId("bbs_titlebar_close"));
+		titleBar.setRightImageResource(getDrawableId("bbs_titlebar_close_black"));
 		View view = LayoutInflater.from(context).inflate(getLayoutId("bbs_login"), null);
 		editTextUserName = (EditText) view.findViewById(getIdRes("bbs_login_edittextusername"));
 		editTextPassword = (EditText) view.findViewById(getIdRes("bbs_login_edittextpassword"));

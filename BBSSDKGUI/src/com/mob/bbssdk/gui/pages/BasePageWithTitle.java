@@ -21,7 +21,7 @@ public abstract class BasePageWithTitle extends BasePage {
 	private ModelLoadingDialog modelLoadingDialog;
 
 	protected int getStatusBarColor() {
-		return getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_title_bg"));
+		return getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_mainviewtitle_bg"));
 	}
 
 	protected View onCreateView(Context context) {
@@ -44,7 +44,7 @@ public abstract class BasePageWithTitle extends BasePage {
 		flContent.addView(titleBar, llp);
 
 		vLine = new View(context);
-		vLine.setBackgroundResource(ResHelper.getColorRes(context, "bbs_title_under_line_bg"));
+		vLine.setBackgroundResource(ResHelper.getColorRes(context, "bbs_mainviewtitle_bg"));
 		flContent.addView(vLine, ViewGroup.LayoutParams.MATCH_PARENT, ResHelper.dipToPx(context, 1) / 2);
 		vLine.setVisibility(View.GONE);
 

@@ -2,4 +2,6 @@
 <resources>
     <item name="tvEmpty" type="id"/>
     <item name="tvLoad" type="id"/>
+    <item name="vLine" type="id"/>
+    <item name="tvOwner" type="id"/>
 </resources>

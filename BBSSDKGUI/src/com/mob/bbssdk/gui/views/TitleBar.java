@@ -144,7 +144,7 @@ public class TitleBar extends FrameLayout {
 	 *
 	 */
 	public void setLeftImageResourceDefaultBack() {
-		setLeftImageResource(ResHelper.getBitmapRes(getContext(), "bbs_ic_back"));
+		setLeftImageResource(ResHelper.getBitmapRes(getContext(), "bbs_subject_back_black"));
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class TitleBar extends FrameLayout {
 	 *
 	 */
 	public void setLeftImageResourceDefaultClose() {
-		setLeftImageResource(ResHelper.getBitmapRes(getContext(), "bbs_ic_close"));
+		setLeftImageResource(ResHelper.getBitmapRes(getContext(), "bbs_titlebar_close_black"));
 	}
 
 	/**

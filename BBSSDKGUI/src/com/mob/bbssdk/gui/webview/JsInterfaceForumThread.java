@@ -234,7 +234,11 @@ public class JsInterfaceForumThread {
 
 	/* 只看楼主 */
 	public void getOwnerPosts() {
-		loadJs("BBSSDKNative.updateCommentHtml", (forumThread == null ? 0L : forumThread.authorId));
+		loadJs("BBSSDKNative.updateCommentHtml", (forumThread == null ? 0L : forumThread.authorId), true);
+	}
+
+	public void getAllPosts() {
+		loadJs("BBSSDKNative.updateCommentHtml", (forumThread == null ? 0L : forumThread.authorId), false);
 	}
 
 	public void addPost(ForumPost forumPost) {

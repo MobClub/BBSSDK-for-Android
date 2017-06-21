@@ -30,7 +30,7 @@ public abstract class BasePagedItemAdapter<T> extends PullToRefreshHeaderFooterA
 	}
 
 	public T getItem(int position) {
-		if (dataSet == null || position >= dataSet.size()) {
+		if (dataSet == null || position >= dataSet.size() || position < 0) {
 			return null;
 		}
 		return dataSet.get(position);

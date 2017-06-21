@@ -38,6 +38,14 @@ public class ForumThreadView extends BaseView {
 	private int tabHeight = 0;
 	private ForumThreadListView.OnItemClickListener itemClickListener;
 	private long forumId = 0;
+	private ForumThreadViewType mType = ForumThreadViewType.FORUM_MAIN;
+
+	public void setType(ForumThreadViewType type) {
+		if(type != null) {
+			mType = type;
+		}
+	}
+
 	/**
 	 * 设置adapter，不设置采用默认adapter（请在loadData前调用，且采用自定义adapter时，请自行实现item点击事件）
 	 */
@@ -115,6 +123,7 @@ public class ForumThreadView extends BaseView {
 							}
 						});
 					}
+					itemView.setType(mType);
 					itemView.setLoadParams(forumId, filtertype, null, 10);
 					itemView.startLoadData();
 					return itemView;
