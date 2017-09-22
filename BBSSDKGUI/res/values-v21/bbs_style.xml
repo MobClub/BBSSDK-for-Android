@@ -1,4 +1,10 @@
 <resources>
+    <style name="BBS_AppBaseTheme" parent="@android:style/Theme.Holo.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
     <style name="BBS_AppTheme" parent="@style/BBS_AppBaseTheme">
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>

@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.mob.bbssdk.API;
 import com.mob.bbssdk.APICallback;
 import com.mob.bbssdk.api.ForumAPI;
-import com.mob.bbssdk.gui.ErrorCodeHelper;
+import com.mob.bbssdk.gui.helper.ErrorCodeHelper;
 import com.mob.bbssdk.gui.dialog.YesNoDialog;
 import com.mob.bbssdk.model.ForumPost;
 import com.mob.tools.utils.ResHelper;
@@ -133,6 +133,13 @@ public class SendForumPostManager {
 		sp.open(CACHE_POST);
 		sp.putInt("status", status);
 		sp.putString("failedMsg", failedMsg);
+	}
+
+	public synchronized static void clearPostStatus(Context context) {
+		SharePrefrenceHelper sp = new SharePrefrenceHelper(context);
+		sp.open(CACHE_POST);
+		sp.putInt("status", 0);
+		sp.putString("failedMsg", "");
 	}
 
 	public synchronized static HashMap<String, Object> getPostCache(Context context) {

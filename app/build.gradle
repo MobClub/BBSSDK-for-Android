@@ -5,9 +5,15 @@ android {
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
     }
 
     dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
         preDexLibraries = false
         additionalParameters = ['--core-library']
     }
@@ -27,14 +33,15 @@ android {
     productFlavors {
         code4app {
             applicationId "com.mob.bbssdk.sample.code4app"
-            resValue "string", "BBS_APPKEY", "\"1bbd456d78f24\""
-            resValue "string", "BBS_APPSECRET", "\"cee607fd53bc73ffbc73bbc753540526\""
+            resValue "string", "BBS_APPKEY", "\"moba6b6c6d6\""
+            resValue "string", "BBS_APPSECRET", "\"b89d2427a3bc7ad1aea1e1e8c1d36bf3\""
         }
     }
 }
 
 dependencies {
-    compile project(':BBSSDKGUI')
+    compile project(':BBSSDKTHEME0')
+    compile project(':BBSSDKTHEME1')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.github.barteksc:android-pdf-viewer:2.4.0'
     compile 'com.android.support:multidex:1.0.1'

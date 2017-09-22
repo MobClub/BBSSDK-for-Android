@@ -3,6 +3,7 @@ package com.mob.bbssdk.gui.views;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -13,21 +14,20 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mob.bbssdk.API;
 import com.mob.bbssdk.APICallback;
 import com.mob.bbssdk.BBSSDK;
 import com.mob.bbssdk.api.ForumAPI;
-import com.mob.bbssdk.gui.pages.PageForumThread;
+import com.mob.bbssdk.gui.BBSViewBuilder;
+import com.mob.bbssdk.gui.pages.forum.PageForumThread;
 import com.mob.bbssdk.gui.ptrlistview.BasePagedItemAdapter;
 import com.mob.bbssdk.gui.utils.ToastUtils;
 import com.mob.bbssdk.model.ForumForum;
-import com.mob.tools.gui.AsyncImageView;
+import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.gui.PullToRequestView;
 import com.mob.tools.gui.ScrollableListView;
 import com.mob.tools.utils.ResHelper;
@@ -43,18 +43,28 @@ public class ForumForumView extends PullToRequestView {
 	private static final String SHAREDPRE_NAME = "sharedpre_sticktopsubjectlist";
 	private static final String SHAREDPRE_KEY_IDS = "forumIds";
 	private static final Integer MAX_STICKTOP_COUNT = 8;
-	private List<ForumForum> listStickTop;
-
-	private int defaultForumPic;
-	private int defaultTotalForumPic;
-	private TextView tvStickTop;
+	protected int defaultForumPic;
+	protected int defaultTotalForumPic;
+	protected LinearLayout layoutStickTop;
+	protected TextView textViewEditStickTop;
 	private LinearLayout llTopContainer;
-	private MyGridView gvTopView;
-	private BaseAdapter topAdapter;
-	private boolean isEditMode = false;
+	protected boolean isEditMode = false;
 	private int lastVisibleItem = 0;
 	private OnItemClickListener onItemClickListener;
-	private ForumItemAdapter forumItemAdapter;
+
+	private ForumFormGridView gridViewStickTop;
+	protected List<ForumForum> listStickTop;
+	private BaseAdapter adapterStickTop;
+
+	protected ForumAdapter adapterForum;
+	protected ArrayList<ForumForum> listForum;
+
+	protected ArrayList<ForumForum> listForumAll;
+
+	@Override
+	protected float getTopFadingEdgeStrength() {
+		return super.getTopFadingEdgeStrength();
+	}
 
 	public ForumForumView(Context context) {
 		this(context, null);
@@ -69,160 +79,104 @@ public class ForumForumView extends PullToRequestView {
 		init(context);
 	}
 
-	private void init(Context context) {
+	protected void init(Context context) {
 		setBackgroundColor(0xFFFFFFFF);
 		defaultForumPic = ResHelper.getBitmapRes(getContext(), "bbs_selectsubject_item_default");
 		defaultTotalForumPic = ResHelper.getBitmapRes(getContext(), "bbs_selectsubject_item_all");
-		initHeaderView(context);
-		forumItemAdapter = new ForumItemAdapter(this) {
-			protected void onRequest(int page, final RequestCallback callback) {
-				BBSSDK.getApi(ForumAPI.class).getForumList(0, false, new APICallback<ArrayList<ForumForum>>() {
-					public void onSuccess(API api, int action, ArrayList<ForumForum> result) {
-						if (result == null || result.isEmpty()) {
-							if (Build.VERSION.SDK_INT <= 17) {
-								llTopContainer.setVisibility(View.GONE);
-							} else if (forumItemAdapter.getListView().getHeaderViewsCount() > 0) {
-								forumItemAdapter.getListView().removeHeaderView(llTopContainer);
-							}
-							callback.onFinished(true, false, null);
-							return;
-						}
-						if (Build.VERSION.SDK_INT <= 17) {
-							llTopContainer.setVisibility(View.VISIBLE);
-						} else if (forumItemAdapter.getListView().getHeaderViewsCount() == 0) {
-							forumItemAdapter.getListView().addHeaderView(llTopContainer);
-						}
-						listStickTop = getCachedTopForumList(result);
-						refreshTopData();
-						callback.onFinished(true, false, result);
-					}
 
-					public void onError(API api, int action, int errorCode, Throwable details) {
-						if (Build.VERSION.SDK_INT <= 17) {
-							llTopContainer.setVisibility(View.GONE);
-						} else if (forumItemAdapter.getListView().getHeaderViewsCount() > 0) {
-							forumItemAdapter.getListView().removeHeaderView(llTopContainer);
-						}
-						callback.onFinished(false, false, null);
+		View view = buildMainLayoutView();
+		if (view == null) {
+			view = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_view_forumforum"), null);
+		}
+		llTopContainer = (LinearLayout) view.findViewById(ResHelper.getIdRes(getContext(), "layoutContainer"));
+		gridViewStickTop = (ForumFormGridView) view.findViewById(ResHelper.getIdRes(getContext(), "myGridView"));
+		layoutStickTop = (LinearLayout) view.findViewById(ResHelper.getIdRes(getContext(), "layoutStickTop"));
+		textViewEditStickTop = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewEditStickTop"));
+		textViewEditStickTop.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				if (isEditMode) {
+					cacheTopForumList();
+					isEditMode = false;
+					textViewEditStickTop.setText(ResHelper.getStringRes(getContext(), "bbs_subjectsettings_editsticktop"));
+					if (adapterForum != null) {
+						adapterForum.notifyDataSetChanged();
 					}
-				});
+				} else {
+					isEditMode = true;
+					textViewEditStickTop.setText(ResHelper.getStringRes(getContext(), "bbs_subjectsettings_finishedit"));
+					if (adapterForum != null) {
+						adapterForum.notifyDataSetChanged();
+					}
+				}
+				refreshListViews();
 			}
-		};
-		forumItemAdapter.setShowPageFooter(false);
-		forumItemAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		});
+
+		if (gridViewStickTop != null) {
+			gridViewStickTop.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					if (adapterStickTop != null) {
+						ForumForum forum = (ForumForum) adapterStickTop.getItem(position);
+						if (forum != null) {
+							if (onItemClickListener != null) {
+								onItemClickListener.onItemClick(forum);
+							} else {
+								PageForumThread page = BBSViewBuilder.getInstance().buildPageForumThread();
+								page.initPage(forum);
+								page.show(getContext());
+							}
+						}
+					}
+				}
+			});
+			adapterStickTop = new StickTopAdapter();
+			gridViewStickTop.setAdapter(adapterStickTop);
+		}
+		adapterForum = new ForumAdapter(this);
+		adapterForum.setShowPageFooter(false);
+		adapterForum.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 				if (isEditMode) {
 					return;
 				}
 				position -= 1;
-				ForumForum forum = forumItemAdapter.getItem(position);
+				ForumForum forum = adapterForum.getItem(position);
 				if (forum == null) {
 					return;
 				}
 				if (onItemClickListener != null) {
 					onItemClickListener.onItemClick(forum);
 				} else {
-					new PageForumThread(forum).show(getContext());
+					PageForumThread page = BBSViewBuilder.getInstance().buildPageForumThread();
+					page.initPage(forum);
+					page.show(getContext());
 				}
 			}
 		});
-		forumItemAdapter.getListView().setDivider(new ColorDrawable(0x00000000));
-		forumItemAdapter.getListView().setSelector(new ColorDrawable(0x00000000));
-		forumItemAdapter.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+		adapterForum.getListView().setDivider(new ColorDrawable(0x00000000));
+		adapterForum.getListView().setSelector(new ColorDrawable(0x00000000));
+		adapterForum.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 
 			}
 
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				if (isEditMode) {
-					if (firstVisibleItem == 0 && lastVisibleItem != 0) {
-						refreshTopData();
-					}
-					lastVisibleItem = firstVisibleItem;
-				} else {
-					lastVisibleItem = 0;
-				}
+//				if (isEditMode) {
+//					if (firstVisibleItem == 0 && lastVisibleItem != 0) {
+//						refreshStickTopView();
+//					}
+//					lastVisibleItem = firstVisibleItem;
+//				} else {
+//					lastVisibleItem = 0;
+//				}
 			}
 		});
-		setAdapter(forumItemAdapter);
+		listForum = adapterForum.getDataSet();
+		setAdapter(adapterForum);
 	}
 
-	private void initHeaderView(Context context) {
-		llTopContainer = new LinearLayout(context);
-		llTopContainer.setOrientation(LinearLayout.VERTICAL);
-		tvStickTop = new TextView(context);
-		tvStickTop.setTextColor(0xffa3a2aa);
-		tvStickTop.setPadding(ResHelper.dipToPx(context, 15), 0, 0, 0);
-		tvStickTop.setGravity(Gravity.CENTER_VERTICAL);
-		tvStickTop.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(context, 12));
-		tvStickTop.setText(ResHelper.getStringRes(context, "bbs_subjectsettings_sticksubject"));
-		llTopContainer.addView(tvStickTop, ViewGroup.LayoutParams.WRAP_CONTENT, ResHelper.dipToPx(context, 40));
-
-		gvTopView = new MyGridView(context);
-		gvTopView.setNumColumns(4);
-		gvTopView.setPadding(0, 0, 0, ResHelper.dipToPx(context, 15));
-		gvTopView.setHorizontalSpacing(ResHelper.dipToPx(context, 10));
-		gvTopView.setVerticalSpacing(ResHelper.dipToPx(context, 15));
-		gvTopView.setSelector(new ColorDrawable(0x00000000));
-		LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		llTopContainer.addView(gvTopView, llp);
-
-		RelativeLayout rlEdit = new RelativeLayout(context);
-		rlEdit.setBackgroundColor(0xFFF5F6FA);
-		llTopContainer.addView(rlEdit, ViewGroup.LayoutParams.MATCH_PARENT, ResHelper.dipToPx(context, 30));
-
-		TextView tvForumList = new TextView(context);
-		tvForumList.setTextColor(0xffa3a2aa);
-		tvForumList.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(context, 12));
-		tvForumList.setText(ResHelper.getStringRes(context, "bbs_subjectsettings_forumlist"));
-		RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		rlp.leftMargin = ResHelper.dipToPx(context, 15);
-		rlp.addRule(CENTER_VERTICAL, TRUE);
-		rlEdit.addView(tvForumList, rlp);
-
-		final TextView tvEdit = new TextView(context);
-		tvEdit.setTextColor(0xff1d8ac7);
-		tvEdit.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(context, 12));
-		tvEdit.setText(ResHelper.getStringRes(context, "bbs_subjectsettings_editsticktop"));
-		rlp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		rlp.rightMargin = ResHelper.dipToPx(context, 15);
-		rlp.addRule(CENTER_VERTICAL, TRUE);
-		rlp.addRule(ALIGN_PARENT_RIGHT, TRUE);
-		rlEdit.addView(tvEdit, rlp);
-
-		tvEdit.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if (isEditMode) {
-					cacheTopForumList();
-					isEditMode = false;
-					tvEdit.setText(ResHelper.getStringRes(getContext(), "bbs_subjectsettings_editsticktop"));
-					if (forumItemAdapter != null) {
-						forumItemAdapter.notifyDataSetChanged();
-					}
-				} else {
-					isEditMode = true;
-					tvEdit.setText(ResHelper.getStringRes(getContext(), "bbs_subjectsettings_finishedit"));
-					if (forumItemAdapter != null) {
-						forumItemAdapter.notifyDataSetChanged();
-					}
-				}
-			}
-		});
-
-		gvTopView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (topAdapter != null) {
-					ForumForum forum = (ForumForum) topAdapter.getItem(position);
-					if (forum != null) {
-						if (onItemClickListener != null) {
-							onItemClickListener.onItemClick(forum);
-						} else {
-							new PageForumThread(forum).show(getContext());
-						}
-					}
-				}
-			}
-		});
+	protected View buildMainLayoutView() {
+		return null;
 	}
 
 	/**
@@ -238,71 +192,73 @@ public class ForumForumView extends PullToRequestView {
 		performPullingDown(true);
 	}
 
-	private void refreshTopData() {
-		if (topAdapter == null) {
-			topAdapter = new BaseAdapter() {
-				public int getCount() {
-					return listStickTop == null ? 0 : listStickTop.size();
-				}
+	protected void refreshListViews() {
+		refreshForumView();
+		refreshStickTopView();
+	}
 
-				public ForumForum getItem(int position) {
-					return (listStickTop == null || position >= listStickTop.size()) ? null : listStickTop.get(position);
-				}
+	protected void refreshForumView() {
+		adapterForum.notifyDataSetChanged();
+	}
 
-				public long getItemId(int position) {
-					return position;
-				}
-
-				public View getView(int position, View convertView, ViewGroup parent) {
-					LinearLayout llContent = new LinearLayout(getContext());
-					llContent.setOrientation(LinearLayout.VERTICAL);
-					final AsyncImageView aivIcon = new AsyncImageView(getContext());
-					int aivIconWidth = ResHelper.dipToPx(getContext(), 40);
-					LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(aivIconWidth, aivIconWidth);
-					llp.gravity = Gravity.CENTER_HORIZONTAL;
-					llContent.addView(aivIcon, llp);
-
-					TextView tvForumName = new TextView(getContext());
-					tvForumName.setTextColor(0xff3a4045);
-					tvForumName.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(getContext(), 14));
-					tvForumName.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-					tvForumName.setSingleLine();
-					llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-					llp.gravity = Gravity.CENTER_HORIZONTAL;
-					llp.topMargin = ResHelper.dipToPx(getContext(), 8);
-					llContent.addView(tvForumName, llp);
-
-					ForumForum forum = getItem(position);
-					if (forum != null) {
-						tvForumName.setText(forum.name);
-						if (!TextUtils.isEmpty(forum.forumPic)) {
-							aivIcon.setRound(ResHelper.dipToPx(getContext(), 5));
-							aivIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
-						}
-						aivIcon.execute(forum.forumPic, forum.fid == 0 ? defaultTotalForumPic : defaultForumPic);
-					} else {
-						aivIcon.setImageResource(defaultForumPic);
-					}
-					return llContent;
-				}
-			};
-			gvTopView.setAdapter(topAdapter);
-		}
-		if (topAdapter.getCount() == 0) {
-			gvTopView.setVisibility(View.GONE);
+	protected void refreshStickTopView() {
+		if (listStickTop.size() == 0) {
+			gridViewStickTop.setVisibility(View.GONE);
 		} else {
-			gvTopView.setVisibility(View.VISIBLE);
+			gridViewStickTop.setVisibility(View.VISIBLE);
 		}
-		if(listStickTop != null && listStickTop.size() > 0) {
-			if(tvStickTop != null) {
-				tvStickTop.setVisibility(VISIBLE);
+		if (listStickTop != null && listStickTop.size() > 0) {
+			if (layoutStickTop != null) {
+				layoutStickTop.setVisibility(VISIBLE);
 			}
 		} else {
-			if(tvStickTop != null) {
-				tvStickTop.setVisibility(GONE);
+			if (layoutStickTop != null) {
+				layoutStickTop.setVisibility(GONE);
 			}
 		}
-		topAdapter.notifyDataSetChanged();
+		adapterStickTop.notifyDataSetChanged();
+	}
+
+	protected boolean addStickTopItemToView(ForumForum forum) {
+		if (listStickTop.size() >= MAX_STICKTOP_COUNT) {
+			return false;
+		}
+		//add the item to stick top list.
+		for (ForumForum item : listStickTop) {
+			if (item.fid == forum.fid) {
+				return false;
+			}
+		}
+		listStickTop.add(forum);
+		refreshListViews();
+		return true;
+	}
+
+	protected boolean removeStickTopItem(ForumForum forum) {
+		if (listStickTop.size() <= 0) {
+			return false;
+		}
+		ForumForum itemFound = null;
+		for (ForumForum item : listStickTop) {
+			if (item.fid == forum.fid) {
+				itemFound = item;
+				break;
+			}
+		}
+		if (itemFound != null) {
+			listStickTop.remove(itemFound);
+			refreshListViews();
+			return true;
+		}
+		return false;
+	}
+
+	public interface OnItemClickListener {
+		void onItemClick(ForumForum forum);
+	}
+
+	protected View buildForumItemView(ForumForum forum, ViewGroup viewGroup) {
+		return null;
 	}
 
 	private List<ForumForum> getCachedTopForumList(ArrayList<ForumForum> forumList) {
@@ -339,49 +295,59 @@ public class ForumForumView extends PullToRequestView {
 		}
 	}
 
-	private boolean addStickTopItemToView(ForumForum forum) {
-		if (listStickTop.size() >= MAX_STICKTOP_COUNT) {
-			return false;
+	public class StickTopAdapter extends BaseAdapter {
+		public int getCount() {
+			return listStickTop == null ? 0 : listStickTop.size();
 		}
-		for (ForumForum item : listStickTop) {
-			if (item.fid == forum.fid) {
-				return false;
+
+		public ForumForum getItem(int position) {
+			return (listStickTop == null || position >= listStickTop.size()) ? null : listStickTop.get(position);
+		}
+
+		public long getItemId(int position) {
+			return position;
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LinearLayout llContent = new LinearLayout(getContext());
+			llContent.setOrientation(LinearLayout.VERTICAL);
+			final GlideImageView aivIcon = new GlideImageView(getContext());
+			int aivIconWidth = ResHelper.dipToPx(getContext(), 40);
+			LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(aivIconWidth, aivIconWidth);
+			llp.gravity = Gravity.CENTER_HORIZONTAL;
+			llContent.addView(aivIcon, llp);
+
+			TextView tvForumName = new TextView(getContext());
+			tvForumName.setTextColor(0xff3a4045);
+			tvForumName.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResHelper.dipToPx(getContext(), 14));
+			tvForumName.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+			tvForumName.setSingleLine();
+			llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+			llp.gravity = Gravity.CENTER_HORIZONTAL;
+			llp.topMargin = ResHelper.dipToPx(getContext(), 8);
+			llContent.addView(tvForumName, llp);
+
+			ForumForum forum = getItem(position);
+			if (forum != null) {
+				tvForumName.setText(forum.name);
+				if (!TextUtils.isEmpty(forum.forumPic)) {
+					aivIcon.setExecuteRound(ResHelper.dipToPx(getContext(), 5));
+					aivIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
+				}
+				aivIcon.execute(forum.forumPic, forum.fid == 0 ? defaultTotalForumPic : defaultForumPic);
+			} else {
+				aivIcon.setImageResource(defaultForumPic);
 			}
+			return llContent;
 		}
-		listStickTop.add(forum);
-		refreshTopData();
-		return true;
 	}
 
-	protected boolean removeStickTopItem(ForumForum forum) {
-		if (listStickTop.size() <= 0) {
-			return false;
-		}
-		ForumForum itemFound = null;
-		for (ForumForum item : listStickTop) {
-			if (item.fid == forum.fid) {
-				itemFound = item;
-				break;
-			}
-		}
-		if (itemFound != null) {
-			listStickTop.remove(itemFound);
-			refreshTopData();
-			return true;
-		}
-		return false;
+	protected void OnForumItemViewCreated(ForumForum forum, View view) {
+
 	}
 
-	public interface OnItemClickListener {
-		/**
-		 *
-		 * @param forum
-		 */
-		void onItemClick(ForumForum forum);
-	}
-
-	public abstract class ForumItemAdapter extends BasePagedItemAdapter<ForumForum> {
-		public ForumItemAdapter(PullToRequestView view) {
+	public class ForumAdapter extends BasePagedItemAdapter<ForumForum> {
+		public ForumAdapter(PullToRequestView view) {
 			super(view);
 		}
 
@@ -395,31 +361,57 @@ public class ForumForumView extends PullToRequestView {
 			return listView;
 		}
 
-		protected int getEmptyViewDrawableId() {
-			return ResHelper.getBitmapRes(getContext(), "bbs_ic_def_no_data");
-		}
-
-		protected int getErrorViewDrawableId() {
-			return ResHelper.getBitmapRes(getContext(), "bbs_ic_def_no_net");
-		}
-
-		protected int getEmptyViewStrId() {
-			return ResHelper.getStringRes(getContext(), "bbs_empty_view_str");
-		}
-
-		protected int getErrorViewStrId() {
-			return ResHelper.getStringRes(getContext(), "bbs_error_view_str");
-		}
-
 		public void refresh() {
 			performPullingDown(true);
+		}
+
+		@Override
+		public void setLoadEmpty(boolean isError) {
+			emptyView.setVisibility(View.GONE);
+		}
+
+		protected void onRequest(int page, final RequestCallback callback) {
+			BBSSDK.getApi(ForumAPI.class).getForumList(0, false, new APICallback<ArrayList<ForumForum>>() {
+				public void onSuccess(API api, int action, ArrayList<ForumForum> result) {
+					if (result == null || result.isEmpty()) {
+						if (Build.VERSION.SDK_INT <= 17) {
+							llTopContainer.setVisibility(View.GONE);
+						} else if (adapterForum.getListView().getHeaderViewsCount() > 0) {
+							adapterForum.getListView().removeHeaderView(llTopContainer);
+						}
+						callback.onFinished(true, false, null);
+						return;
+					}
+					if (Build.VERSION.SDK_INT <= 17) {
+						llTopContainer.setVisibility(View.VISIBLE);
+					} else if (adapterForum.getListView().getHeaderViewsCount() == 0) {
+						adapterForum.getListView().addHeaderView(llTopContainer);
+					}
+					listStickTop = getCachedTopForumList(result);
+					listForumAll = result;
+					callback.onFinished(true, false, result);
+					refreshStickTopView();
+				}
+
+				public void onError(API api, int action, int errorCode, Throwable details) {
+					if (Build.VERSION.SDK_INT <= 17) {
+						llTopContainer.setVisibility(View.GONE);
+					} else if (adapterForum.getListView().getHeaderViewsCount() > 0) {
+						adapterForum.getListView().removeHeaderView(llTopContainer);
+					}
+					callback.onFinished(false, false, null);
+				}
+			});
 		}
 
 		public View getContentView(int position, View convertView, ViewGroup viewGroup) {
 			View view = convertView;
 			final ViewHolder viewHolder;
 			if (view == null) {
-				view = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_subject_list_item"), viewGroup, false);
+				view = buildForumItemView(getItem(position), viewGroup);
+				if (view == null) {
+					view = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_item_forumsetting"), viewGroup, false);
+				}
 				viewHolder = new ViewHolder(view);
 				view.setTag(viewHolder);
 			} else {
@@ -427,84 +419,69 @@ public class ForumForumView extends PullToRequestView {
 			}
 			final ForumForum forum = getItem(position);
 			if (forum != null) {
-				AsyncImageView aivIcon = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_asyImageView"));
+				GlideImageView aivIcon = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_asyImageView"));
 				TextView tvTitle = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_textViewTitle"));
 				TextView tvLable = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_textViewLabel"));
 				TextView tvDes = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_textViewDes"));
-				final TextView tvStick = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_viewStick"));
-				final TextView tvUnStick = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_viewUnstick"));
+				final View viewStick = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_viewStick"));
+				final View viewUnstick = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_viewUnstick"));
 				View vEdit = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_viewEdit"));
+				View viewDivider = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_viewDivider"));
+
 				if (isFling()) {
-					aivIcon.setRound(0);
 					aivIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
 					aivIcon.execute(null, forum.fid == 0 ? defaultTotalForumPic : defaultForumPic);
 				} else {
 					if (!TextUtils.isEmpty(forum.forumPic)) {
-						aivIcon.setRound(ResHelper.dipToPx(getContext(), 5));
+//						aivIcon.setExecuteRound(ResHelper.dipToPx(getContext(), 5));
 						aivIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
 					}
 					aivIcon.execute(forum.forumPic, forum.fid == 0 ? defaultTotalForumPic : defaultForumPic);
 				}
 				tvTitle.setText(forum.name);
-				tvDes.setText(forum.description);
+				if(StringUtils.isEmpty(forum.description)) {
+					forum.description = "";
+				}
+				tvDes.setText(Html.fromHtml(forum.description));
 				if (isEditMode) {
 					vEdit.setVisibility(View.VISIBLE);
 					boolean found = false;
 					for (ForumForum item : listStickTop) {
 						if (item.fid == forum.fid) {
-							tvUnStick.setVisibility(VISIBLE);
-							tvStick.setVisibility(GONE);
+							viewUnstick.setVisibility(VISIBLE);
+							viewStick.setVisibility(GONE);
 							found = true;
 							break;
 						}
 					}
 					if (!found) {
-						tvUnStick.setVisibility(GONE);
-						tvStick.setVisibility(VISIBLE);
+						viewUnstick.setVisibility(GONE);
+						viewStick.setVisibility(VISIBLE);
 					}
 				} else {
 					vEdit.setVisibility(View.GONE);
 				}
-				tvStick.setOnClickListener(new OnClickListener() {
+				viewStick.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						if (addStickTopItemToView(forum)) {
-							tvStick.setVisibility(GONE);
-							tvUnStick.setVisibility(VISIBLE);
+							viewStick.setVisibility(GONE);
+							viewUnstick.setVisibility(VISIBLE);
 						} else {
 							ToastUtils.showToast(getContext(), getResources().getString(
 									ResHelper.getStringRes(getContext(), "bbs_pagesubjectview_cantadd_toomanyitems")));
 						}
 					}
 				});
-				tvUnStick.setOnClickListener(new OnClickListener() {
+				viewUnstick.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						removeStickTopItem(forum);
-						tvStick.setVisibility(VISIBLE);
-						tvUnStick.setVisibility(GONE);
+						viewStick.setVisibility(VISIBLE);
+						viewUnstick.setVisibility(GONE);
 					}
 				});
 			}
+			OnForumItemViewCreated(forum, view);
 			return view;
-		}
-	}
-
-	public class MyGridView extends GridView {
-		public MyGridView(Context context) {
-			super(context);
-		}
-
-		public MyGridView(Context context, AttributeSet attrs) {
-			super(context, attrs);
-		}
-
-		public MyGridView(Context context, AttributeSet attrs, int defStyle) {
-			super(context, attrs, defStyle);
-		}
-
-		protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-			int expandSpec = MeasureSpec.makeMeasureSpec(
-					Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
-			super.onMeasure(widthMeasureSpec, expandSpec);
 		}
 	}
 }

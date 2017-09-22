@@ -43,9 +43,14 @@ public abstract class BaseView extends RelativeLayout {
 			});
 			setLoadingStatus(RequestLoadingView.LOAD_STATUS_ING);
 		}
+		OnViewCreated(contentView);
 	}
 
 	protected abstract View initContentView(Context context, AttributeSet attrs, int defStyleAttr);
+
+	protected void OnViewCreated(View contentview) {
+
+	}
 
 	protected RequestLoadingView initLoadingView(Context context) {
 		return new RequestLoadingView(context);

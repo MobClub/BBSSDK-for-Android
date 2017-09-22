@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/bbs_white">
+
+    <com.mob.bbssdk.theme1.view.Theme1OtherUserProfilePullRequestView
+        android:id="@+id/pullRequestView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.mob.bbssdk.theme1.view.Theme1OtherUserProfilePullRequestView>
+
+    <View
+        android:alpha="0"
+        android:id="@+id/viewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/bbs_white"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp">
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/bbs_titlebar_back_black"/>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="TITLE"
+                android:textColor="@color/bbs_title_txt_title"
+                android:textSize="16sp"/>
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/imageViewSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:src="@drawable/bbs_theme1_userprofile_settings"
+            android:visibility="invisible"
+            />
+    </LinearLayout>
+</FrameLayout>

@@ -1,13 +1,10 @@
 package com.mob.bbssdk.gui.pages;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.mob.bbssdk.gui.dialog.ModelLoadingDialog;
-import com.mob.bbssdk.gui.utils.ToastUtils;
 import com.mob.bbssdk.gui.views.TitleBar;
 import com.mob.tools.utils.ResHelper;
 
@@ -18,17 +15,17 @@ import com.mob.tools.utils.ResHelper;
 public abstract class BasePageWithTitle extends BasePage {
 	protected TitleBar titleBar;
 	protected View vLine;
-	private ModelLoadingDialog modelLoadingDialog;
+	protected LinearLayout mainLayout;
 
 	protected int getStatusBarColor() {
-		return getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_mainviewtitle_bg"));
+		return getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_statusbar_bg"));
 	}
 
 	protected View onCreateView(Context context) {
-		LinearLayout flContent = new LinearLayout(context);
-		flContent.setBackgroundResource(ResHelper.getColorRes(context, "bbs_title_bg"));
-		flContent.setOrientation(LinearLayout.VERTICAL);
-		flContent.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		mainLayout = new LinearLayout(context);
+		mainLayout.setBackgroundResource(ResHelper.getColorRes(context, "bbs_title_bg"));
+		mainLayout.setOrientation(LinearLayout.VERTICAL);
+		mainLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
 		titleBar = new TitleBar(context) {
 			@Override
@@ -41,21 +38,29 @@ public abstract class BasePageWithTitle extends BasePage {
 			}
 		};
 		LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		flContent.addView(titleBar, llp);
+		mainLayout.addView(titleBar, llp);
 
 		vLine = new View(context);
 		vLine.setBackgroundResource(ResHelper.getColorRes(context, "bbs_mainviewtitle_bg"));
-		flContent.addView(vLine, ViewGroup.LayoutParams.MATCH_PARENT, ResHelper.dipToPx(context, 1) / 2);
+		mainLayout.addView(vLine, ViewGroup.LayoutParams.MATCH_PARENT, ResHelper.dipToPx(context, 1) / 2);
 		vLine.setVisibility(View.GONE);
 
 		View contentView = onCreateContentView(context);
-		contentView.setBackgroundResource(ResHelper.getColorRes(context, "bbs_bg"));
+//		contentView.setBackgroundResource(ResHelper.getColorRes(context, "bbs_bg"));
 		llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
 		llp.weight = 1;
-		flContent.addView(contentView, llp);
+		mainLayout.addView(contentView, llp);
 
 		titleBar.setOnClickListener(newTitleBarClickListener());
-		return flContent;
+		return mainLayout;
+	}
+
+	public TitleBar getTitleBar() {
+		return titleBar;
+	}
+
+	public LinearLayout getMainLayout() {
+		return mainLayout;
 	}
 
 	protected View getTitleCenterView() {
@@ -97,51 +102,5 @@ public abstract class BasePageWithTitle extends BasePage {
 
 	protected void onTitleRightClick(TitleBar titleBar) {
 
-	}
-
-	public String getStringRes(String name) {
-		if (TextUtils.isEmpty(name)) {
-			return "";
-		}
-		return getContext().getString(ResHelper.getStringRes(getContext(), name));
-	}
-
-	public Integer getDrawableId(String name) {
-		int resid = ResHelper.getBitmapRes(getContext(), name);
-		return resid;
-	}
-
-	public Integer getColorId(String name) {
-		return ResHelper.getColorRes(getContext(), name);
-	}
-
-	public Integer getLayoutId(String name) {
-		return ResHelper.getLayoutRes(getContext(), name);
-	}
-
-	public int getIdRes(String name) {
-		return ResHelper.getIdRes(getContext(), name);
-	}
-
-	public void toastStringRes(String name) {
-		if (TextUtils.isEmpty(name)) {
-			return;
-		}
-		ToastUtils.showToast(getContext(), getStringRes(name));
-	}
-
-	protected void showLoadingDialog() {
-		if (modelLoadingDialog != null && modelLoadingDialog.isShowing()) {
-			return;
-		}
-		modelLoadingDialog = new ModelLoadingDialog(getContext());
-		modelLoadingDialog.show();
-	}
-
-	protected void dismissLoadingDialog() {
-		if(modelLoadingDialog == null) {
-			return;
-		}
-		modelLoadingDialog.dismiss();
 	}
 }

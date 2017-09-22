@@ -34,6 +34,20 @@
             android:screenOrientation="portrait"
             android:theme="@style/BBS_AppTheme"
             android:windowSoftInputMode="stateHidden|adjustResize">
+        </activity>
+
+        <activity
+            android:name="com.mob.bbssdk.sample.TestActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/BBS_AppTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+        </activity>
+
+        <activity
+            android:name=".InitActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -44,18 +58,39 @@
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
             android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+
+            <intent-filter>
+                <data android:scheme="tencent1106383066"/>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
-        <meta-data
-            android:name="Mob-AppKey"
-            android:value="@string/BBS_APPKEY"/>
-        <meta-data
-            android:name="Mob-AppSecret"
-            android:value="@string/BBS_APPSECRET"/>
+
+        <activity
+            android:name="cn.sharesdk.demo.wxapi.WXEntryActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <activity-alias
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:targetActivity="cn.sharesdk.demo.wxapi.WXEntryActivity"/>
     </application>
 
 </manifest>

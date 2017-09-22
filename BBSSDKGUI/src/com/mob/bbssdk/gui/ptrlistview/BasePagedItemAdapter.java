@@ -16,13 +16,31 @@ public abstract class BasePagedItemAdapter<T> extends PullToRefreshHeaderFooterA
 	private int currentPage = 1;
 	private boolean hasMoreData = true;
 	private boolean showPageFooter = true;
+	private boolean hasContentHeader = false;
 	private ArrayList<T> dataSet = new ArrayList<T>();
+	private boolean isRefreshing = false;
 
 	public BasePagedItemAdapter(PullToRequestView view) {
 		super(view);
 		getListView().setSelector(new ColorDrawable(0));
 		getListView().setDivider(new ColorDrawable(view.getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_list_divider_bg"))));
 		getListView().setDividerHeight(ResHelper.dipToPx(getContext(), 1));
+	}
+
+	protected int getEmptyViewDrawableId() {
+		return ResHelper.getBitmapRes(getContext(), "bbs_ic_def_no_data");
+	}
+
+	protected int getErrorViewDrawableId() {
+		return ResHelper.getBitmapRes(getContext(), "bbs_ic_def_no_net");
+	}
+
+	protected int getEmptyViewStrId() {
+		return ResHelper.getStringRes(getContext(), "bbs_empty_view_str");
+	}
+
+	protected int getErrorViewStrId() {
+		return ResHelper.getStringRes(getContext(), "bbs_error_view_str");
 	}
 
 	public long getItemId(int position) {
@@ -43,6 +61,29 @@ public abstract class BasePagedItemAdapter<T> extends PullToRefreshHeaderFooterA
 		return dataSet.size();
 	}
 
+	public void setHasContentHeader(boolean flag) {
+		hasContentHeader = flag;
+	}
+
+	public boolean haveContentHeader() {
+		return hasContentHeader;
+	}
+
+	public View getContentHeader(ViewGroup viewGroup, View viewprev) {
+		if (!hasContentHeader) {
+			throw new IllegalStateException("Don't have Content Header.");
+		}
+		return null;
+	}
+
+	@Override
+	public void onRefresh() {
+		if(!isRefreshing) {
+			isRefreshing = true;
+			super.onRefresh();
+		}
+	}
+
 	protected void requestRefresh() {
 		currentPage = 1;
 		hasMoreData = true;
@@ -52,6 +93,10 @@ public abstract class BasePagedItemAdapter<T> extends PullToRefreshHeaderFooterA
 				dataSet.clear();
 				if (success) {
 					if (data != null) {
+						//header占位
+						if (hasContentHeader) {
+							dataSet.add((T) new Object());
+						}
 						dataSet.addAll(data);
 					}
 					if (hasMoreData) {
@@ -69,6 +114,7 @@ public abstract class BasePagedItemAdapter<T> extends PullToRefreshHeaderFooterA
 					getParent().lockPullingUp();
 					notifyFreshDataError();
 				}
+				isRefreshing = false;
 			}
 		});
 	}
@@ -90,6 +136,7 @@ public abstract class BasePagedItemAdapter<T> extends PullToRefreshHeaderFooterA
 					getParent().lockPullingUp();
 				}
 				notifyDataSetChanged();
+				isRefreshing = false;
 			}
 		});
 	}
@@ -104,18 +151,28 @@ public abstract class BasePagedItemAdapter<T> extends PullToRefreshHeaderFooterA
 		return 0;
 	}
 
+	public boolean isRefreshing() {
+		return isRefreshing;
+	}
+
+	public ArrayList<T> getDataSet() {
+		return dataSet;
+	}
+
 	public int getViewTypeCount() {
 		return 2;
 	}
 
-	/** 设置当翻到最后一页时，是否显示页脚"以上已为全部内容"*/
+	/**
+	 * 设置当翻到最后一页时，是否显示页脚"以上已为全部内容"
+	 */
 	public void setShowPageFooter(boolean show) {
 		showPageFooter = show;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (getItemViewType(position) == 1) {
-			return LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_list_page_footer"), parent, false);
+			return LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_pageitem_footer"), parent, false);
 		}
 		return getContentView(position, convertView, parent);
 	}

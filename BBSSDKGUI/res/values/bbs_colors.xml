@@ -5,6 +5,7 @@
     <!--<color name="bbs_title_bg">#F5F5F5</color>-->
     <color name="bbs_title_bg">#ffffff</color>
     <color name="bbs_mainviewtitle_bg">#4d546d</color>
+    <color name="bbs_statusbar_bg">#4d546d</color>
     <!-- 标题字体颜色 -->
     <!--<color name="bbs_title_txt_title">#777777</color>-->
     <color name="bbs_title_txt_title">#323232</color>
@@ -55,7 +56,7 @@
     <color name="bbs_divider">#d8d8d8</color>
     <color name="bbs_texthint">#b4b4b4</color>
     <!-- 版块颜色 -->
-    <color name="bbs_subject_unsticktop_bg">#dbdbdb</color>
+    <color name="bbs_subject_unsticktop_bg">#abafba</color>
     <color name="bbs_subject_title">#a3a2aa</color>
     <color name="bbs_subject_item_name">#3a4045</color>
     <!-- 操作版块颜色 -->
@@ -87,4 +88,7 @@
     <color name="bbs_postitem_titleclicked">#a5a7a8</color>
     <color name="bbs_postitem_summary">#9a9ea5</color>
     <color name="bbs_postitem_statics">#b4b4b4</color>
+
+    <color name="bbs_theme0_blue">#5b7ef0</color>
+    <color name="bbs_theme0_bg">#eaedf2</color>
 </resources>

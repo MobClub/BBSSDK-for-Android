@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bbs_theme0_title_txt_size">17sp</dimen>
+    <dimen name="bbs_theme0_menu_tab_txt_size">15sp</dimen>
+    <dimen name="bbs_theme0_forumsubjectmenu_tab_txt_size">15sp</dimen>
+    <dimen name="bbs_theme0_writethread_left_txt_size">15sp</dimen>
+    <dimen name="bbs_theme0_writethread_right_txt_size">15sp</dimen>
+    <dimen name="bbs_theme0_forumsubjectthreadview_tab_divider_height">5sp</dimen>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="183dp">
+
+    <com.mob.bbssdk.gui.other.BannerLayout
+        android:id="@+id/bannerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bbs_forumlistview_banner_height"
+        app:autoPlayDuration="2000"
+        app:indicatorMargin="20dp"
+        app:indicatorPosition="leftBottom"
+        app:indicatorShape="oval"
+        app:indicatorSpace="3dp"
+        app:scrollDuration="200"
+        app:selectedIndicatorColor="@color/bbs_white"
+        app:selectedIndicatorHeight="6dp"
+        app:selectedIndicatorWidth="6dp"
+        app:unSelectedIndicatorColor="#88ffffff"
+        app:unSelectedIndicatorHeight="6dp"
+        app:unSelectedIndicatorWidth="6dp"
+        android:background="@color/bbs_white"/>
+
+    <ImageView
+        android:id="@+id/imageViewFakeBanner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bbs_forumlistview_banner_height"
+        android:visibility="gone"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bbs_defaultbanner"/>
+
+</LinearLayout>

@@ -65,6 +65,7 @@
     <string name="bbs_activeaccount_backtologin">返回登录</string>
     <string name="bbs_editprofile_male">男</string>
     <string name="bbs_editprofile_female">女</string>
+    <string name="bbs_editprofile_keepsecret">保密</string>
     <string name="bbs_editprofile_submit">提交</string>
     <string name="bbs_editprofile_setlater">稍后设置</string>
     <string name="bbs_login_username_hint">用户名/邮箱</string>
@@ -112,8 +113,8 @@
     <string name="bbs_subjectlistitem_unsticktop">取消置顶</string>
     <string name="bbs_subjectsettings_sticksubject">置顶版块</string>
     <string name="bbs_subjectsettings_forumlist">论坛列表</string>
-    <string name="bbs_subjectsettings_finishedit">完成编辑</string>
-    <string name="bbs_subjectsettings_editsticktop">编辑置顶</string>
+    <string name="bbs_subjectsettings_finishedit">完成</string>
+    <string name="bbs_subjectsettings_editsticktop">编辑</string>
     <string name="bbs_userprofile_nickname">昵称</string>
     <string name="bbs_userprofile_gender">性别</string>
     <string name="bbs_userprofile_mail">邮箱</string>
@@ -124,6 +125,8 @@
     <string name="bbs_userprofile_gender_male">男</string>
     <string name="bbs_userprofile_gender_female">女</string>
     <string name="bbs_userprofile_gender_secret">保密</string>
+    <string name="bbs_userprofile_verified">已验证</string>
+    <string name="bbs_userprofile_unverified">未验证</string>
     <string name="bbs_editprofile_success">修改用户信息成功</string>
     <string name="bbs_editprofile_fail">修改用户信息失败</string>
     <string name="bbs_editprofile_invalidpic">选择的图片无效</string>
@@ -145,9 +148,9 @@
     <string name="bbs_viewthreaddetail_btn_all">全部评论</string>
     <string name="bbs_viewthreaddetail_btn_send">发送</string>
 
-    <string name="bbs_pagewritethread_tip_subject_null">请填写标题</string>
-    <string name="bbs_pagewritethread_tip_content_null">请填写内容</string>
-    <string name="bbs_pagewritethread_tip_forum_null">请选择版块</string>
+    <string name="bbs_pagewritethread_tip_subject_invalid">请填写标题不少于2个字</string>
+    <string name="bbs_pagewritethread_tip_content_invalid">请填写内容不少于5个字</string>
+    <string name="bbs_pagewritethread_tip_forum_invalid">请选择版块</string>
     <string name="bbs_pagewritethread_send_ing">发帖提交中&#8230;</string>
     <string name="bbs_pagewritethread_send_success">发帖成功</string>
     <string name="bbs_pagewritethread_send_failed">发帖失败</string>
@@ -187,4 +190,49 @@
         <item>拍摄</item>
         <item>从手机相册选择</item>
     </string-array>
+    <string name="bbs_reportaccusation_title">举报</string>
+    <string name="bbs_reportaccusation_submitsuccess">举报成功！</string>
+    <string name="bbs_editsignature_submitsuccess">修改签名成功！</string>
+    <string name="bbs_userprofile_title">用户资料</string>
+    <string name="bbs_location_municipality">市</string>
+    <string name="bbs_searchkey_empty">搜索关键字为空！</string>
+    <string name="bbs_delmessage_title">确认删除</string>
+    <string name="bbs_delmessage_body">确定删除这条消息吗？</string>
+    <string name="bbs_delmessage_btn_pos">确定</string>
+    <string name="bbs_delmessage_btn_neg">取消</string>
+    <string name="bbs_delmessage_success">成功删除消息！</string>
+    <string name="bbs_follow_success">成功关注用户！</string>
+    <string name="bbs_unfollow_success">取消关注用户！</string>
+    <string name="bbs_favorite_success">成功收藏！</string>
+    <string name="bbs_unfavorite_success">取消收藏！</string>
+
+    <string name="bbs_unfavorite_title">取消收藏</string>
+    <string name="bbs_unfavorite_body">确定取消收藏吗？</string>
+    <string name="bbs_unfavorite_btn_pos">确定</string>
+    <string name="bbs_unfavorite_btn_neg">取消</string>
+
+    <string name="bbs_delhistory_title">删除浏览记录</string>
+    <string name="bbs_delhistory_body">确定删除浏览记录吗？</string>
+    <string name="bbs_btn_pos">确定</string>
+    <string name="bbs_btn_neg">取消</string>
+    <string name="bbs_delhistory_success">删除浏览记录!</string>
+
+    <string name="umssdk_default_camera">相机</string>
+    <string name="umssdk_default_select_from_album">从相册选择</string>
+    <string name="umssdk_default_repick">重拍</string>
+    <string name="umssdk_default_use_this_picture">使用照片</string>
+    <string name="umssdk_default_pick_image">读取照片</string>
+    <string name="umssdk_default_pick_image_failed">读取照片时发生错误</string>
+    <string name="umssdk_default_save_image_failed">保存照片时发生错误</string>
+
+    <string name="bbs_should_grant_allpermissions">需求通过所有权限！</string>
+    <string name="bbs_cant_reportaccusation_self">自己不能举报自己！</string>
+    <string name="bbs_message_comment">评论了您的帖子</string>
+    <string name="bbs_message_system">系统消息</string>
+    <string name="bbs_message_like">喜欢了您的帖子</string>
+    <string name="bbs_message_follow">关注了您</string>
+    <string name="bbs_message_threadinvalid">帖子无法找到！</string>
+    <string name="bbs_clearcache_success">清空缓存!</string>
+
+    <string name="bbs_cant_follower_yourself">自己不能关注自己！</string>
 </resources>

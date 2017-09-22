@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="umssdk_zodiac_dog">狗</string>
+	<string name="umssdk_zodiac_dragon">龙</string>
+	<string name="umssdk_zodiac_goat">羊</string>
+	<string name="umssdk_zodiac_horse">马</string>
+	<string name="umssdk_zodiac_monkey">猴</string>
+	<string name="umssdk_zodiac_ox">牛</string>
+	<string name="umssdk_zodiac_pig">猪</string>
+	<string name="umssdk_zodiac_rabbit">兔</string>
+	<string name="umssdk_zodiac_rat">鼠</string>
+	<string name="umssdk_zodiac_rooster">鸡</string>
+	<string name="umssdk_zodiac_snake">蛇</string>
+	<string name="umssdk_zodiac_tiger">虎</string>
+</resources>

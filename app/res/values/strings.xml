@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">BBSSDK Demo</string>
+    <string name="bbs_init_intro">请输入以下信息\n预览您的论坛</string>
+    <string name="bbs_init_keyhint">App Key</string>
+    <string name="bbs_init_secrethint">App Secret</string>
+    <string name="bbs_init_annotation">*您可以在mob.com后台查看以上信息</string>
+    <string name="bbs_init_entermyforum">进入我的论坛</string>
+    <string name="bbs_init_enterofficalforum">进入官方演示</string>
+    <string name="bbs_init_illegalkey">key不合法！</string>
+    <string name="bbs_init_illegalsecret">secret不合法！</string>
+
+    <string name="bbs_init_appsecret_error">appKey或者appSecret不匹配，请重新输入!</string>
+    <string name="bbs_init_pluginnotset_error">请检查论坛已安装BBSSDK插件，并设置成功!</string>
+    <string name="bbs_init_bbssdknotinit_error">请先在Mob后台进行初始化!</string>
 </resources>

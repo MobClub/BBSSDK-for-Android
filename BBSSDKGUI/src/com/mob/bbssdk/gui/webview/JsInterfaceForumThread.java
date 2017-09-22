@@ -1,5 +1,6 @@
 package com.mob.bbssdk.gui.webview;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -10,10 +11,17 @@ import com.mob.bbssdk.API;
 import com.mob.bbssdk.APICallback;
 import com.mob.bbssdk.BBSSDK;
 import com.mob.bbssdk.api.ForumAPI;
-import com.mob.bbssdk.gui.pages.PageAttachmentViewer;
+import com.mob.bbssdk.api.UserAPI;
+import com.mob.bbssdk.gui.BBSViewBuilder;
+import com.mob.bbssdk.gui.GUIManager;
+import com.mob.bbssdk.gui.helper.ErrorCodeHelper;
+import com.mob.bbssdk.gui.pages.forum.PageAttachmentViewer;
+import com.mob.bbssdk.gui.pages.profile.PageOtherUserProfile;
+import com.mob.bbssdk.gui.utils.ToastUtils;
 import com.mob.bbssdk.model.ForumPost;
 import com.mob.bbssdk.model.ForumThread;
 import com.mob.bbssdk.model.ForumThreadAttachment;
+import com.mob.bbssdk.model.User;
 import com.mob.tools.utils.Hashon;
 import com.mob.tools.utils.ResHelper;
 import com.mob.tools.utils.UIHandler;
@@ -30,16 +38,19 @@ import java.util.HashMap;
  * 帖子详情JS交互对象
  */
 public class JsInterfaceForumThread {
+	private static final String TAG = "JsInterfaceForumThread";
 	private WeakReference<JsViewClient> refViewClient;
 	private ForumThread forumThread;
 	private Hashon hashon;
+	private Context context;
 
-	public JsInterfaceForumThread(JsViewClient viewClient, ForumThread forumThread) {
+	public JsInterfaceForumThread(Context context, JsViewClient viewClient, ForumThread forumThread) {
 		if (viewClient != null) {
 			refViewClient = new WeakReference<JsViewClient>(viewClient);
 			hashon = new Hashon();
 		}
 		this.forumThread = forumThread;
+		this.context = context;
 	}
 
 	@JavascriptInterface
@@ -103,6 +114,20 @@ public class JsInterfaceForumThread {
 				object.put("createdOn", forumThread.createdOn);
 				object.put("replies", forumThread.replies);
 				object.put("views", forumThread.views);
+
+				User user = null;
+				try {
+					user = BBSSDK.getApi(UserAPI.class).getCurrentUser();
+				} catch (Exception e) {
+					e.printStackTrace();
+					user = null;
+				}
+				//user is valid and current user is not the author then display follow button.
+				if(user != null && user.uid != forumThread.authorId) {
+					object.put("follow", forumThread.follow);
+				}
+				object.put("recommend_add", forumThread.recommendadd);
+				object.put("forumPic", forumThread.forumPic);
 				return object.toString();
 			} catch (Throwable t) {
 				t.printStackTrace();
@@ -232,6 +257,10 @@ public class JsInterfaceForumThread {
 		}
 	}
 
+	public void gotoPosts() {
+		loadJs("BBSSDKNative.goComment");
+	}
+
 	/* 只看楼主 */
 	public void getOwnerPosts() {
 		loadJs("BBSSDKNative.updateCommentHtml", (forumThread == null ? 0L : forumThread.authorId), true);
@@ -271,6 +300,7 @@ public class JsInterfaceForumThread {
 		if (forumThread != null) {
 			authorId = forumThread.authorId;
 		}
+		//todo if the comment list is not loaded completely.
 		loadJs("BBSSDKNative.addNewCommentHtml", post, authorId);
 	}
 
@@ -290,7 +320,7 @@ public class JsInterfaceForumThread {
 			if (data == null || data.length < 1) {
 				jsSB.append("null");
 			} else {
-				for (int i = 0; i < data.length; i ++) {
+				for (int i = 0; i < data.length; i++) {
 					if (data[i] == null) {
 						jsSB.append("null");
 					} else {
@@ -313,5 +343,82 @@ public class JsInterfaceForumThread {
 				refViewClient.get().evaluateJavascript(jsSB.toString());
 			}
 		}
+	}
+
+	@JavascriptInterface
+	public void openAuthor(int authorId) {
+		User user = null;
+		try {
+			user = BBSSDK.getApi(UserAPI.class).getCurrentUser();
+		} catch (Exception e) {
+			e.printStackTrace();
+			user = null;
+		}
+		//"openAuthor. user.uid: " + user.uid + " authorid: " + authorId
+		if(user != null && user.uid == authorId) {
+			BBSViewBuilder.getInstance().buildPageUserProfile().show(context);
+		} else {
+			PageOtherUserProfile page = BBSViewBuilder.getInstance().buildPageOtherUserProfile();
+			page.initPage(authorId);
+			page.show(context);
+		}
+	}
+
+	@JavascriptInterface
+	public void followAuthor(int authorId, int flag, final String callback) {
+		UserAPI userAPI = BBSSDK.getApi(UserAPI.class);
+		if (flag == 0) {
+			User current = GUIManager.getCurrentUser();
+			if(current != null && authorId == current.uid) {
+				ToastUtils.showToast(context, ResHelper.getStringRes(context, "bbs_cant_follower_yourself"));
+				return;
+			}
+			userAPI.followUser(authorId, false, new APICallback<Boolean>() {
+				@Override
+				public void onSuccess(API api, int action, Boolean result) {
+					loadJs(callback, true);
+					ToastUtils.showToast(context, ResHelper.getStringRes(context, "bbs_follow_success"));
+				}
+
+				@Override
+				public void onError(API api, int action, int errorCode, Throwable details) {
+					ErrorCodeHelper.toastError(context, errorCode, details);
+					loadJs(callback, (Object) null);
+				}
+			});
+		} else if (flag == 1) {
+			userAPI.unfollowUser(authorId, false, new APICallback<Boolean>() {
+				@Override
+				public void onSuccess(API api, int action, Boolean result) {
+					loadJs(callback, true);
+					ToastUtils.showToast(context, ResHelper.getStringRes(context, "bbs_unfollow_success"));
+				}
+
+				@Override
+				public void onError(API api, int action, int errorCode, Throwable details) {
+					ErrorCodeHelper.toastError(context, errorCode, details);
+					loadJs(callback, (Object) null);
+				}
+			});
+		} else {
+			//followAuthor error flag:
+		}
+	}
+
+	@JavascriptInterface
+	public void likeArticle(int fid, int tid, final String callback) {
+		UserAPI userAPI = BBSSDK.getApi(UserAPI.class);
+		userAPI.recordLikePost(fid, tid, false, new APICallback<Boolean>() {
+			@Override
+			public void onSuccess(API api, int action, Boolean result) {
+				loadJs(callback, true);
+			}
+
+			@Override
+			public void onError(API api, int action, int errorCode, Throwable details) {
+				ErrorCodeHelper.toastError(context, errorCode, details);
+				loadJs(callback, (Object) null);
+			}
+		});
 	}
 }

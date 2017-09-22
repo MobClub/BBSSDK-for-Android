@@ -6,8 +6,10 @@ import android.os.Build;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
-import com.mob.bbssdk.gui.pages.PageAttachmentViewer;
-import com.mob.bbssdk.gui.pages.PageImageViewer;
+import com.mob.bbssdk.gui.BBSViewBuilder;
+import com.mob.bbssdk.gui.pages.forum.PageAttachmentViewer;
+import com.mob.bbssdk.gui.pages.forum.PageImageViewer;
+import com.mob.bbssdk.gui.pages.forum.PageForumThreadDetail;
 import com.mob.bbssdk.gui.utils.ImageDownloader;
 import com.mob.bbssdk.model.ForumPost;
 import com.mob.bbssdk.model.ForumThreadAttachment;
@@ -39,7 +41,7 @@ public class JsViewClient {
 	 */
 	public void onItemAttachmentClick(ForumThreadAttachment attachment) {
 		if (refContext != null && refContext.get() != null && attachment != null) {
-			PageAttachmentViewer page = new PageAttachmentViewer();
+			PageAttachmentViewer page = BBSViewBuilder.getInstance().buildPageAttachmentViewer();
 			page.setAttachment(attachment);
 			page.show(refContext.get());
 		}
@@ -51,7 +53,7 @@ public class JsViewClient {
 	 */
 	public void onItemImageClick(String[] imageUrls, int index) {
 		if (refContext != null && refContext.get() != null && imageUrls != null && imageUrls.length > 0) {
-			PageImageViewer page = new PageImageViewer();
+			PageImageViewer page = BBSViewBuilder.getInstance().buildPageImageViewer();
 			page.setImageUrlsAndIndex(imageUrls, index);
 			page.show(refContext.get());
 		}
@@ -93,7 +95,7 @@ public class JsViewClient {
 	/**
 	 * 回复回帖（如果自己实现此功能请重写并返回true）
 	 * @param forumPost	回帖内容
-	 * @return 返回true则用户自己拦截，否则采用{@link com.mob.bbssdk.gui.pages.PageForumThreadDetail}中的innerJsViewClient处理，默认返回false
+	 * @return 返回true则用户自己拦截，否则采用{@link PageForumThreadDetail}中的innerJsViewClient处理，默认返回false
 	 */
 	public boolean onReplyPostClick(ForumPost forumPost) {
 		return false;

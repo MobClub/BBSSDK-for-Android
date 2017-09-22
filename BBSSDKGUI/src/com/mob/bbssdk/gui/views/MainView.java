@@ -11,30 +11,26 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.mob.bbssdk.BBSSDK;
-import com.mob.bbssdk.api.UserAPI;
-import com.mob.bbssdk.gui.PageResult;
-import com.mob.bbssdk.gui.pages.PageForumThread;
-import com.mob.bbssdk.gui.pages.PageForumThreadDetail;
-import com.mob.bbssdk.gui.pages.PageWriteThread;
-import com.mob.bbssdk.gui.pages.user.PageLogin;
-import com.mob.bbssdk.gui.pages.user.PageUserProfile;
+import com.mob.bbssdk.gui.BBSViewBuilder;
+import com.mob.bbssdk.gui.GUIManager;
+import com.mob.bbssdk.gui.pages.forum.PageForumThread;
+import com.mob.bbssdk.gui.pages.forum.PageForumThreadDetail;
+import com.mob.bbssdk.gui.pages.forum.PageSearch;
 import com.mob.bbssdk.gui.utils.SendForumThreadManager;
-import com.mob.bbssdk.gui.utils.ToastUtils;
 import com.mob.bbssdk.model.ForumForum;
 import com.mob.bbssdk.model.ForumThread;
-import com.mob.tools.FakeActivity;
+import com.mob.bbssdk.model.User;
 import com.mob.tools.utils.ResHelper;
 import com.mob.tools.utils.UIHandler;
-
-import java.util.HashMap;
 
 /**
  * 主页的主界面
  */
-public class MainView extends LinearLayout {
+public class MainView extends LinearLayout implements MainViewInterface {
 	protected TitleBar titleBar;
 	private ForumThreadView forumThreadView;
 	private ForumForumView forumForumView;
@@ -42,10 +38,20 @@ public class MainView extends LinearLayout {
 	private View viewBtn1;
 	private View viewMark0;
 	private View viewMark1;
-	private ThreadItemClickListener threadItemClickListener;
+	private ImageView imageViewSearch;
+	protected TextView textViewTab0;
+	protected TextView textViewTab1;
+	private ForumThreadListView.OnItemClickListener threadItemClickListener;
 	private ForumItemClickListener forumItemClickListener;
+	private  GUIManager.LoginListener loginListener;
 
 	private BroadcastReceiver sendThreadReceiver;
+
+	public enum WritePostStatus {
+		Normal,
+		Failed,
+		Success
+	}
 
 	public MainView(Context context) {
 		super(context);
@@ -76,17 +82,74 @@ public class MainView extends LinearLayout {
 		}
 	}
 
+	protected void updateTitleRightImg(WritePostStatus status) {
+		if (status == null) {
+			titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_title_writepost"));
+			return;
+		}
+		switch (status) {
+			case Failed: {
+				titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_ic_writethread_failed"));
+			} break;
+			case Success: {
+				titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_ic_writethread_success"));
+			} break;
+			case Normal: {
+				titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_title_writepost"));
+			} break;
+			default: {
+				titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_title_writepost"));
+			} break;
+		}
+	}
+
+	protected View getMainView() {
+		return LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_view_main"), null);
+	}
+
+	protected View getTitleBarView() {
+		return LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_view_maintitlecenter"), null);
+	}
+
+	protected void OnClickTabBtn0() {
+
+	}
+
+	protected void OnClickTabBtn1() {
+
+	}
+
+	protected void OnClickSearch() {
+		PageSearch pagesearch = BBSViewBuilder.getInstance().buildPageSearch();
+		pagesearch.show(getContext());
+	}
+
 	protected void init(final Context context) {
 		setOrientation(LinearLayout.VERTICAL);
+		loginListener = new GUIManager.LoginListener() {
+			@Override
+			public void OnLoggedIn() {
+				if(forumForumView != null) {
+					forumThreadView.refreshData();
+				}
+			}
+			@Override
+			public void OnCancel() {
+
+			}
+		};
+
 		titleBar = new TitleBar(context) {
 			@Override
 			protected View getCenterView() {
-				View view = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(context, "bbs_maintitlecenterview"), null);
+				View view = getTitleBarView();
 				viewBtn0 = view.findViewById(ResHelper.getIdRes(context, "bbs_maintitlcenterview_viewBtn0"));
 				viewBtn1 = view.findViewById(ResHelper.getIdRes(context, "bbs_maintitlcenterview_viewBtn1"));
 				viewMark0 = view.findViewById(ResHelper.getIdRes(context, "bbs_maintitlcenterview_viewMark0"));
 				viewMark1 = view.findViewById(ResHelper.getIdRes(context, "bbs_maintitlcenterview_viewMark1"));
-
+				imageViewSearch = (ImageView) view.findViewById(ResHelper.getIdRes(context, "bbs_maintitlcenterview_imageViewSearch"));
+				textViewTab0 = (TextView) view.findViewById(ResHelper.getIdRes(context, "bbs_maintitlcenterview_textViewTab0"));
+				textViewTab1 = (TextView) view.findViewById(ResHelper.getIdRes(context, "bbs_maintitlcenterview_textViewTab1"));
 				viewBtn0.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -94,6 +157,7 @@ public class MainView extends LinearLayout {
 						viewMark1.setVisibility(View.INVISIBLE);
 						forumThreadView.setVisibility(View.VISIBLE);
 						forumForumView.setVisibility(View.GONE);
+						OnClickTabBtn0();
 					}
 				});
 				viewBtn1.setOnClickListener(new View.OnClickListener() {
@@ -103,16 +167,24 @@ public class MainView extends LinearLayout {
 						viewMark1.setVisibility(View.VISIBLE);
 						forumThreadView.setVisibility(View.GONE);
 						forumForumView.setVisibility(View.VISIBLE);
+						OnClickTabBtn1();
+					}
+				});
+				imageViewSearch.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						OnClickSearch();
 					}
 				});
 				viewMark0.setVisibility(View.VISIBLE);
 				viewMark1.setVisibility(View.INVISIBLE);
+				OnClickTabBtn0();//init the Initialization display effect.
 				return view;
 			}
 		};
 		titleBar.setLeftUserAvatar(ResHelper.getBitmapRes(getContext(), "bbs_title_header"),
 				ResHelper.getBitmapRes(getContext(), "bbs_login_account"));
-		titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_title_writepost"));
+		updateTitleRightImg(WritePostStatus.Normal);
 		titleBar.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -123,27 +195,15 @@ public class MainView extends LinearLayout {
 						} break;
 						case TitleBar.TYPE_LEFT_IMAGE://fall through
 						case TitleBar.TYPE_LEFT_TEXT: {
-							if (checkLogin()) {
-								new PageUserProfile().show(getContext());
+							if(GUIManager.isLogin()) {
+								BBSViewBuilder.getInstance().buildPageUserProfile().show(getContext());
+							} else {
+								GUIManager.showLogin(getContext(), loginListener);
 							}
 						} break;
 						case TitleBar.TYPE_RIGHT_IMAGE://fall through
 						case TitleBar.TYPE_RIGHT_TEXT: {
-							if (checkLogin()) {
-								//允许发帖
-								if (BBSSDK.getApi(UserAPI.class).getCurrentUser().allowPost == 1) {
-									int status = SendForumThreadManager.getStatus(context);
-									if (status == SendForumThreadManager.STATUS_SEND_FAILED) {
-										SendForumThreadManager.showFailedDialog(context);
-									} else if (status == SendForumThreadManager.STATUS_SEND_IDLE
-											|| status == SendForumThreadManager.STATUS_SEND_CACHED) {
-										new PageWriteThread().show(getContext());
-									}
-								} else {//不允许发帖
-									ToastUtils.showToast(getContext(),
-											getResources().getString(ResHelper.getStringRes(getContext(), "bbs_dont_allowpost")));
-								}
-							}
+							GUIManager.writePost(getContext(), loginListener);
 						} break;
 					}
 				}
@@ -152,7 +212,7 @@ public class MainView extends LinearLayout {
 		titleBar.setBackgroundResource(ResHelper.getColorRes(getContext(), "bbs_mainviewtitle_bg"));
 		addView(titleBar, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
-		View view = LayoutInflater.from(context).inflate(ResHelper.getLayoutRes(context, "bbs_main"), null);
+		View view = getMainView();
 		forumThreadView = (ForumThreadView) view.findViewById(ResHelper.getIdRes(context, "bbs_main_forumView"));
 		//设置主题帖子列表的点击事件
 		forumThreadView.setOnItemClickListener(new ForumThreadListView.OnItemClickListener() {
@@ -160,7 +220,7 @@ public class MainView extends LinearLayout {
 				if (threadItemClickListener != null) {
 					threadItemClickListener.onItemClick(position, item);
 				} else {
-					PageForumThreadDetail pageForumThreadDetail = new PageForumThreadDetail();
+					PageForumThreadDetail pageForumThreadDetail = BBSViewBuilder.getInstance().buildPageForumThreadDetail();
 					pageForumThreadDetail.setForumThread(item);
 					pageForumThreadDetail.show(getContext());
 				}
@@ -173,8 +233,9 @@ public class MainView extends LinearLayout {
 				if (forumItemClickListener != null) {
 					forumItemClickListener.onItemClick(forum);
 				} else {
-					PageForumThread pageForumThread = new PageForumThread(forum);
-					pageForumThread.show(getContext());
+					PageForumThread page = BBSViewBuilder.getInstance().buildPageForumThread();
+					page.initPage(forum);
+					page.show(getContext());
 				}
 			}
 		});
@@ -186,31 +247,11 @@ public class MainView extends LinearLayout {
 		if (Build.VERSION.SDK_INT >= 14) {
 			setFitsSystemWindows(true);
 		}
+		onViewCreated();
 	}
 
-	private boolean isLogin() {
-		UserAPI api = BBSSDK.getApi(UserAPI.class);
-		return (api.getCurrentUser() != null);
-	}
+	protected void onViewCreated() {
 
-	private boolean checkLogin() {
-		if (isLogin()) {
-			return true;
-		} else {
-			new PageLogin().showForResult(getContext(), new FakeActivity() {
-				@Override
-				public void onResult(HashMap<String, Object> data) {
-					super.onResult(data);
-					if (data != null) {
-						Boolean refresh = (Boolean) data.get(PageResult.RESULT_LOGINSUCCESS_BOOLEAN);
-						if (refresh != null && refresh) {
-							forumThreadView.refreshData();
-						}
-					}
-				}
-			});
-			return false;
-		}
 	}
 
 	/**
@@ -221,22 +262,23 @@ public class MainView extends LinearLayout {
 	}
 
 	/**
-	 *	设置帖子列表item点击事件，默认使用{@link com.mob.bbssdk.gui.pages.PageForumThreadDetail}来显示帖子详情界面
+	 * 设置帖子列表item点击事件，默认使用{@link PageForumThreadDetail}来显示帖子详情界面
 	 */
-	public void setThreadItemClickListener(ThreadItemClickListener listener) {
+	public void setThreadItemClickListener(ForumThreadListView.OnItemClickListener listener) {
 		threadItemClickListener = listener;
 	}
 
 	/**
-	 * 设置版块界面点击事件，黑夜使用{@link com.mob.bbssdk.gui.pages.PageForumThread}来显示帖子列表界面
+	 * 设置版块界面点击事件，黑夜使用{@link PageForumThread}来显示帖子列表界面
 	 */
 	public void setForumItemClickListener(ForumItemClickListener listener) {
 		forumItemClickListener = listener;
 	}
 
 	private void updateTitleBarRight(int status) {
-		if (!isLogin() || BBSSDK.getApi(UserAPI.class).getCurrentUser().allowPost != 1) {
-			titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_title_writepost"));
+		User user = BBSViewBuilder.getInstance().ensureLogin(false);
+		if (!GUIManager.isLogin() || (user != null && user.allowPost != 1)) {
+			updateTitleRightImg(WritePostStatus.Normal);
 			return;
 		}
 		if (titleBar == null) {
@@ -245,17 +287,17 @@ public class MainView extends LinearLayout {
 		if (status == SendForumThreadManager.STATUS_SEND_ING) {
 			titleBar.setRightProgressBar();
 		} else if (status == SendForumThreadManager.STATUS_SEND_FAILED) {
-			titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_ic_writethread_failed"));
+			updateTitleRightImg(WritePostStatus.Failed);
 		} else if (status == SendForumThreadManager.STATUS_SEND_SUCCESS) {
-			titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_ic_writethread_success"));
+			updateTitleRightImg(WritePostStatus.Success);
 			UIHandler.sendEmptyMessageDelayed(0, 2000, new Handler.Callback() {
 				public boolean handleMessage(Message msg) {
-					titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_title_writepost"));
+					updateTitleRightImg(WritePostStatus.Normal);
 					return false;
 				}
 			});
 		} else {
-			titleBar.setRightImageResource(ResHelper.getBitmapRes(getContext(), "bbs_title_writepost"));
+			updateTitleRightImg(WritePostStatus.Normal);
 		}
 	}
 
@@ -283,10 +325,6 @@ public class MainView extends LinearLayout {
 			};
 		}
 		return sendThreadReceiver;
-	}
-
-	public interface ThreadItemClickListener {
-		void onItemClick(int position, ForumThread item);
 	}
 
 	public interface ForumItemClickListener {

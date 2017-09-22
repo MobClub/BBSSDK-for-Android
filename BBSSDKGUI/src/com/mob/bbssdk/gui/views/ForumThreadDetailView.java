@@ -11,8 +11,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -21,7 +20,7 @@ import android.webkit.JsPromptResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -32,11 +31,11 @@ import com.mob.bbssdk.API;
 import com.mob.bbssdk.APICallback;
 import com.mob.bbssdk.BBSSDK;
 import com.mob.bbssdk.api.ForumAPI;
-import com.mob.bbssdk.api.UserAPI;
+import com.mob.bbssdk.gui.BBSViewBuilder;
 import com.mob.bbssdk.gui.dialog.DefaultChooserDialog;
 import com.mob.bbssdk.gui.dialog.ReplyEditorPopWindow;
 import com.mob.bbssdk.gui.pages.PageWeb;
-import com.mob.bbssdk.gui.pages.user.PageLogin;
+import com.mob.bbssdk.gui.pages.account.PageLogin;
 import com.mob.bbssdk.gui.utils.ImageDownloader;
 import com.mob.bbssdk.gui.utils.ImageUtils;
 import com.mob.bbssdk.gui.utils.SendForumPostManager;
@@ -47,6 +46,7 @@ import com.mob.bbssdk.gui.webview.JsViewClient;
 import com.mob.bbssdk.model.ForumPost;
 import com.mob.bbssdk.model.ForumThread;
 import com.mob.bbssdk.model.ForumThreadAttachment;
+import com.mob.bbssdk.model.User;
 import com.mob.tools.FakeActivity;
 import com.mob.tools.utils.ResHelper;
 import com.mob.tools.utils.UIHandler;
@@ -59,18 +59,19 @@ import java.util.List;
  * 帖子详情的View
  */
 public class ForumThreadDetailView extends BaseView {
-	private BaseWebView webView;
+	protected BaseWebView webView;
 	private ProgressBar progressBar;
-	private RelativeLayout rlReply;
-	private RelativeLayout rlReplyIng;
-	private RelativeLayout rlReplyFailed;
-	private RelativeLayout rlReplySuccess;
+	private ViewGroup rlReply;
+	private ViewGroup rlReplyIng;
+	private ViewGroup rlReplyFailed;
+	private ViewGroup rlReplySuccess;
+	private TextView tvOwner;
 
-	private ForumThread forumThread;
+	protected ForumThread forumThread;
 	private JsViewClient innerJsViewClient;
 	private JsViewClient outJsViewClient;
-	private JsInterfaceForumThread jsInterfaceForumThread;
-	private RelativeLayout rlContainer;
+	protected JsInterfaceForumThread jsInterfaceForumThread;
+	protected RelativeLayout rlContainer;
 	private int keyBoardHeight = 0;
 	private int realBottom = 0;
 
@@ -82,7 +83,6 @@ public class ForumThreadDetailView extends BaseView {
 	private ForumPost tmpPrePost = null;
 	private BroadcastReceiver sendPostReceiver;
 	private boolean showOwner = false;//只看楼主和
-	private TextView tvOwner;
 
 	public ForumThreadDetailView(Context context) {
 		super(context);
@@ -96,125 +96,23 @@ public class ForumThreadDetailView extends BaseView {
 		super(context, attrs, defStyleAttr);
 	}
 
+	protected View buildContentView(Context context) {
+		return null;
+	}
+
 	protected View initContentView(Context context, AttributeSet attrs, int defStyleAttr) {
-		rlContainer = new RelativeLayout(context, attrs, defStyleAttr);
-
-		int bottomBarHeight = ResHelper.dipToPx(context, 49);
-		tvOwner = new TextView(context);
-		int textSize = ResHelper.dipToPx(context, 14);
-		tvOwner.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-		tvOwner.setTextColor(0xFF1d8ac7);
-		tvOwner.setGravity(Gravity.CENTER);
-		tvOwner.setId(ResHelper.getIdRes(context, "tvOwner"));
-		tvOwner.setText(getStringRes("bbs_viewthreaddetail_btn_owner"));
-		int paddingLeft = ResHelper.dipToPx(context, 10);
-		tvOwner.setPadding(paddingLeft, 0, paddingLeft, 0);
-		RelativeLayout.LayoutParams rlp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, bottomBarHeight);
-		rlp.addRule(ALIGN_PARENT_BOTTOM, TRUE);
-		rlp.addRule(ALIGN_PARENT_RIGHT, TRUE);
-		rlContainer.addView(tvOwner, rlp);
-
-		rlReply = new RelativeLayout(context);
-		rlp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bottomBarHeight);
-		rlp.addRule(ALIGN_PARENT_BOTTOM, TRUE);
-		rlp.addRule(LEFT_OF, tvOwner.getId());
-		rlContainer.addView(rlReply, rlp);
-		TextView tvReply = new TextView(context);
-		tvReply.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-		tvReply.setTextColor(0xFFc5c8cc);
-		tvReply.setGravity(Gravity.CENTER);
-		tvReply.setText(getStringRes("bbs_viewthreaddetail_btn_reply"));
-		tvReply.setCompoundDrawablePadding(paddingLeft);
-		tvReply.setCompoundDrawablesWithIntrinsicBounds(getDrawableId("bbs_pagesubject_reply"), 0, 0, 0);
-		rlp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		rlp.addRule(ALIGN_PARENT_LEFT, TRUE);
-		rlp.addRule(CENTER_VERTICAL, TRUE);
-		rlp.leftMargin = ResHelper.dipToPx(context, 10);
-		rlReply.addView(tvReply, rlp);
-
-		rlReplyIng = new RelativeLayout(context);
-		rlp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bottomBarHeight);
-		rlp.addRule(ALIGN_PARENT_BOTTOM, TRUE);
-		rlp.addRule(LEFT_OF, tvOwner.getId());
-		rlContainer.addView(rlReplyIng, rlp);
-
-		LinearLayout llIng = new LinearLayout(context);
-		llIng.setOrientation(LinearLayout.HORIZONTAL);
-		rlp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		rlp.addRule(CENTER_IN_PARENT, TRUE);
-		rlReplyIng.addView(llIng, rlp);
-
-		ProgressBar pbIng = new ProgressBar(context);
-		pbIng.setIndeterminate(true);
-		int drawableId = ResHelper.getBitmapRes(context, "bbs_anim_rotate");
-		pbIng.setIndeterminateDrawable(context.getResources().getDrawable(drawableId));
-		int pbHeight = ResHelper.dipToPx(context, 30);
-		LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(pbHeight, pbHeight);
-		llp.gravity = Gravity.CENTER_VERTICAL;
-		llIng.addView(pbIng, llp);
-
-		TextView tvIng = new TextView(context);
-		tvIng.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-		tvIng.setTextColor(0xFF3A4045);
-		tvIng.setGravity(Gravity.CENTER);
-		tvIng.setText(getStringRes("bbs_writepost_send_status_ing"));
-		llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		llp.gravity = Gravity.CENTER_VERTICAL;
-		llp.leftMargin = ResHelper.dipToPx(context, 10);
-		llIng.addView(tvIng, llp);
-
-		rlReplySuccess = new RelativeLayout(context);
-		rlp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bottomBarHeight);
-		rlp.addRule(ALIGN_PARENT_BOTTOM, TRUE);
-		rlp.addRule(LEFT_OF, tvOwner.getId());
-		rlContainer.addView(rlReplySuccess, rlp);
-
-		TextView tvSuccess = new TextView(context);
-		tvSuccess.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-		tvSuccess.setTextColor(0xFF3A4045);
-		tvSuccess.setGravity(Gravity.CENTER);
-		tvSuccess.setText(getStringRes("bbs_writepost_send_success"));
-		tvSuccess.setCompoundDrawablePadding(ResHelper.dipToPx(context, 10));
-		tvSuccess.setCompoundDrawablesWithIntrinsicBounds(getDrawableId("bbs_ic_writethread_success"), 0, 0, 0);
-		rlp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		rlp.addRule(CENTER_IN_PARENT, TRUE);
-		rlReplySuccess.addView(tvSuccess, rlp);
-
-		rlReplyFailed = new RelativeLayout(context);
-		rlp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bottomBarHeight);
-		rlp.addRule(ALIGN_PARENT_BOTTOM, TRUE);
-		rlp.addRule(LEFT_OF, tvOwner.getId());
-		rlContainer.addView(rlReplyFailed, rlp);
-
-		TextView tvFailed = new TextView(context);
-		tvFailed.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-		tvFailed.setTextColor(0xFF3A4045);
-		tvFailed.setGravity(Gravity.CENTER);
-		tvFailed.setText(getStringRes("bbs_writepost_send_failed"));
-		tvFailed.setCompoundDrawablePadding(ResHelper.dipToPx(context, 10));
-		tvFailed.setCompoundDrawablesWithIntrinsicBounds(getDrawableId("bbs_ic_writethread_failed"), 0, 0, 0);
-		rlp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		rlp.addRule(CENTER_IN_PARENT, TRUE);
-		rlReplyFailed.addView(tvFailed, rlp);
-
-		View vLine = new View(context);
-		vLine.setBackgroundColor(0xFFE3E4E4);
-		vLine.setId(ResHelper.getIdRes(context, "vLine"));
-		rlp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ResHelper.dipToPx(context, 1));
-		rlp.addRule(ABOVE, tvOwner.getId());
-		rlContainer.addView(vLine, rlp);
-
-		webView = new BaseWebView(context, attrs, defStyleAttr);
-		initWebView();
-		rlp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-		rlp.addRule(ABOVE, vLine.getId());
-		rlContainer.addView(webView, rlp);
-
-		progressBar = new ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal);
-		progressBar.setIndeterminate(false);
-		progressBar.setMax(100);
-		progressBar.setProgressDrawable(getResources().getDrawable(ResHelper.getBitmapRes(context, "bbs_webview_progressbar_bg")));
-		rlContainer.addView(progressBar, LinearLayout.LayoutParams.MATCH_PARENT, ResHelper.dipToPx(context, 2));
+		View view = buildContentView(context);
+		if(view == null) {
+			view = LayoutInflater.from(context).inflate(ResHelper.getLayoutRes(context, "bbs_layout_forumthreadview"), this, false);
+		}
+		rlContainer = (RelativeLayout) view.findViewById(ResHelper.getIdRes(context, "rlContainer"));
+		webView = (BaseWebView) view.findViewById(ResHelper.getIdRes(context, "webView"));
+		progressBar = (ProgressBar) view.findViewById(ResHelper.getIdRes(context, "progressBar"));
+		tvOwner = (TextView) view.findViewById(ResHelper.getIdRes(context, "tvOwner"));
+		rlReply = (ViewGroup) view.findViewById(ResHelper.getIdRes(context, "rlReply"));
+		rlReplySuccess = (ViewGroup) view.findViewById(ResHelper.getIdRes(context, "rlReplySuccess"));
+		rlReplyFailed = (ViewGroup) view.findViewById(ResHelper.getIdRes(context, "rlReplyFailed"));
+		rlReplyIng = (ViewGroup) view.findViewById(ResHelper.getIdRes(context, "rlReplyIng"));
 
 		initInnerJsViewClient();
 		tvOwner.setOnClickListener(new OnClickListener() {
@@ -333,7 +231,7 @@ public class ForumThreadDetailView extends BaseView {
 		webView.setWebViewClient(new WebViewClient() {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				if (url.startsWith("http://") || url.startsWith("https://")) {
-					PageWeb pageWeb = new PageWeb();
+					PageWeb pageWeb = BBSViewBuilder.getInstance().buildPageWeb();
 					pageWeb.setLink(url);
 					pageWeb.show(getContext());
 				}
@@ -430,6 +328,21 @@ public class ForumThreadDetailView extends BaseView {
 		this.forumThread = forumThread;
 	}
 
+	public void setForumThread(int fid, int tid, String author) {
+		if(fid <= 0 || tid <= 0) {
+			this.forumThread = null;
+			return;
+		}
+		this.forumThread = new ForumThread();
+		this.forumThread.fid = fid;
+		this.forumThread.tid = tid;
+		this.forumThread.author = author;
+	}
+
+	protected void forumThreadUpdated() {
+
+	}
+
 	/**
 	 * 加载帖子详情，加载前请调用{@link #setForumThread(ForumThread)}设置主题帖内容
 	 */
@@ -450,6 +363,7 @@ public class ForumThreadDetailView extends BaseView {
 				forumThread = result;
 				setLoadingStatus(RequestLoadingView.LOAD_STATUS_SUCCESS);
 				loadHtml(forumThread);
+				forumThreadUpdated();
 			}
 
 			public void onError(API api, int action, int errorCode, Throwable details) {
@@ -464,13 +378,17 @@ public class ForumThreadDetailView extends BaseView {
 		}
 	}
 
-	private void loadHtml(ForumThread detail) {
+	protected void loadHtml(ForumThread detail) {
 		progressBar.setProgress(0);
 		progressBar.setVisibility(View.VISIBLE);
-		jsInterfaceForumThread = new JsInterfaceForumThread(innerJsViewClient, detail);
+		jsInterfaceForumThread = new JsInterfaceForumThread(getContext(), innerJsViewClient, detail);
 		if (Build.VERSION.SDK_INT >= 17) {
 			webView.addJavascriptInterface(jsInterfaceForumThread, "forumThread");
 		}
+		loadNativeHtml();
+	}
+
+	protected void loadNativeHtml() {
 		webView.loadUrl("file:///android_asset/html/details/index.html");
 	}
 
@@ -514,13 +432,17 @@ public class ForumThreadDetailView extends BaseView {
 					}
 				};
 			}
-			replyEditorPopWindow = new ReplyEditorPopWindow(getContext(), onConfirmClickListener) {
-				protected void onImgAddClick() {
-					if (choosePicClickListener != null) {
-						choosePicClickListener.onChooseClick();
-					}
-				}
-			};
+
+			replyEditorPopWindow = BBSViewBuilder.getInstance().buildReplyEditorPopWindow(getContext(), onConfirmClickListener,
+					new ReplyEditorPopWindow.OnImgAddClickListener() {
+						@Override
+						public void onClick() {
+							if (choosePicClickListener != null) {
+								choosePicClickListener.onChooseClick();
+							}
+						}
+					});
+
 			replyEditorPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
 				public void onDismiss() {
 					if (forumThread == null) {
@@ -535,7 +457,11 @@ public class ForumThreadDetailView extends BaseView {
 		if (tmpPrePost != null) {
 			author = tmpPrePost.author;
 		} else {
-			author = forumThread == null ? "" : forumThread.author;
+			if(forumThread == null || forumThread.author == null) {
+				author = "";
+			} else {
+				author = forumThread.author;
+			}
 		}
 		replyEditorPopWindow.show(rlContainer, author);
 	}
@@ -559,10 +485,10 @@ public class ForumThreadDetailView extends BaseView {
 	}
 
 	private boolean checkIsAllowToReply(boolean gotoLogin, boolean toast) {
-		UserAPI api = BBSSDK.getApi(UserAPI.class);
-		boolean isLogin = (api.getCurrentUser() != null);
+		User user = BBSViewBuilder.getInstance().ensureLogin(false);
+		boolean isLogin = (user != null);
 		if (isLogin) {
-			if (BBSSDK.getApi(UserAPI.class).getCurrentUser().allowReply == 1) {
+			if (user.allowReply == 1) {
 				return true;
 			} else if (toast){//不允许发帖
 				ToastUtils.showToast(getContext(),
@@ -570,7 +496,8 @@ public class ForumThreadDetailView extends BaseView {
 				return false;
 			}
 		} else if (gotoLogin) {
-			new PageLogin().showForResult(getContext(), new FakeActivity() {
+			PageLogin pagelogin = BBSViewBuilder.getInstance().buildPageLogin();
+			pagelogin.showForResult(getContext(), new FakeActivity() {
 				public void onResult(HashMap<String, Object> data) {
 					super.onResult(data);
 				}
@@ -589,7 +516,7 @@ public class ForumThreadDetailView extends BaseView {
 		}
 	}
 
-	private void updateSendButton(int status, ForumPost forumPost) {
+	protected void updateSendButton(int status, ForumPost forumPost) {
 		if (!checkIsAllowToReply(false, false)) {
 			rlReply.setVisibility(View.VISIBLE);
 			rlReplyIng.setVisibility(View.GONE);
@@ -639,6 +566,7 @@ public class ForumThreadDetailView extends BaseView {
 	}
 
 	public void onDestroy() {
+		SendForumPostManager.clearPostStatus(getContext());
 		if (sendPostReceiver != null) {
 			getContext().unregisterReceiver(sendPostReceiver);
 		}
@@ -663,6 +591,9 @@ public class ForumThreadDetailView extends BaseView {
 		return sendPostReceiver;
 	}
 
+	public ForumThread getForumThread() {
+		return forumThread;
+	}
 
 	public interface ChoosePicClickListener {
 		void onChooseClick();

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:background="@color/bbs_bg"
+              android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bbs_white"
+        android:paddingBottom="51dp"
+        android:paddingTop="29dp">
+
+        <com.mob.bbssdk.gui.views.GlideImageView
+            android:id="@+id/bbs_userprofile_aivAvatar"
+            android:layout_width="94dp"
+            android:layout_height="94dp"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bbs_white"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="47dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/bbs_userprofile_nickname"
+                android:textColor="#8c8c8c"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                tools:text="刘先生"
+                android:textColor="#3c3c3c"
+                android:textSize="15sp"/>
+        </RelativeLayout>
+
+        <include layout="@layout/bbs_divider"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:background="@color/bbs_white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/bbs_userprofile_gender"
+                android:textColor="#8c8c8c"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/textViewGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                tools:text="男"
+                android:textColor="#3c3c3c"
+                android:textSize="15sp"/>
+        </RelativeLayout>
+
+        <include layout="@layout/bbs_divider"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:background="@color/bbs_white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/bbs_userprofile_mail"
+                android:textColor="#8c8c8c"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/textViewMail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                tools:text="issayliu@qq.com"
+                android:textColor="#3c3c3c"
+                android:textSize="15sp"/>
+        </RelativeLayout>
+
+        <include layout="@layout/bbs_divider"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:background="@color/bbs_white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/bbs_userprofile_usergroup"
+                android:textColor="#8c8c8c"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/textViewGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                tools:text="管理员"
+                android:textColor="#3c3c3c"
+                android:textSize="15sp"/>
+        </RelativeLayout>
+
+        <include layout="@layout/bbs_divider"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:background="@color/bbs_white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/bbs_userprofile_status"
+                android:textColor="#8c8c8c"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/bbs_userprofile_textViewStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bbs_bg_rectrimred_inactive"
+                android:paddingBottom="3dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="3dp"
+                android:text="@string/bbs_userprofile_status_inactive"
+                android:textColor="#ff6b71"
+                android:textSize="13sp"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/bbs_userprofile_btnQuit"
+        style="@style/BBS_BlueSolidButton"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/bbs_userprofile_quit"/>
+</LinearLayout>

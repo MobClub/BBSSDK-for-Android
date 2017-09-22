@@ -25,7 +25,7 @@ public class ModelLoadingDialog extends Dialog {
 		setCanceledOnTouchOutside(true);//触摸屏幕取消窗体
 		setCancelable(false);//按返回键取消窗体
 		Window window = getWindow();
-		window.setWindowAnimations(ResHelper.getStyleRes(context, "BBS_AnimUpDown"));
+		window.setWindowAnimations(ResHelper.getStyleRes(context, "BBS_AnimFadeInOut"));
 
 		//setup view
 		LinearLayout llItem = new LinearLayout(context);

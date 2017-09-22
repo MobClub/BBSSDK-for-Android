@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@android:color/transparent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bbs_theme1_mask"/>
+
+    <View
+        android:id="@+id/viewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="@color/bbs_theme1_statusbar_grey"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="7dp">
+
+            <com.mob.bbssdk.gui.views.GlideImageView
+                android:id="@+id/imageViewAvatar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/bbs_theme1_account_white"/>
+
+            <View
+                android:id="@+id/viewMessageMark"
+                android:visibility="gone"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_gravity="right|top"
+                android:background="@drawable/bbs_redcircle_mark"/>
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:alpha="0"
+            android:text="首页"
+            android:textColor="@color/bbs_white"/>
+
+        <ImageView
+            android:id="@+id/imageViewSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/imageViewWritePost"
+            android:src="@drawable/bbs_theme1_search_white"/>
+
+        <ImageView
+            android:id="@+id/imageViewWritePost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="7dp"
+            android:src="@drawable/bbs_theme1_title_writepost"/>
+    </RelativeLayout>
+</FrameLayout>

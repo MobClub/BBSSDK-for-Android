@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/bbs_theme0_bg"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layoutUserProfile"
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
+        android:background="@color/bbs_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+
+        <FrameLayout
+            android:id="@+id/bbs_uerprofile_portraitcontainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp">
+
+            <com.mob.bbssdk.gui.views.GlideImageView
+                android:id="@+id/aivAvatar"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="left"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/bbs_theme0_userprofile_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_toRightOf="@+id/bbs_uerprofile_portraitcontainer"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/bbs_uerprofile_portraitcontainer"
+                    android:textColor="#2d3037"
+                    android:textSize="16sp"
+                    tools:text="刘先生刘先生刘先生刘先生刘先生刘先生刘先生"
+                    android:singleLine="true"
+                    android:maxLength="8"
+                    android:ellipsize="end"/>
+
+                <TextView
+                    android:id="@+id/textViewSignature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="9dp"
+                    tools:text="来自电影不夜城来自电影不夜城来自电影不夜城来自电影不夜城来自电影不夜城"
+                    android:textColor="#6a7081"
+                    android:textSize="12sp"
+                    android:maxLines="3"
+                    android:ellipsize="end"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="上海市 黄浦区上海市 黄浦区上海市 黄浦区上海市 黄浦区"
+                    android:textColor="#6a7081"
+                    android:textSize="12sp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            />
+
+    </LinearLayout>
+
+    <include layout="@layout/bbs_divider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:background="@color/bbs_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+
+        <LinearLayout
+            android:id="@+id/layoutMyFollowing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="8dp"
+                android:text="关注"
+                android:textColor="#6a7081"
+                android:textSize="12sp"
+                />
+
+            <TextView
+                android:id="@+id/textViewFollowing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#3c3c3c"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="15dp"
+            android:background="#dde1eb"
+            />
+
+        <LinearLayout
+            android:id="@+id/layoutMyFollowers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="8dp"
+                android:text="粉丝"
+                android:textColor="#6a7081"
+                android:textSize="12sp"
+                />
+
+            <TextView
+                android:id="@+id/textViewFollowers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#3c3c3c"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@color/bbs_white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/layoutMyFavorites"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="7dp"
+            android:background="@color/bbs_white">
+
+            <ImageView
+                android:id="@+id/bbs_personalinfo_img_postfavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/bbs_personalinfo_img_postfavorite"
+                android:text="文章收藏"
+                android:textColor="#2d3037"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/textViewFavoriteCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/bbs_theme0_personalinfo_fav_arrow2"
+                android:text="0"
+                android:textColor="#6a7081"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/bbs_theme0_personalinfo_fav_arrow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="55dp"
+            android:background="@color/bbs_divider"/>
+
+        <RelativeLayout
+            android:id="@+id/layoutMyPosts"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="7dp"
+            android:background="@color/bbs_white">
+
+            <ImageView
+                android:id="@+id/bbs_personalinfo_img_mypost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/bbs_personalinfo_img_mypost"
+                android:text="我的帖子"
+                android:textColor="#2d3037"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/textViewPostsCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/bbs_theme0_personalinfo_mypost_arrow2"
+                android:text="0"
+                android:textColor="#6a7081"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/bbs_theme0_personalinfo_mypost_arrow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="55dp"
+            android:background="@color/bbs_divider"/>
+
+        <RelativeLayout
+            android:id="@+id/layoutMyHistory"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="7dp"
+            android:background="@color/bbs_white">
+
+            <ImageView
+                android:id="@+id/bbs_personalinfo_img_hository"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/bbs_personalinfo_img_hository"
+                android:text="浏览记录"
+                android:textColor="#2d3037"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/textViewHistoryCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/bbs_theme0_personalinfo_history_arrow2"
+                android:text="0"
+                android:textColor="#6a7081"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/bbs_theme0_personalinfo_history_arrow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/btnQuit"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/bbs_userprofile_quit"/>
+</LinearLayout>

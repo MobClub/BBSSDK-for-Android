@@ -10,7 +10,9 @@ import java.util.Date;
 public class TimeUtils {
 
 	public static String timeDiff(Context context, long time) {
-		if (context == null || time <= 0) return "";
+		if (context == null || time <= 0) {
+			return "";
+		}
 		long diffdate = new Date().getTime() - time * 1000;
 		int days = (int) Math.floor(diffdate / (24 * 3600 * 1000));
 		long leave1 = diffdate % (24 * 3600 * 1000);

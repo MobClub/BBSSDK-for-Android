@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/bbs_white"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@color/bbs_white"
+                  android:gravity="center"
+                  android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewLatest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:text="最新"
+                android:textColor="#2a2b30"
+                android:textStyle="bold"/>
+
+            <View
+                android:id="@+id/viewMarkLatest"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/bbs_theme1_defaultyellow"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewHot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:text="热门"
+                android:textColor="#2a2b30"/>
+
+            <View
+                android:id="@+id/viewMarkHot"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/bbs_theme1_defaultyellow"
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewEssence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:text="精华"
+
+                android:textColor="#2a2b30"/>
+
+            <View
+                android:id="@+id/viewMarkEssence"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/bbs_theme1_defaultyellow"
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewSticktop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:text="置顶"
+                android:textColor="#2a2b30"/>
+
+            <View
+                android:id="@+id/viewMarkSticktop"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/bbs_theme1_defaultyellow"
+                android:visibility="invisible"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <include layout="@layout/bbs_divider"/>
+</LinearLayout>

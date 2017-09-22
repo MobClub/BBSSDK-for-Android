@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="umssdk_error_421">用户已存在</string>
+	<string name="umssdk_error_422">登录失败，可能是密码或者账户有误</string>
+	<string name="umssdk_error_423">登录已过期</string>
+	<string name="umssdk_error_424">账户异常</string>
+	<string name="umssdk_error_425">您已下线，由于您的账号在其它设备登录</string>
+	<string name="umssdk_error_426">禁止登录</string>
+	<string name="umssdk_error_427">令牌不存在</string>
+	<string name="umssdk_error_428">手机号已绑定或者注册</string>
+	<string name="umssdk_error_429">注册超过设备最大限制</string>
+	<string name="umssdk_error_430">账户类型错误</string>
+	<string name="umssdk_error_431">字段非法</string>
+	<string name="umssdk_error_432">字段不能为空</string>
+	<string name="umssdk_error_433">字段长度错误</string>
+	<string name="umssdk_error_434">字段值不合法</string>
+	<string name="umssdk_error_435">账号已经被绑定</string>
+	<string name="umssdk_error_436">自定义字段不存在</string>
+	<string name="umssdk_error_437">自定义字段校验失败</string>
+	<string name="umssdk_error_438">不支持的平台</string>
+	<string name="umssdk_error_439">验证码不能为空</string>
+	<string name="umssdk_error_440">验证码错误</string>
+	<string name="umssdk_error_441">query语法错误</string>
+
+	<string name="umssdk_error_450">用户为黑名单用户不能关注</string>
+	<string name="umssdk_error_451">你已关注，不能再次关注</string>
+	<string name="umssdk_error_452">用户不存在</string>
+	<string name="umssdk_error_453">不能关注自己</string>
+	<string name="umssdk_error_454">用户为黑名单用户，不可添加对方为好友</string>
+	<string name="umssdk_error_455">用户已经在黑名单中</string>
+	<string name="umssdk_error_456">已为好友关系，不能重复添加</string>
+	<string name="umssdk_error_457">该用户不存在，不能添加好友</string>
+	<string name="umssdk_error_458">不可以添加自己为好友</string>
+	<string name="umssdk_error_459">待处理好友申请信息不存在</string>
+	<string name="umssdk_error_460">对方为黑名单用户，好友申请信息操作失败</string>
+	<string name="umssdk_error_461">用户不存在黑名单列表中</string>
+	<string name="umssdk_error_462">用户不存在，好友申请信息操作失败</string>
+	<string name="umssdk_error_463">好友回复无效</string>
+	<string name="umssdk_error_464">自己不能拉黑自己</string>
+	<string name="umssdk_error_465">不是好友关系不能执行删除操作</string>
+	<string name="umssdk_error_467">你已经被拉黑不能关注和加对方为好友</string>
+
+	<string name="umssdk_error_521">用户查找失败</string>
+
+
+	<string name="umssdk_error_no_network">无网络，请连接网络</string>
+</resources>

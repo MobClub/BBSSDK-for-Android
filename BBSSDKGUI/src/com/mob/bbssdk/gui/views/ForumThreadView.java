@@ -14,43 +14,46 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mob.bbssdk.gui.ThreadListOrderType;
-import com.mob.bbssdk.gui.ThreadListSelectType;
-import com.mob.bbssdk.gui.pages.PageForumThreadDetail;
+import com.mob.bbssdk.gui.BBSViewBuilder;
+import com.mob.bbssdk.gui.datadef.ThreadListOrderType;
+import com.mob.bbssdk.gui.datadef.ThreadListSelectType;
+import com.mob.bbssdk.gui.pages.forum.PageForumThreadDetail;
+import com.mob.bbssdk.gui.pages.forum.PageForumThread;
 import com.mob.bbssdk.model.ForumThread;
 import com.mob.tools.gui.MobViewPager;
-import com.mob.tools.gui.ViewPagerAdapter;
 import com.mob.tools.utils.ResHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * 主题帖子列表界面，可以设置内容的adapter, 如果不设置，默认采用{@link ForumThreadListView}来显示内容，使用可参照{@link com.mob.bbssdk.gui.pages.PageForumThread}
+ * 主题帖子列表界面，可以设置内容的adapter, 如果不设置，默认采用{@link ForumThreadListView}来显示内容，使用可参照{@link PageForumThread}
  */
-public class ForumThreadView extends BaseView {
+public class ForumThreadView extends BaseView implements ForumThreadListPageAdapter.PageSwitchListener {
 	private static final String TAG = "ForumView";
 	private HorizontalScrollView hsvContent;
-	private SlidingTabStrip slidingTabStrip;
+	protected SlidingTabStrip slidingTabStrip;
 	private MobViewPager viewPager;
-	private PageAdapter adapter;
+	private ForumThreadListPageAdapter adapter;
 	private int tabHeight = 0;
-	private ForumThreadListView.OnItemClickListener itemClickListener;
-	private long forumId = 0;
-	private ForumThreadViewType mType = ForumThreadViewType.FORUM_MAIN;
+	protected ForumThreadListView.OnItemClickListener itemClickListener;
+	protected long forumId = 0;
+	protected ForumThreadViewType forumThreadViewType = ForumThreadViewType.FORUM_MAIN;
 
 	public void setType(ForumThreadViewType type) {
 		if(type != null) {
-			mType = type;
+			forumThreadViewType = type;
 		}
 	}
 
 	/**
 	 * 设置adapter，不设置采用默认adapter（请在loadData前调用，且采用自定义adapter时，请自行实现item点击事件）
 	 */
-	public void setAdapter(PageAdapter adapter) {
+	public void setAdapter(ForumThreadListPageAdapter adapter) {
 		this.adapter = adapter;
+	}
+
+	public ForumThreadListPageAdapter getAdapter() {
+		return adapter;
 	}
 
 	/**
@@ -72,12 +75,23 @@ public class ForumThreadView extends BaseView {
 		super(context, attrs, defStyleAttr);
 	}
 	protected View initContentView(Context context, AttributeSet attrs, int defStyleAttr) {
-		tabHeight = getResources().getDimensionPixelSize(ResHelper.getResId(context, "dimen", "bbs_menu_tab_height"));
+		ForumThreadViewStyle viewstyle = getForumThreadViewStyle();
+		if(viewstyle == null) {
+			viewstyle = new ForumThreadViewStyle();
+		}
+		if(viewstyle.idMenuTabHeight == null) {
+			viewstyle.idMenuTabHeight = ResHelper.getResId(context, "dimen", "bbs_menu_tab_height");
+		}
+		tabHeight = getResources().getDimensionPixelSize(viewstyle.idMenuTabHeight);
 
 		LinearLayout llContent = new LinearLayout(context, attrs, defStyleAttr);
+		llContent.setBackgroundColor(getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_white")));
 		llContent.setOrientation(LinearLayout.VERTICAL);
 		hsvContent = new HorizontalScrollView(context);
-		hsvContent.setBackgroundColor(context.getResources().getColor(ResHelper.getColorRes(context, "bbs_menu_tab_bg")));
+		if(viewstyle.idMenuTabBg == null) {
+			viewstyle.idMenuTabBg = ResHelper.getColorRes(context, "bbs_menu_tab_bg");
+		}
+		hsvContent.setBackgroundColor(context.getResources().getColor(viewstyle.idMenuTabBg));
 		hsvContent.setHorizontalScrollBarEnabled(false);
 		hsvContent.setFillViewport(true);
 		slidingTabStrip = new SlidingTabStrip(context);
@@ -87,11 +101,18 @@ public class ForumThreadView extends BaseView {
 		llContent.addView(hsvContent, llp);
 
 		View divider = new View(context);
-		divider.setBackgroundColor(context.getResources().getColor(ResHelper.getColorRes(context, "bbs_divider")));
+		if(viewstyle.idMenuTabDividerColor == null) {
+			viewstyle.idMenuTabDividerColor = ResHelper.getColorRes(context, "bbs_divider");
+		}
+		divider.setBackgroundColor(context.getResources().getColor(viewstyle.idMenuTabDividerColor));
+
+		if(viewstyle.idMenuTabDividerHeight == null) {
+			viewstyle.idMenuTabDividerHeight = ResHelper.getResId(context, "dimen", "bbs_menu_tab_divider_height");
+		}
 		llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-				getResources().getDimensionPixelSize(ResHelper.getResId(context, "dimen", "bbs_menu_tab_divider_height")));
+				getResources().getDimensionPixelSize(viewstyle.idMenuTabDividerHeight));
 		llContent.addView(divider, llp);
-		viewPager = new MobViewPager(context);
+		viewPager = buildViewPager();
 		llp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0);
 		llp.weight = 1;
 		llContent.addView(viewPager, llp);
@@ -104,31 +125,51 @@ public class ForumThreadView extends BaseView {
 		loadData();
 	}
 
+	protected ForumThreadListView getForumThreadListView () {
+		return null;
+	}
+
+	@Override
+	public void onPageChanged(int page) {
+		setCurrentPage(page);
+	}
+
+	protected MobViewPager buildViewPager() {
+		return new MobViewPager(getContext());
+	}
+
+	protected ForumThreadListPageAdapter buildForumThreadListPageAdapter() {
+		return new ForumThreadListPageAdapter(this) {
+			protected View getView(ThreadListSelectType filtertype, int position) {
+				ForumThreadListView itemView = getForumThreadListView();
+				if(itemView == null) {
+					itemView = new ForumThreadListView(getContext());
+				}
+				if (itemClickListener != null) {
+					itemView.setOnItemClickListener(itemClickListener);
+				} else {
+					itemView.setOnItemClickListener(new ForumThreadListView.OnItemClickListener() {
+						public void onItemClick(int position, ForumThread item) {
+							if (item != null) {
+								PageForumThreadDetail pageForumThreadDetail = BBSViewBuilder.getInstance().buildPageForumThreadDetail();
+								pageForumThreadDetail.setForumThread(item);
+								pageForumThreadDetail.show(getContext());
+							}
+						}
+					});
+				}
+				itemView.setType(forumThreadViewType);
+				itemView.setLoadParams(forumId, filtertype, null, 10);
+				itemView.startLoadData();
+				return itemView;
+			}
+		};
+	}
+
 	public void loadData() {
 		setLoadingStatus(RequestLoadingView.LOAD_STATUS_SUCCESS);
 		if (adapter == null) {
-			adapter = new ForumThreadView.PageAdapter(this) {
-				protected View getView(ThreadListSelectType filtertype, int position) {
-					ForumThreadListView itemView = new ForumThreadListView(getContext());
-					if (itemClickListener != null) {
-						itemView.setOnItemClickListener(itemClickListener);
-					} else {
-						itemView.setOnItemClickListener(new ForumThreadListView.OnItemClickListener() {
-							public void onItemClick(int position, ForumThread item) {
-								if (item != null) {
-									PageForumThreadDetail pageForumThreadDetail = new PageForumThreadDetail();
-									pageForumThreadDetail.setForumThread(item);
-									pageForumThreadDetail.show(getContext());
-								}
-							}
-						});
-					}
-					itemView.setType(mType);
-					itemView.setLoadParams(forumId, filtertype, null, 10);
-					itemView.startLoadData();
-					return itemView;
-				}
-			};
+			adapter = buildForumThreadListPageAdapter();
 			ArrayList<ThreadListSelectType> list = new ArrayList<ThreadListSelectType>();
 			list.add(ThreadListSelectType.LATEST);
 			list.add(ThreadListSelectType.HEATS);
@@ -183,21 +224,38 @@ public class ForumThreadView extends BaseView {
 			llp.gravity = Gravity.CENTER_VERTICAL;
 			slidingTabStrip.addView(tabView, llp);
 		}
-		setTabSelected(0);
+		setCurrentPage(0);
 	}
 
 	private TextView createDefaultTabView(Context context) {
 		TextView tvTab = new TextView(context);
 		tvTab.setGravity(Gravity.CENTER);
-		int tvTabSize = getResources().getDimensionPixelSize(ResHelper.getResId(context, "dimen", "bbs_menu_tab_txt_size"));
+		TabTextViewStyle tabTextViewStyle = getTabTextViewStyle();
+		if(tabTextViewStyle == null) {
+			tabTextViewStyle = new TabTextViewStyle();
+		}
+		if(tabTextViewStyle.idTabTextSize == null) {
+			tabTextViewStyle.idTabTextSize = ResHelper.getResId(context, "dimen", "bbs_menu_tab_txt_size");
+		}
+		int tvTabSize = getResources().getDimensionPixelSize(tabTextViewStyle.idTabTextSize);
 		tvTab.setTextSize(TypedValue.COMPLEX_UNIT_PX, tvTabSize);
-		ColorStateList csl = context.getResources().getColorStateList(ResHelper.getColorRes(context, "bbs_menu_tab_txt_color"));
+		if(tabTextViewStyle.idTabTextColor == null) {
+			tabTextViewStyle.idTabTextColor = ResHelper.getColorRes(context, "bbs_menu_tab_txt_color");
+		}
+		ColorStateList csl = context.getResources().getColorStateList(tabTextViewStyle.idTabTextColor);
 		if (csl != null) {
 			tvTab.setTextColor(csl);
 		}
-		int tvTabPadding = getResources().getDimensionPixelSize(ResHelper.getResId(context, "dimen", "bbs_menu_tab_txt_padding"));
+		if(tabTextViewStyle.idTabTextLeftRightPadding == null) {
+			tabTextViewStyle.idTabTextLeftRightPadding = ResHelper.getResId(context, "dimen", "bbs_menu_tab_txt_padding");
+		}
+		int tvTabPadding = getResources().getDimensionPixelSize(tabTextViewStyle.idTabTextLeftRightPadding);
 		tvTab.setPadding(tvTabPadding, 0, tvTabPadding, 0);
 		return tvTab;
+	}
+
+	public int getCurrentPagePos() {
+		return slidingTabStrip.getSelectedPosition();
 	}
 
 	private void setCurrentPage(int currentPage) {
@@ -205,7 +263,7 @@ public class ForumThreadView extends BaseView {
 		scrollToTab(currentPage, 0);
 	}
 
-	private void scrollToTab(int tabIndex, int positionOffset) {
+	protected void scrollToTab(int tabIndex, int positionOffset) {
 		final int tabStripChildCount = slidingTabStrip.getChildCount();
 		if (tabStripChildCount == 0 || tabIndex < 0 || tabIndex >= tabStripChildCount) {
 			return;
@@ -236,7 +294,41 @@ public class ForumThreadView extends BaseView {
 		}
 	}
 
-	static class SlidingTabStrip extends LinearLayout {
+	public static class ForumThreadViewStyle {
+		public Integer idMenuTabHeight;
+		public Integer idMenuTabBg;
+		public Integer idMenuTabDividerColor;
+		public Integer idMenuTabDividerHeight;
+	}
+
+
+	protected ForumThreadViewStyle getForumThreadViewStyle() {
+		return null;
+	}
+
+	public static class TabTextViewStyle {
+		public Integer idTabTextSize;
+		public Integer idTabTextColor;
+		public Integer idTabTextLeftRightPadding;
+	}
+
+	protected TabTextViewStyle getTabTextViewStyle() {
+		return null;
+	}
+
+	protected SlidingTabStripStyle getSlidingTabStripStyle() {
+		return null;// use default;
+	}
+
+	public static class SlidingTabStripStyle {
+		public Integer idTabUnderLineWidth;
+		public Integer idTabSelectedLineHeight;
+		public Integer idTabSelectedLineColor;
+		public Integer idTabUnderLineHeight;
+		public Integer idTabUnderLineColor;
+	}
+
+	protected class SlidingTabStrip extends LinearLayout {
 		private final Paint selectedTabLinePaint;
 		private final Paint underLinePaint;
 		private final int selectedTabLineHeight;
@@ -247,6 +339,7 @@ public class ForumThreadView extends BaseView {
 
 		private int screenWidth = 0;
 		private int bottomwidth;
+		private SlidingTabStripStyle slidingTabStripStyle;
 
 		public SlidingTabStrip(Context context) {
 			this(context, null);
@@ -254,15 +347,38 @@ public class ForumThreadView extends BaseView {
 
 		public SlidingTabStrip(Context context, AttributeSet attrs) {
 			super(context, attrs);
-			bottomwidth = context.getResources().getDimensionPixelSize(ResHelper.getResId(context, "dimen", "bbs_menu_tab_under_line_width"));
+			slidingTabStripStyle = getSlidingTabStripStyle();
+			if(slidingTabStripStyle == null) {
+				slidingTabStripStyle = new SlidingTabStripStyle();
+			}
+			if(slidingTabStripStyle.idTabUnderLineWidth == null) {
+				slidingTabStripStyle.idTabUnderLineWidth = ResHelper.getResId(context, "dimen", "bbs_menu_tab_under_line_width");
+			}
+			bottomwidth = context.getResources().getDimensionPixelSize(slidingTabStripStyle.idTabUnderLineWidth);
 			screenWidth = ResHelper.getScreenWidth(context);
 			setWillNotDraw(false);
-			selectedTabLineHeight = getResources().getDimensionPixelSize(ResHelper.getResId(context, "dimen", "bbs_menu_tab_selected_line_height"));
+			if(slidingTabStripStyle.idTabSelectedLineHeight == null) {
+				slidingTabStripStyle.idTabSelectedLineHeight = ResHelper.getResId(context, "dimen", "bbs_menu_tab_selected_line_height");
+			}
+			selectedTabLineHeight = getResources().getDimensionPixelSize(slidingTabStripStyle.idTabSelectedLineHeight);
 			selectedTabLinePaint = new Paint();
-			selectedTabLinePaint.setColor(getResources().getColor(ResHelper.getColorRes(context, "bbs_menu_tab_selected_line_color")));
-			underLineHeight = getResources().getDimensionPixelSize(ResHelper.getResId(context, "dimen", "bbs_menu_tab_under_line_height"));
+			if(slidingTabStripStyle.idTabSelectedLineColor == null) {
+				slidingTabStripStyle.idTabSelectedLineColor = ResHelper.getColorRes(context, "bbs_menu_tab_selected_line_color");
+			}
+			selectedTabLinePaint.setColor(getResources().getColor(slidingTabStripStyle.idTabSelectedLineColor));
+			if(slidingTabStripStyle.idTabUnderLineHeight == null) {
+				slidingTabStripStyle.idTabUnderLineHeight = ResHelper.getResId(context, "dimen", "bbs_menu_tab_under_line_height");
+			}
+			underLineHeight = getResources().getDimensionPixelSize(slidingTabStripStyle.idTabUnderLineHeight);
 			underLinePaint = new Paint();
-			underLinePaint.setColor(getResources().getColor(ResHelper.getColorRes(context, "bbs_menu_tab_under_line_color")));
+			if(slidingTabStripStyle.idTabUnderLineColor == null) {
+				slidingTabStripStyle.idTabUnderLineColor = ResHelper.getColorRes(context, "bbs_menu_tab_under_line_color");
+			}
+			underLinePaint.setColor(getResources().getColor(slidingTabStripStyle.idTabUnderLineColor));
+		}
+
+		public int getSelectedPosition() {
+			return selectedPosition;
 		}
 
 		public void onViewPagerPageChanged(int position, float positionOffset) {
@@ -289,53 +405,5 @@ public class ForumThreadView extends BaseView {
 				canvas.drawRect(left, height - selectedTabLineHeight, right, height, selectedTabLinePaint);
 			}
 		}
-	}
-
-	public static abstract class PageAdapter extends ViewPagerAdapter {
-		private ForumThreadView forumMenuView;
-		private ArrayList<ThreadListSelectType> threadListType;
-		//缓存已经产生的view
-		private Map<Integer, View> mapViewContent = new HashMap<Integer, View>();
-
-		public PageAdapter(ForumThreadView forumMenuView) {
-			this.forumMenuView = forumMenuView;
-			this.threadListType = new ArrayList<ThreadListSelectType>();
-		}
-
-		public void setThreadListSelectType(ArrayList<ThreadListSelectType> list) {
-			this.threadListType.clear();
-			this.threadListType.addAll(list);
-		}
-
-		public void onScreenChange(int currentScreen, int lastScreen) {
-			super.onScreenChange(currentScreen, lastScreen);
-			forumMenuView.setCurrentPage(currentScreen);
-		}
-
-		public int getCount() {
-			return threadListType.size();
-		}
-
-		public ThreadListSelectType getItem(int position) {
-			return (position >= 0 && position < threadListType.size()) ? threadListType.get(position) : null;
-		}
-
-		public View getViewAt(int pos) {
-			return mapViewContent.get(pos);
-		}
-
-		public View getView(int position, View view, ViewGroup viewGroup) {
-			View item = mapViewContent.get(position);
-			if(item != null) {
-				return item;
-			}
-
-			ThreadListSelectType type = getItem(position);
-			View itemView = getView(type, position);
-			mapViewContent.put(position, itemView);
-			return itemView;
-		}
-
-		protected abstract View getView(ThreadListSelectType filtertype, int position);
 	}
 }

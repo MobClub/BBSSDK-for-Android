@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+                android:id="@+id/rlContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <com.mob.bbssdk.gui.webview.BaseWebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.mob.bbssdk.gui.webview.BaseWebView>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:indeterminate="false"
+        android:max="100"/>
+
+    <View
+        android:id="@+id/vLine"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignTop="@+id/layoutBottom"
+        android:background="#e3e4e4"/>
+
+    <LinearLayout
+        android:id="@+id/layoutBottom"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bbs_white"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/rlReply"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tvReply"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:text="写评论..."
+                android:textColor="#6a7081"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rlReplySuccess"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bbs_ic_writethread_success"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/bbs_writepost_send_success"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rlReplyFailed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bbs_ic_writethread_failed"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/bbs_writepost_send_failed"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rlReplyIng"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:indeterminateDrawable="@drawable/bbs_anim_rotate"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="正在提交"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageViewGotoComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:src="@drawable/bbs_theme0_writepost"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewFavorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:src="@drawable/bbs_theme0_unfavorited"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewUnfavorite"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:src="@drawable/bbs_theme0_favorited"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:src="@drawable/bbs_theme0_share"
+            />
+
+        <TextView
+            android:id="@+id/tvOwner"
+            android:layout_width="wrap_content"
+            android:layout_height="49dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="只看楼主"
+            android:textColor="#ff1d8ac7"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

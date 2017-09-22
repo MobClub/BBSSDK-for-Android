@@ -7,7 +7,7 @@ import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnErrorListener;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
-import com.mob.bbssdk.gui.pages.PageAttachmentViewer;
+import com.mob.bbssdk.gui.pages.forum.PageAttachmentViewer;
 
 import java.io.File;
 

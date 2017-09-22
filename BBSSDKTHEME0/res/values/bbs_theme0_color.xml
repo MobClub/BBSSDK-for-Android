@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bbs_theme0_blue">#5b7ef0</color>
+    <color name="bbs_theme0_statusbar_blue">#5b7ef0</color>
+    <color name="bbs_theme0_statusbar_grey">#4d546d</color>
+    <color name="bbs_theme0_pagetext">#6a7081</color>
+    <color name="bbs_theme0_bg">#eaedf2</color>
+    <color name="bbs_theme0_forumthreadview_tabselectedline">#5b7ef0</color>
+    <color name="bbs_theme0_forumthreadview_tabtext">#5b7ef0</color>
+    <color name="bbs_theme0_forumthreadview_tabunselectedtext">#6a7081</color>
+
+    <color name="bbs_theme0_forumsubjectthreadview_tabselectedline">#5b7ef0</color>
+    <color name="bbs_theme0_forumsubjectthreadview_tabtext">#5b7ef0</color>
+    <color name="bbs_theme0_forumsubjectthreadview_tabunselectedtext">#6a7081</color>
+    <color name="bbs_theme0_forumthread_titleselected">#5b7ef0</color>
+    <color name="bbs_theme0_forumthread_titleunselected">#6a7081</color>
+</resources>

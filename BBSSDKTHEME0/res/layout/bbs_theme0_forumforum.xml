@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layoutContainer"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/bbs_white"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="#F5F6FA"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        >
+
+        <TextView
+            android:id="@+id/tvStickTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="#F5F6FA"
+            android:gravity="center_vertical"
+            android:text="置顶板块"
+            android:textColor="#6a7081"
+            android:textSize="12sp"
+            />
+
+        <TextView
+            android:id="@+id/textViewEditStickTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/bbs_subjectsettings_editsticktop"
+            android:textColor="#1d8ac7"
+            android:textSize="12sp"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutSticktop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="#F5F6FA"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="论坛列表"
+            android:textColor="#6a7081"
+            android:textSize="12sp"
+            />
+
+
+    </RelativeLayout>
+</LinearLayout>

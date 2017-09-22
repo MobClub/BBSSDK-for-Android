@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/bbs_init_bg"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="88dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bbs_init_forum"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:lineSpacingMultiplier="1.4"
+            android:text="@string/bbs_init_intro"
+            android:textColor="#565762"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="37dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bbs_init_key"
+                />
+
+            <EditText
+                android:id="@+id/editTextKey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:background="@null"
+                android:hint="@string/bbs_init_keyhint"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:alpha="0.1"
+            android:background="#000000"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bbs_init_secret"
+                />
+
+            <EditText
+                android:id="@+id/editTextSecret"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:background="@null"
+                android:hint="@string/bbs_init_secrethint"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="36dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/bbs_init_annotation"
+            android:textColor="#bcbdc3"
+            android:textSize="12sp"
+            />
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/bbs_init_bg_btnrectgrey"
+            android:text="@string/bbs_init_entermyforum"
+            android:textColor="#565762"
+            android:textSize="16sp"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <RelativeLayout
+        android:id="@+id/layoutEnterOfficial"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="#5583ca">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/bbs_init_enterofficalforum"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/bbs_init_arrow"
+            />
+
+    </RelativeLayout>
+</LinearLayout>

@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.mob.bbssdk.API;
 import com.mob.bbssdk.APICallback;
 import com.mob.bbssdk.api.ForumAPI;
-import com.mob.bbssdk.gui.ErrorCodeHelper;
+import com.mob.bbssdk.gui.helper.ErrorCodeHelper;
 import com.mob.bbssdk.gui.dialog.YesNoDialog;
 import com.mob.bbssdk.model.ForumForum;
 import com.mob.bbssdk.model.ForumThread;

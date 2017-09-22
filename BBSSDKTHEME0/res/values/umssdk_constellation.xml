@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="umssdk_constellation_aquarius">水瓶座</string>
+	<string name="umssdk_constellation_aries">白羊座</string>
+	<string name="umssdk_constellation_cancer">巨蟹座</string>
+	<string name="umssdk_constellation_capricorn">摩羯座</string>
+	<string name="umssdk_constellation_gemini">双子座</string>
+	<string name="umssdk_constellation_leo">狮子座</string>
+	<string name="umssdk_constellation_libra">天秤座</string>
+	<string name="umssdk_constellation_pisces">双鱼座</string>
+	<string name="umssdk_constellation_sagittarius">射手座</string>
+	<string name="umssdk_constellation_scorpio">天蝎座</string>
+	<string name="umssdk_constellation_taurus">金牛座</string>
+	<string name="umssdk_constellation_virgo">处女座</string>
+</resources>

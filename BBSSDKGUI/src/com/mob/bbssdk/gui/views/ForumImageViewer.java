@@ -22,7 +22,7 @@ import java.util.HashMap;
  * 浏览图片的View
  */
 public class ForumImageViewer extends BaseView {
-	private BaseWebView webView;
+	protected BaseWebView webView;
 	private JsInterfaceForumImage jsInterfaceForumImage;
 	private String[] imageUrls = null;
 	private int index = 0;
@@ -152,6 +152,10 @@ public class ForumImageViewer extends BaseView {
 		if (Build.VERSION.SDK_INT >= 17) {
 			webView.addJavascriptInterface(jsInterfaceForumImage, "forumImage");
 		}
+		loadNativeHtml();
+	}
+
+	protected void loadNativeHtml() {
 		webView.loadUrl("file:///android_asset/html/details/imgshow.html");
 	}
 

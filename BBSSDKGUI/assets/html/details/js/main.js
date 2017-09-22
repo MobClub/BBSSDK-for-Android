@@ -34,7 +34,7 @@ function getCommonHtml(){
 
 /*打开附件*/
 function openAttachment(obj) {
-	//TODO 实现native交互，跳转打开附件的界面
+	//实现native交互，跳转打开附件的界面
 	BBSSDKNative.openAttachment(obj);
 }
 

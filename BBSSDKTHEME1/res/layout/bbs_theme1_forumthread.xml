@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.mob.bbssdk.theme1.view.Theme1ForumThreadPullToRequestView
+        android:id="@+id/forumThreadPullToRequestView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/viewBackground"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:alpha="0"
+                android:background="@color/bbs_white"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:orientation="horizontal"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp">
+
+                <ImageView
+                    android:id="@+id/imageViewBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/bbs_titlebar_back_black"/>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:id="@+id/layoutTitleDropDown"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:alpha="0"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textViewTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="Title"
+                            android:textColor="#2a2b30"
+                            android:textSize="16sp"
+                            android:layout_marginRight="5dp"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/bbs_theme1_forumthread_dropdown"/>
+                    </LinearLayout>
+
+
+                    <ImageView
+                        android:id="@+id/imageViewSearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
+                        android:layout_marginRight="7dp"
+                        android:src="@drawable/bbs_theme1_search_black"/>
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/imageViewWritePost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@drawable/bbs_theme1_writepost_black"
+                    />
+            </LinearLayout>
+        </FrameLayout>
+
+        <include
+            android:id="@+id/layoutStickTab"
+            layout="@layout/bbs_theme1_layout_forumthreadtab"/>
+
+    </LinearLayout>
+
+</FrameLayout>
+

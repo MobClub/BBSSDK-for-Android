@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.mob.bbssdk.gui.pages.PageAttachmentViewer;
+import com.mob.bbssdk.gui.pages.forum.PageAttachmentViewer;
 import com.mob.bbssdk.gui.webview.BaseWebView;
 import com.mob.bbssdk.sample.utils.OfficeConverter;
 import com.mob.tools.utils.Data;

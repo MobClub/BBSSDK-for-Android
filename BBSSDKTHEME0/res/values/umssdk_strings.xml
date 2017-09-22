@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="umssdk_have_not_integrate_this_plat">未集成该登录方式</string>
+	<string name="umssdk_operation_faield">操作失败</string>
+	<string name="umssdk_have_not_integrate_smssdk">未集成短信验证码模块</string>
+	<string name="umssdk_account_registered">用户已存在</string>
+	<string name="umssdk_image_not_exists">图片文件不存在</string>
+	<string name="umssdk_account_does_not_exists">用户不存在</string>
+</resources>

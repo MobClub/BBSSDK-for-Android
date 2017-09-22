@@ -12,16 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mob.bbssdk.gui.utils.SendForumPostManager;
+import com.mob.bbssdk.gui.views.GlideImageView;
 import com.mob.tools.utils.BitmapHelper;
 import com.mob.tools.utils.ResHelper;
 import com.mob.tools.utils.UIHandler;
@@ -37,6 +38,7 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 	private PopupWindow popupWindow;
 	private InputMethodManager imm;
 	private OnConfirmClickListener onConfirmClickListener;
+	private OnImgAddClickListener onImgAddClickListener;
 	private EditText etContent;
 	private GridView gvImg;
 	private TextView tvImgCount;
@@ -51,15 +53,27 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 	private BaseAdapter adapter = null;
 	private WarningDialog warningDialog;
 
-	public ReplyEditorPopWindow(Context context, OnConfirmClickListener listener) {
+	public ReplyEditorPopWindow(Context context, OnConfirmClickListener listener, OnImgAddClickListener addlistener) {
 		this.context = context;
 		onConfirmClickListener = listener;
+		onImgAddClickListener = addlistener;
 		this.imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		init();
 	}
 
+	protected Context getContext() {
+		return context;
+	}
+
+	protected View getContentView() {
+		return null;
+	}
+
 	private void init() {
-		View contentView = LayoutInflater.from(context).inflate(ResHelper.getLayoutRes(context, "bbs_reply_editor"), null);
+		View contentView = getContentView();
+		if(contentView == null) {
+			contentView = LayoutInflater.from(context).inflate(ResHelper.getLayoutRes(context, "bbs_view_replyeditor"), null);
+		}
 		etContent = (EditText) contentView.findViewById(ResHelper.getIdRes(context, "etContent"));
 		gvImg = (GridView) contentView.findViewById(ResHelper.getIdRes(context, "gvImg"));
 		tvImgCount = (TextView) contentView.findViewById(ResHelper.getIdRes(context, "tvImgCount"));
@@ -200,7 +214,9 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 			isImgClick = true;
 			hideSoftInput();
 			if (imgList == null || imgList.size() == 0) {
-				onImgAddClick();
+				if(onImgAddClickListener != null) {
+					onImgAddClickListener.onClick();
+				}
 			}
 			updateImgListView();
 		} else if (v == tvSend) {
@@ -223,10 +239,6 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 		}
 		warningDialog.setWarningText(warningStr);
 		warningDialog.show();
-	}
-
-	protected void onImgAddClick() {
-
 	}
 
 	/**
@@ -268,6 +280,14 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 		}
 	}
 
+	protected Integer getAddPicImageId() {
+		return null;
+	}
+
+	protected Integer getReplyAddPicLayoutId() {
+		return null;
+	}
+
 	private BaseAdapter initGvAdapter() {
 		if (adapter == null) {
 			adapter = new BaseAdapter() {
@@ -291,30 +311,44 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 				}
 
 				public View getView(final int position, View convertView, ViewGroup parent) {
-					RelativeLayout view;
-					view = new RelativeLayout(context);
+					Integer layout = getReplyAddPicLayoutId();
+					if(layout == null) {
+						layout = ResHelper.getLayoutRes(getContext(), "bbs_reply_addpic");
+					}
+					ViewGroup view;
+					view = (ViewGroup) LayoutInflater.from(getContext()).inflate(layout, parent, false);
+//					view = new RelativeLayout(context);
+//					int padding = ResHelper.dipToPx(context, 10);
+//					final int ivHeight = (gvHeight - padding * 2) / 2;
+//					view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ivHeight));
+//					final ImageView ivImg = new ImageView(context);
+//					ivImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//					RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//							ViewGroup.LayoutParams.MATCH_PARENT);
+//					rlp.bottomMargin = padding;
+//					rlp.topMargin = ResHelper.dipToPx(context, 5);
+//					rlp.rightMargin = padding;
+//					view.addView(ivImg, rlp);
+//					ImageView ivDelete = new ImageView(context);
+//					ivDelete.setImageResource(ResHelper.getBitmapRes(context, "bbs_reply_addpic_remove"));
+//					rlp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//					rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+//					view.addView(ivDelete, rlp);
+
 					int padding = ResHelper.dipToPx(context, 10);
 					final int ivHeight = (gvHeight - padding * 2) / 2;
-					view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ivHeight));
-					final ImageView ivImg = new ImageView(context);
-					ivImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
-					RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-							ViewGroup.LayoutParams.MATCH_PARENT);
-					rlp.bottomMargin = padding;
-					rlp.topMargin = ResHelper.dipToPx(context, 5);
-					rlp.rightMargin = padding;
-					view.addView(ivImg, rlp);
-					ImageView ivDelete = new ImageView(context);
-					ivDelete.setImageResource(ResHelper.getBitmapRes(context, "bbs_reply_addpic_remove"));
-					rlp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-					rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-					view.addView(ivDelete, rlp);
-
+					view.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ivHeight));
+					final GlideImageView ivImg = (GlideImageView) view.findViewById(ResHelper.getIdRes(getContext(), "ivImg"));
+					ImageView ivDelete = (ImageView) view.findViewById(ResHelper.getIdRes(getContext(), "ivDelete"));
 					final String path = getItem(position);
 					if (path == null) {
 						ivDelete.setVisibility(View.GONE);
-						ivImg.setScaleType(ImageView.ScaleType.FIT_CENTER);
-						ivImg.setImageResource(ResHelper.getBitmapRes(context, "bbs_reply_addpicitem"));
+						ivImg.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+						Integer id = getAddPicImageId();
+						if(id == null) {
+							id = ResHelper.getBitmapRes(context, "bbs_reply_addpicitem");
+						}
+						ivImg.setImageResource(id);
 					} else {
 						ivDelete.setVisibility(View.VISIBLE);
 						Bitmap cachedBitmap = bitmapCache.get(path);
@@ -325,7 +359,8 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 								new Thread() {
 									public void run() {
 										try {
-											final Bitmap bitmap = BitmapHelper.getBitmapByCompressQuality(path, ivHeight, ivHeight, 70, 0);
+											final Bitmap bitmap = BitmapHelper.getBitmap(path);
+//											final Bitmap squarebitmap = com.mob.bbssdk.gui.helper.ImageHelper.getSquareRoundedCornerBitmap(bitmap, 0);
 											bitmapCache.put(path, bitmap);
 											UIHandler.sendEmptyMessage(0, new Handler.Callback() {
 												public boolean handleMessage(Message msg) {
@@ -368,7 +403,9 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					Object object = adapter.getItem(position);
 					if (object == null) {
-						onImgAddClick();
+						if(onImgAddClickListener != null) {
+							onImgAddClickListener.onClick();
+						}
 					}
 				}
 			});
@@ -376,6 +413,10 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 			adapter.notifyDataSetChanged();
 		}
 		return adapter;
+	}
+
+	public interface OnImgAddClickListener {
+		void onClick();
 	}
 
 	public interface OnConfirmClickListener {

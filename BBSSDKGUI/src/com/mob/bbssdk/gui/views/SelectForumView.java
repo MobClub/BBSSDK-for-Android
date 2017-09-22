@@ -2,6 +2,7 @@ package com.mob.bbssdk.gui.views;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import com.mob.bbssdk.APICallback;
 import com.mob.bbssdk.BBSSDK;
 import com.mob.bbssdk.api.ForumAPI;
 import com.mob.bbssdk.model.ForumForum;
-import com.mob.tools.gui.AsyncImageView;
 import com.mob.tools.utils.ResHelper;
 
 import java.util.ArrayList;
@@ -46,6 +46,7 @@ public class SelectForumView extends BaseView {
 		llContainer = new LinearLayout(context);
 		llContainer.setOrientation(LinearLayout.VERTICAL);
 		scrollView.addView(llContainer, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		scrollView.setBackgroundColor(Color.WHITE);
 		return scrollView;
 	}
 
@@ -79,12 +80,12 @@ public class SelectForumView extends BaseView {
 	}
 
 	private void addItem(final ForumForum forum) {
-		View view = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_list_selectsubject_item"), null);
-		AsyncImageView imageView = (AsyncImageView) view.findViewById(ResHelper.getIdRes(getContext(), "bbs_list_selectsubject_item_imageView"));
+		View view = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_item_selectsubject"), null);
+		GlideImageView imageView = (GlideImageView) view.findViewById(ResHelper.getIdRes(getContext(), "bbs_list_selectsubject_item_imageView"));
 		TextView textView = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "bbs_list_selectsubject_item_textView"));
 		textView.setText(forum.name);
 		if (!TextUtils.isEmpty(forum.forumPic)) {
-			imageView.setRound(ResHelper.dipToPx(getContext(), 5));
+			imageView.setExecuteRound(ResHelper.dipToPx(getContext(), 5));
 			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		}
 		imageView.execute(forum.forumPic, ResHelper.getBitmapRes(getContext(), "bbs_selectsubject_item_default"));

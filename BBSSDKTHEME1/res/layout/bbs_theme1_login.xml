@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/bbs_theme1_login_bg"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/bbs_theme1_login_close"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/bbs_theme1_login_defaultportrait"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="欢迎您的登陆"
+        android:textColor="#4e4e4e"
+        android:textSize="22sp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/bbs_login_edittextusername"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:hint="@string/bbs_login_username_hint"
+            android:inputType="text"
+            android:textColorHint="@color/bbs_theme1_userinputhinttext"
+            android:textSize="@dimen/bbs_theme1_userinputtext"/>
+
+        <include layout="@layout/bbs_theme1_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/bbs_login_edittextpassword"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:digits="@string/bbs_password_digits"
+                android:hint="@string/bbs_login_password_hint"
+                android:inputType="textPassword"
+                android:textColorHint="@color/bbs_theme1_userinputhinttext"
+                android:textSize="@dimen/bbs_theme1_userinputtext"/>
+
+            <TextView
+                android:id="@+id/bbs_login_viewforgetpassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="忘记密码?"
+                android:textColor="@color/bbs_theme1_userinputhinttext"
+                android:textSize="12sp"
+                />
+        </LinearLayout>
+
+        <include layout="@layout/bbs_theme1_divider"/>
+
+        <LinearLayout
+            android:id="@+id/bbs_login_layoutAnswerQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/bbs_login_textviewquestion"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:hint="@string/bbs_login_question"
+                    android:inputType="text"
+                    android:textColorHint="@color/bbs_theme1_userinputhinttext"
+                    android:textSize="@dimen/bbs_theme1_userinputtext"
+                    />
+
+                <ImageView
+                    android:id="@+id/bbs_login_viewdropdown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:src="@drawable/bbs_login_question_dropdown"
+                    />
+
+            </LinearLayout>
+
+            <include layout="@layout/bbs_theme1_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/bbs_login_edittextanswer"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:hint="@string/bbs_login_answer_hint"
+                    android:inputType="text"
+                    android:textColorHint="@color/bbs_theme1_userinputhinttext"
+                    android:textSize="@dimen/bbs_theme1_userinputtext"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/bbs_theme1_divider"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bbs_login_btnlogin"
+        style="@style/BBS_theme1_SolidYellowButton"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/bbs_login_login"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <TextView
+        android:id="@+id/bbs_login_viewregister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:gravity="bottom|center_horizontal"
+        android:padding="10dp"
+        android:text="立即注册"
+        android:textColor="#2a2b30"
+        android:textSize="14sp"
+        />
+</LinearLayout>

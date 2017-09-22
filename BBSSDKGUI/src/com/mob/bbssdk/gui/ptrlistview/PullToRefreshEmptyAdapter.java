@@ -14,7 +14,7 @@ import com.mob.tools.gui.Scrollable;
 
 public abstract class PullToRefreshEmptyAdapter extends PullToRequestListAdapter {
 	private ScrollableRelativeLayout bodyView;
-	private EmptyView emptyView;
+	protected EmptyView emptyView;
 
 	public PullToRefreshEmptyAdapter(PullToRequestView view) {
 		super(view);

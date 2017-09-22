@@ -20,7 +20,7 @@ public abstract class PullToRefreshHeaderFooterAdapter extends PullToRefreshEmpt
 	}
 
 	public View getHeaderView() {
-		View headerView = View.inflate(getContext(), ResHelper.getLayoutRes(getContext(), "bbs_list_refresh_header"), null);
+		View headerView = View.inflate(getContext(), ResHelper.getLayoutRes(getContext(), "bbs_pulltorefresh_header"), null);
 		cvHeaderProgress = (ChrysanthemumView) headerView.findViewById(ResHelper.getIdRes(getContext(), "cvHeaderProgress"));
 		ivHeaderPointer = (RotateImageView) headerView.findViewById(ResHelper.getIdRes(getContext(), "ivHeaderPointer"));
 		tvHeaderMessage = (TextView) headerView.findViewById(ResHelper.getIdRes(getContext(), "tvHeaderMessage"));
@@ -60,7 +60,7 @@ public abstract class PullToRefreshHeaderFooterAdapter extends PullToRefreshEmpt
 	protected abstract void requestNextPage();
 
 	public View getFooterView() {
-		View headerView = View.inflate(getContext(), ResHelper.getLayoutRes(getContext(), "bbs_list_refresh_footer"), null);
+		View headerView = View.inflate(getContext(), ResHelper.getLayoutRes(getContext(), "bbs_pulltorefresh_footer"), null);
 		cvFooterProgress = (ChrysanthemumView) headerView.findViewById(ResHelper.getIdRes(getContext(), "cvFooterProgress"));
 		ivFooterPointer = (RotateImageView) headerView.findViewById(ResHelper.getIdRes(getContext(), "ivFooterPointer"));
 		tvFooterMessage = (TextView) headerView.findViewById(ResHelper.getIdRes(getContext(), "tvFooterMessage"));

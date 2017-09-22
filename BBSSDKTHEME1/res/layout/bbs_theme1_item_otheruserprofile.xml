@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/bbs_white"
+              android:orientation="vertical"
+              android:padding="15dp">
+
+    <RelativeLayout
+        android:id="@+id/bbs_item_forumpost_layoutHeader"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginBottom="11dp"
+        android:visibility="gone">
+
+        <com.mob.bbssdk.gui.views.GlideImageView
+            android:id="@+id/bbs_item_forumpost_aivAvatar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/bbs_item_forumpost_textViewAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/bbs_item_forumpost_aivAvatar"
+            android:textColor="@color/bbs_postitem_username"
+            android:textSize="12sp"
+            tools:text="管理员"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/bbs_item_forumpost_textViewRightTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/bbs_textgrey"
+        android:textSize="10sp"
+        tools:text="51分钟前"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/bbs_item_forumpost_textViewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="2"
+                android:textColor="@color/bbs_postitem_title"
+                android:textSize="16sp"
+                tools:text="欢迎来到安卓巴士微论坛欢迎来到安卓巴士微论坛"/>
+
+            <TextView
+                android:id="@+id/bbs_item_forumpost_textViewSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="2"
+                android:textColor="@color/bbs_postitem_summary"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:text="安卓巴士论坛来了，为了方便大家在手机上随时随来了，为了方便大家在手机来了，为了方便大家在手机来了，为了方便大家在手机地上安卓巴士，欢迎吐槽"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/bbs_item_forumpost_viewPicContainer"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp">
+
+            <com.mob.bbssdk.gui.views.GlideImageView
+                android:id="@+id/bbs_item_forumpost_aivPic"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"/>
+
+            <View
+                android:id="@+id/bbs_item_forumpost_viewPicMask"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:background="@color/bbs_black"/>
+
+            <TextView
+                android:id="@+id/bbs_item_forumpost_textViewPicNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/bbs_white"
+                android:textSize="20sp"
+                tools:text="+9"/>
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/bbs_item_forumpost_textViewSubject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:lines="1"
+            android:textColor="@color/bbs_textgrey"
+            android:textSize="11sp"
+            android:visibility="gone"
+            tools:text="灌水区"/>
+
+        <LinearLayout
+            android:id="@+id/bbs_item_forumpost_layoutLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/bbs_item_forumpost_imageViewSticktop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bbs_postitem_sticktop"
+                />
+
+            <ImageView
+                android:id="@+id/bbs_item_forumpost_imageViewHeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:src="@drawable/bbs_postitem_heat"
+                />
+
+            <ImageView
+                android:id="@+id/bbs_item_forumpost_imageViewEssence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:src="@drawable/bbs_postitem_essence"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/bbs_item_forumpost_layoutCommentView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- placeholder -->
+                <ImageView
+                    android:id="@+id/bbs_item_forumpost_imageViewPageCommentLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/bbs_item_forumpost_imageViewPageViewLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:text="评论"
+                    android:textColor="@color/bbs_postitem_statics"
+                    android:textSize="11sp"/>
+
+                <TextView
+                    android:id="@+id/bbs_item_forumpost_textViewPageComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30"
+                    android:textColor="@color/bbs_postitem_statics"
+                    android:textSize="11sp"/>
+
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="0dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:text="喜欢"
+                    android:textColor="@color/bbs_postitem_statics"
+                    android:textSize="11sp"/>
+
+                <TextView
+                    android:id="@+id/textViewPageLike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30"
+                    android:textColor="@color/bbs_postitem_statics"
+                    android:textSize="11sp"/>
+
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="0dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:text="查看"
+                    android:textColor="@color/bbs_postitem_statics"
+                    android:textSize="11sp"/>
+
+                <TextView
+                    android:id="@+id/bbs_item_forumpost_textViewPageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30"
+                    android:textColor="@color/bbs_postitem_statics"
+                    android:textSize="11sp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/bbs_item_forumpost_textViewLeftTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/bbs_textgrey"
+                android:textSize="11sp"
+                android:visibility="gone"
+                tools:text="51分钟前"
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

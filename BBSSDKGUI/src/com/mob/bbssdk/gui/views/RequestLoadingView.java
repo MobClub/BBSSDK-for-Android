@@ -50,7 +50,7 @@ public class RequestLoadingView extends RelativeLayout {
 		emptyResStr = getContext().getString(ResHelper.getStringRes(getContext(), "bbs_loadview_emptytitle"));
 		emptyContentStr = getContext().getString(ResHelper.getStringRes(getContext(), "bbs_loadview_emptydes"));
 
-		View view = LayoutInflater.from(context).inflate(ResHelper.getLayoutRes(context, "bbs_requestloadingview"), null);
+		View view = LayoutInflater.from(context).inflate(ResHelper.getLayoutRes(context, "bbs_view_requestloading"), null);
 		imageView = (ImageView) view.findViewById(ResHelper.getIdRes(context, "bbs_thread_loadingview_imageView"));
 		tvTitle = (TextView) view.findViewById(ResHelper.getIdRes(context, "bbs_thread_loadingview_textViewTitle"));
 		loadingView = (LoadingView) view.findViewById(ResHelper.getIdRes(context, "bbs_thread_loadingview_loadingView"));

@@ -8,7 +8,7 @@ import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
-import com.mob.bbssdk.gui.pages.PageAttachmentViewer;
+import com.mob.bbssdk.gui.pages.forum.PageAttachmentViewer;
 
 import java.io.File;
 

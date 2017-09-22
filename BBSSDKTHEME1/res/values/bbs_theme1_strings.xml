@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">BBSSDKTHEME0</string>
+    <string name="bbs_theme1_forumsetting_title">选择板块</string>
+    <string name="bbs_theme1_reportaccusation_title">选择举报理由</string>
+    <string name="bbs_theme1_writethread_title">发布</string>
+    <string name="bbs_theme1_userprofile_title">用户资料</string>
+    <string name="bbs_theme1_pullrequestview_empty">暂无内容</string>
+    <string name="bbs_theme1_pullrequestview_nomessage">暂无消息</string>
+    <string name="bbs_theme1_likepost_success">喜欢帖子成功！</string>
+    <string name="bbs_theme1_alredylikepost">已经喜欢过这个帖子！</string>
+    <string name="bbs_theme1_favoritepost_success">喜欢帖子成功！</string>
+</resources>

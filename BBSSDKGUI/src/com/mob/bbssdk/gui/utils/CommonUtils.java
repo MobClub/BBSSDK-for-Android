@@ -1,5 +1,8 @@
 package com.mob.bbssdk.gui.utils;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+
 import java.text.DecimalFormat;
 
 public class CommonUtils {
@@ -17,5 +20,11 @@ public class CommonUtils {
 			formatResultStr = df.format((double) fileLength / 1073741824) + "G";
 		}
 		return formatResultStr;
+	}
+
+	public static String getApplicationName(Context context) {
+		ApplicationInfo applicationInfo = context.getApplicationInfo();
+		int stringId = applicationInfo.labelRes;
+		return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
 	}
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_arrangebycomment"
+        android:title="按回复时间排序"/>
+    <item
+        android:id="@+id/action_arrangebypost"
+        android:title="按发帖时间排序"/>
+</menu>

@@ -1,6 +1,7 @@
 package com.mob.bbssdk.gui.views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -12,10 +13,9 @@ import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mob.bbssdk.BBSSDK;
-import com.mob.bbssdk.api.UserAPI;
+import com.mob.bbssdk.gui.BBSViewBuilder;
+import com.mob.bbssdk.gui.GUIManager;
 import com.mob.bbssdk.model.User;
-import com.mob.tools.gui.AsyncImageView;
 import com.mob.tools.utils.ResHelper;
 
 /** 标题栏 */
@@ -28,12 +28,13 @@ public class TitleBar extends FrameLayout {
 	public static final int TYPE_RIGHT_PB = 5;
 
 	private ImageView ivLeft;
-	private AsyncImageView ivAvatar;
+	private GlideImageView ivAvatar;
 	private TextView tvLeft;
 	private TextView tvRight;
 	private ImageView ivRight;
 	private View viewCenter;
 	private ProgressBar pbRight;
+	private static boolean firstUpdateAvatar = true;
 
 	public TitleBar(Context context) {
 		super(context);
@@ -66,10 +67,8 @@ public class TitleBar extends FrameLayout {
 		if (avatarSize > titleHeight) {
 			avatarSize = titleHeight;
 		}
-		ivAvatar = new AsyncImageView(context);
-		ivAvatar.setRound(avatarSize / 2);
-		ivAvatar.setUseCacheOption(true, true);
-		ivAvatar.setCompressOptions(200, 200, 70, 0L);
+		ivAvatar = new GlideImageView(context);
+		ivAvatar.setExecuteRound();
 		lp = new LayoutParams(avatarSize, avatarSize);
 		lp.leftMargin = (titleHeight - avatarSize) / 2;
 		lp.topMargin = (titleHeight - avatarSize) / 2;
@@ -144,7 +143,7 @@ public class TitleBar extends FrameLayout {
 	 *
 	 */
 	public void setLeftImageResourceDefaultBack() {
-		setLeftImageResource(ResHelper.getBitmapRes(getContext(), "bbs_subject_back_black"));
+		setLeftImageResource(ResHelper.getBitmapRes(getContext(), "bbs_titlebar_back_black"));
 	}
 
 	/**
@@ -179,14 +178,24 @@ public class TitleBar extends FrameLayout {
 	 * @param defaultUserId 默认已登录的用户头像资源id
 	 */
 	public void setLeftUserAvatar(int defaultResId, int defaultUserId) {
-		User user = BBSSDK.getApi(UserAPI.class).getCurrentUser();
+		User user = BBSViewBuilder.getInstance().ensureLogin(false);
 		if (user == null || TextUtils.isEmpty(user.avatar)) {
 			ivLeft.setImageResource(defaultResId);
 			ivLeft.setVisibility(View.VISIBLE);
 			ivAvatar.setVisibility(View.GONE);
 		} else {
-			ivAvatar.execute(null, defaultUserId);
-			ivAvatar.execute(user.avatar, defaultUserId);
+			Bitmap bitmap = GUIManager.getInstance().getCurrentUserAvatar();
+			if(firstUpdateAvatar || bitmap == null) {
+				GUIManager.getInstance().forceUpdateCurrentUserAvatar(new GUIManager.AvatarUpdatedListener() {
+					@Override
+					public void onUpdated(Bitmap bitmap) {
+						ivAvatar.setImageBitmap(bitmap);
+					}
+				});
+				firstUpdateAvatar = false;
+			} else {
+				ivAvatar.setImageBitmap(GUIManager.getInstance().getCurrentUserAvatar());
+			}
 			ivAvatar.setVisibility(View.VISIBLE);
 			ivLeft.setVisibility(View.GONE);
 		}

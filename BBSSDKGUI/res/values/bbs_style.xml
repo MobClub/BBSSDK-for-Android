@@ -22,6 +22,10 @@
         <item name="android:windowEnterAnimation">@anim/bbs_roll_up</item>
         <item name="android:windowExitAnimation">@anim/bbs_roll_down</item>
     </style>
+    <style name="BBS_AnimFadeInOut" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/bbs_fadein</item>
+        <item name="android:windowExitAnimation">@anim/bbs_fadeout</item>
+    </style>
     <style name="BBS_BlueSolidButton">
         <item name="android:background">@drawable/bbs_bg_rectsolidblue</item>
         <item name="android:textColor">@color/bbs_white</item>
@@ -38,5 +42,8 @@
         <item name="android:windowEnterAnimation">@anim/bbs_activity_roll_up</item>
         <item name="android:windowExitAnimation">@anim/bbs_activity_roll_down</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <style name="BBS_PopupMenu" parent="android:Widget.Holo.Light">
+        <item name="android:itemBackground">@color/bbs_white</item>
     </style>
 </resources>

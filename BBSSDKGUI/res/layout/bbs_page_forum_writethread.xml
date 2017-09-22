@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/bbs_white"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <com.mob.bbssdk.gui.views.GlideImageView
+            android:id="@+id/bbs_writepost_aivAvatar"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/bbs_writepost_textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/bbs_writepost_aivAvatar"
+            android:textColor="@color/bbs_writepost_name"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/bbs_writepost_textViewChooseCat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bbs_bg_rectrimblue"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="@string/bbs_pagewritethread_choose_category"
+            android:textColor="@color/bbs_textblue"
+            android:textSize="12sp"/>
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/bbs_writepost_editTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@null"
+        android:hint="@string/bbs_pagewritethread_edit_title_hint"
+        android:lines="1"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textColor="@color/bbs_writepost_text"
+        android:textColorHint="@color/bbs_textgrey"
+        android:textSize="18sp"/>
+
+    <include layout="@layout/bbs_divider"/>
+
+    <com.mob.bbssdk.gui.views.RichEditor
+        android:id="@+id/richEditor"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@null"/>
+
+    <include layout="@layout/bbs_divider"/>
+
+    <LinearLayout
+        android:id="@+id/llEditorBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/bbs_white">
+
+        <HorizontalScrollView
+            android:layout_width="0dp"
+            android:scrollbars="none"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/bbs_writepost_toggleBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="9dp"
+                    android:paddingBottom="9dp"
+                    android:src="@drawable/bbs_writepost_bold"/>
+
+                <ImageView
+                    android:id="@+id/bbs_writepost_toggleItalic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="9dp"
+                    android:paddingBottom="9dp"
+                    android:src="@drawable/bbs_writepost_italic"/>
+
+                <ImageView
+                    android:id="@+id/bbs_writepost_toggleDelline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:visibility="gone"
+                    android:paddingTop="9dp"
+                    android:paddingBottom="9dp"
+                    android:src="@drawable/bbs_writepost_delline"/>
+
+                <ImageView
+                    android:id="@+id/bbs_writepost_toggleQuote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="9dp"
+                    android:visibility="gone"
+                    android:paddingBottom="9dp"
+                    android:src="@drawable/bbs_writepost_quote"/>
+
+                <ImageView
+                    android:id="@+id/bbs_writepost_toggleHeader1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="9dp"
+                    android:paddingBottom="9dp"
+                    android:src="@drawable/bbs_writepost_header1"/>
+
+
+                <ImageView
+                    android:id="@+id/bbs_writepost_toggleHeader2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="9dp"
+                    android:paddingBottom="9dp"
+                    android:src="@drawable/bbs_writepost_header2"/>
+
+                <ImageView
+                    android:id="@+id/bbs_writepost_toggleHeader3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="9dp"
+                    android:paddingBottom="9dp"
+                    android:src="@drawable/bbs_writepost_header3"/>
+
+                <ImageView
+                    android:id="@+id/bbs_writepost_toggleHeader4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="9dp"
+                    android:paddingBottom="9dp"
+                    android:src="@drawable/bbs_writepost_header4"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <ImageView
+            android:id="@+id/bbs_writepost_toggleAddPic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:src="@drawable/bbs_writepost_addpic"/>
+
+        <ImageView
+            android:id="@+id/bbs_writepost_imageViewKeyboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:src="@drawable/bbs_writepost_keyboard"/>
+    </LinearLayout>
+
+
+</LinearLayout>
