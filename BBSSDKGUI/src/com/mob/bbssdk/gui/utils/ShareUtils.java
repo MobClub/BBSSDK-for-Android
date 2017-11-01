@@ -22,9 +22,9 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class ShareUtils {
-	private static final String DefaultShareRes = "bbs_default_sharepic";
-	private static final String DefaultShareFileName = "DefaultSharePic.png";
-	private static final String DefaultShareFileDir = FilePath.FILE_FOLDER;
+	private static final String DEFAULT_SHARE_RES = "bbs_default_sharepic";
+	private static final String DEFAULT_SHARE_FILE_NAME = "DefaultSharePic.png";
+	private static final String DEFAULT_SHARE_FILE_DIR = FilePath.FILE_FOLDER;
 
 	public static void startShare(Context context, String title, String titleurl
 			, String text, String imagedir, String url, String comment
@@ -48,7 +48,7 @@ public class ShareUtils {
 		//微信分享必须要有图片才能正常的分享链接！！！确保imageurl或者imagepath有一个参数是有效的。
 		if (StringUtils.isEmpty(imagedir)){
 			if(ensureDefaultShareExist(context)) {
-				oks.setImagePath(DefaultShareFileDir + DefaultShareFileName);//本地图片。确保SDcard下面存在此张图片
+				oks.setImagePath(DEFAULT_SHARE_FILE_DIR + DEFAULT_SHARE_FILE_NAME);//本地图片。确保SDcard下面存在此张图片
 			} else {
 				//No valid shared pic on disk
 				return;
@@ -72,8 +72,8 @@ public class ShareUtils {
 
 	public static boolean ensureDefaultShareExist(Context context) {
 		Resources resources = context.getResources();
-		Bitmap bm = BitmapFactory.decodeResource(resources, ResHelper.getBitmapRes(context, DefaultShareRes));
-		File file = new File(DefaultShareFileDir, DefaultShareFileName);
+		Bitmap bm = BitmapFactory.decodeResource(resources, ResHelper.getBitmapRes(context, DEFAULT_SHARE_RES));
+		File file = new File(DEFAULT_SHARE_FILE_DIR, DEFAULT_SHARE_FILE_NAME);
 		if (!file.exists()) {
 			FileOutputStream outStream = null;
 			try {

@@ -11,9 +11,9 @@
         android:layout_height="match_parent"/>
 
     <ImageView
-        android:alpha="0.3"
+        android:alpha="0.2"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:scaleType="fitXY"
         android:src="@drawable/bbs_banner_mask"/>

@@ -39,6 +39,7 @@ import com.mob.bbssdk.model.ForumThread;
 import com.mob.bbssdk.model.User;
 import com.mob.bbssdk.model.UserOperations;
 import com.mob.bbssdk.utils.StringUtils;
+import com.mob.tools.utils.ReflectHelper;
 import com.mob.tools.utils.ResHelper;
 
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 	ImageView imageViewFavorite;
 	ImageView imageViewThread;
 	ImageView imageViewHistory;
+	ImageView imageViewLocationMark;
 	public ViewGroup layoutTab;
 	View viewFavoriteMark;
 	View viewThreadMark;
@@ -81,6 +83,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 	private UserProfileUpdatedListener userProfileUpdatedListener;
 	private User userInfo;
 	private UserOperations userOperations;
+	private boolean isClickTabEvent;
 
 
 	public Theme1UserProfilePullRequestView(Context context) {
@@ -131,7 +134,11 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 					List<ForumThread> list = ForumThreadHistoryManager.getInstance().getReadedThread();
 					callback.onFinished(true, false, list);
 				}
-				updateInfoFromServer();
+				if (isClickTabEvent) {
+					isClickTabEvent = false;
+				} else {
+					updateInfoFromServer();
+				}
 			}
 		});
 	}
@@ -160,6 +167,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 		});
 
 		textViewName = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewName"));
+		imageViewLocationMark = (ImageView) view.findViewById(ResHelper.getIdRes(getContext(), "imageViewLocationMark"));
 		textViewLocation = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewLocation"));
 		textViewSignature = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewSignature"));
 		imageViewEditProfile = (ImageView) view.findViewById(ResHelper.getIdRes(getContext(), "imageViewEditProfile"));
@@ -226,10 +234,16 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 		if (tab == null || tab == currentTab) {
 			return;
 		}
+		isClickTabEvent = true;
 		currentTab = tab;
 		updateTabView();
 		getBasePagedItemAdapter().getDataSet().clear();
 		refreshQuiet();
+		try {
+			//取消加载效果，防止界面闪动
+			ReflectHelper.invokeInstanceMethod(this,"reversePulling");
+		} catch (Throwable throwable) {
+		}
 	}
 
 	public void updateTabView() {
@@ -288,6 +302,11 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 				aivAvatar.setImageBitmap(GUIManager.getInstance().getCurrentUserAvatar());
 				textViewName.setText(userInfo.userName);
 				textViewLocation.setText(DataConverterHelper.getLocationText(userInfo));
+				if(StringUtils.isEmpty(textViewLocation.getText().toString().trim())) {
+					imageViewLocationMark.setVisibility(INVISIBLE);
+				} else {
+					imageViewLocationMark.setVisibility(VISIBLE);
+				}
 				textViewSignature.setText(userInfo.sightml == null ? "" : Html.fromHtml(userInfo.sightml));
 
 				//set blur background

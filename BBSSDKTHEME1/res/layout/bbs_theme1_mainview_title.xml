@@ -52,7 +52,7 @@
             android:layout_centerInParent="true"
             android:alpha="0"
             android:text="首页"
-            android:textColor="@color/bbs_white"/>
+            android:textColor="@color/bbs_theme1_maintitleblack"/>
 
         <ImageView
             android:id="@+id/imageViewSearch"

@@ -89,6 +89,7 @@ public class GlideImageView extends ImageView {
 		TypedArray array = getContext().obtainStyledAttributes(attrs, getStyleables("GlideImageViewStyle"), defStyle, 0);
 		roundedCorner = (int) array.getDimension(getStyleable("GlideImageViewStyle_roundCorner"), roundedCorner);
 		roundedPic = array.getBoolean(getStyleable("GlideImageViewStyle_roundedPic"), roundedPic);
+		array.recycle();
 	}
 
 	public void execute(String url) {

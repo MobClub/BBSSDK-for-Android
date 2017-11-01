@@ -11,4 +11,5 @@
     <string name="bbs_init_appsecret_error">appKey或者appSecret不匹配，请重新输入!</string>
     <string name="bbs_init_pluginnotset_error">请检查论坛已安装BBSSDK插件，并设置成功!</string>
     <string name="bbs_init_bbssdknotinit_error">请先在Mob后台进行初始化!</string>
+    <string name="bbs_init_restorefromurl">从超链接打开详情页</string>
 </resources>

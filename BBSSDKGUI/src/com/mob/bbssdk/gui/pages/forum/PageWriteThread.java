@@ -5,10 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +26,8 @@ import com.mob.bbssdk.gui.BBSViewBuilder;
 import com.mob.bbssdk.gui.dialog.WarningDialog;
 import com.mob.bbssdk.gui.pages.SelectPicBasePageWithTitle;
 import com.mob.bbssdk.gui.utils.SendForumThreadManager;
+import com.mob.bbssdk.gui.views.EmojiPagerAdapter;
+import com.mob.bbssdk.gui.views.EmojiTab;
 import com.mob.bbssdk.gui.views.GlideImageView;
 import com.mob.bbssdk.gui.views.RichEditor;
 import com.mob.bbssdk.gui.views.TitleBar;
@@ -35,7 +43,7 @@ import java.util.List;
 /**
  * 发帖界面
  */
-public class PageWriteThread extends SelectPicBasePageWithTitle {
+public class PageWriteThread extends SelectPicBasePageWithTitle implements View.OnClickListener {
 	private GlideImageView aivAvatar;
 	private TextView textViewTitle;
 	protected TextView textViewChooseCat;
@@ -51,13 +59,23 @@ public class PageWriteThread extends SelectPicBasePageWithTitle {
 	private ImageView toggleHeader4;
 	private ImageView toggleQuote;
 	private ImageView imageViewKeyboard;
+	private ImageView imageViewAddEmoji;
+	private ViewGroup layoutEmojiContainer;
 	private View llEditorBar;
+	private EmojiPagerAdapter emojiPagerAdapter;
+	private ViewPager emojiViewPager;
+	private Handler mHandler = new Handler();
+	private ImageView imageViewEmojiGeneral;
+	private ImageView imageViewEmojiGrapeman;
+	private ImageView imageViewEmojiCoolMonkey;
 
 	private View.OnClickListener toggleListener;
 	protected ForumForum selectedForum = null;
 
 	private WarningDialog warningDialog;
 	private BroadcastReceiver sendThreadReceiver;
+	InputMethodManager inputMethodManager;
+	private boolean isKeyboardShown = false;
 
 	/**
 	 * 设置论坛版块
@@ -97,27 +115,102 @@ public class PageWriteThread extends SelectPicBasePageWithTitle {
 		toggleHeader3 = (ImageView) view.findViewById(getIdRes("bbs_writepost_toggleHeader3"));
 		toggleHeader4 = (ImageView) view.findViewById(getIdRes("bbs_writepost_toggleHeader4"));
 		toggleQuote = (ImageView) view.findViewById(getIdRes("bbs_writepost_toggleQuote"));
+		imageViewAddEmoji = (ImageView) view.findViewById(getIdRes("imageViewAddEmoji"));
+		layoutEmojiContainer = (ViewGroup) view.findViewById(getIdRes("layoutEmojiContainer"));
+		layoutEmojiContainer.setVisibility(View.GONE);
 		llEditorBar = view.findViewById(getIdRes("llEditorBar"));
+
+		imageViewEmojiGeneral = (ImageView) view.findViewById(ResHelper.getIdRes(context, "imageViewEmojiGeneral"));
+		imageViewEmojiGrapeman = (ImageView) view.findViewById(ResHelper.getIdRes(context, "imageViewEmojiGrapeman"));
+		imageViewEmojiCoolMonkey = (ImageView) view.findViewById(ResHelper.getIdRes(context, "imageViewEmojiCoolMonkey"));
+		imageViewEmojiGeneral.setOnClickListener(this);
+		imageViewEmojiGrapeman.setOnClickListener(this);
+		imageViewEmojiCoolMonkey.setOnClickListener(this);
 
 		UserAPI userAPI = BBSSDK.getApi(UserAPI.class);
 		User user = BBSViewBuilder.getInstance().ensureLogin(true);
-		if(user == null) {
+		if (user == null) {
 			finish();
 			return;
 		}
 		aivAvatar.execute(user.avatar, null);
 		textViewTitle.setText(user.userName);
 
-		imageViewKeyboard = (ImageView) view.findViewById(getIdRes("bbs_writepost_imageViewKeyboard"));
-		imageViewKeyboard.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				View view = activity.getCurrentFocus();
-				if (view != null) {
-					InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+		titleBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				Rect r = new Rect();
+				titleBar.getWindowVisibleDisplayFrame(r);
+				int screenHeight = titleBar.getRootView().getHeight();
+				// r.bottom is the position above soft keypad or device button.
+				// if keypad is shown, the r.bottom is smaller than that before.
+				int keypadHeight = screenHeight - r.bottom;
+				if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+					isKeyboardShown = true;
+					//键盘展示时会隐藏emoji输入框
+					layoutEmojiContainer.setVisibility(View.GONE);
+				} else {
+					isKeyboardShown = false;
 				}
 			}
 		});
+
+		imageViewKeyboard = (ImageView) view.findViewById(getIdRes("bbs_writepost_imageViewKeyboard"));
+		imageViewKeyboard.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (isKeyboardShown) {
+					hideSoftInput();
+				} else {
+					showSoftInput();
+				}
+			}
+		});
+		imageViewAddEmoji.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (isKeyboardShown) {
+					hideSoftInput();
+				}
+				mHandler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						layoutEmojiContainer.setVisibility(View.VISIBLE);
+					}
+				}, 500);
+			}
+		});
+
+		emojiViewPager = (ViewPager) view.findViewById(getIdRes("emojiViewPager"));
+		emojiPagerAdapter = new EmojiPagerAdapter(getContext(), new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String key = (String) v.getTag();
+				key = htmlReplace(key);
+				richEditor.insertHTML(key);
+			}
+		});
+		emojiViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+				onEmojiPageSelected(position);
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
+		emojiViewPager.setAdapter(emojiPagerAdapter);
+		emojiPagerAdapter.notifyDataSetChanged();
+
 		textViewChooseCat.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				ChooseForum();
@@ -174,7 +267,101 @@ public class PageWriteThread extends SelectPicBasePageWithTitle {
 			}
 		});
 
+		richEditor.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				//当弹出emoji界面，又点击了详情页时，因为会弹出键盘，所以关闭掉emoji页面的展示。
+				if (event.getAction() == MotionEvent.ACTION_UP && layoutEmojiContainer.getVisibility() == View.VISIBLE) {
+					layoutEmojiContainer.setVisibility(View.GONE);
+				}
+				return false;
+			}
+		});
 		restoreCache(context);
+	}
+
+	public static String htmlReplace(String str){
+		str = str.replace("'", "&apos;");
+		str = str.replace("—", "&mdash;");
+		str = str.replace("–", "&ndash;");
+		str = str.replace("\"", "&quot;");
+		str = str.replace(">", "&gt;");
+		str = str.replace("<", "&lt;");
+		str = str.replace("&", "&amp;");
+		return str;
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v == imageViewEmojiGeneral) {
+			clickOnEmojiTab(EmojiTab.General);
+		} else if (v == imageViewEmojiCoolMonkey) {
+			clickOnEmojiTab(EmojiTab.CoolMonkey);
+		} else if (v == imageViewEmojiGrapeman) {
+			clickOnEmojiTab(EmojiTab.Grapeman);
+		}
+	}
+
+	protected void clickOnEmojiTab(EmojiTab tab) {
+		if (tab == null) {
+			return;
+		}
+		int selectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_selected"));
+		int unselectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_unselected"));
+		if (tab == EmojiTab.General) {
+			emojiViewPager.setCurrentItem(0);
+			imageViewEmojiGeneral.setBackgroundColor(selectedcolor);
+			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
+			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
+		} else if (tab == EmojiTab.Grapeman) {
+			emojiViewPager.setCurrentItem(1);
+			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
+			imageViewEmojiGrapeman.setBackgroundColor(selectedcolor);
+			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
+		} else if (tab == EmojiTab.CoolMonkey) {
+			emojiViewPager.setCurrentItem(2);
+			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
+			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
+			imageViewEmojiCoolMonkey.setBackgroundColor(selectedcolor);
+		}
+	}
+
+	protected void onEmojiPageSelected(int position) {
+		EmojiTab tab = EmojiTab.fromPosition(position);
+		int selectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_selected"));
+		int unselectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_unselected"));
+		if (tab == EmojiTab.General) {
+			emojiViewPager.setCurrentItem(0);
+			imageViewEmojiGeneral.setBackgroundColor(selectedcolor);
+			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
+			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
+		} else if (tab == EmojiTab.Grapeman) {
+			emojiViewPager.setCurrentItem(1);
+			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
+			imageViewEmojiGrapeman.setBackgroundColor(selectedcolor);
+			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
+		} else if (tab == EmojiTab.CoolMonkey) {
+			emojiViewPager.setCurrentItem(2);
+			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
+			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
+			imageViewEmojiCoolMonkey.setBackgroundColor(selectedcolor);
+		}
+	}
+
+
+	private void hideSoftInput() {
+		if (inputMethodManager == null) {
+			return;
+		}
+		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+	}
+
+	private void showSoftInput() {
+		if (activity.getCurrentFocus() == null) {
+			return;
+		}
+		activity.getCurrentFocus().requestFocus();
+		inputMethodManager.showSoftInput(activity.getCurrentFocus(), 0);
 	}
 
 	protected void ChooseForum() {

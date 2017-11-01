@@ -7,6 +7,8 @@ import com.mob.bbssdk.model.User;
 import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.utils.ResHelper;
 
+import java.util.Locale;
+
 public class DataConverterHelper {
 
 	public static String getGenderInfo(Context context, User user) {
@@ -65,8 +67,8 @@ public class DataConverterHelper {
 		if (user.birthyear <= 0 || user.birthmonth <= 0 || user.birthday <= 0) {
 			return null;
 		}
-		String month = String.format("%02d", user.birthmonth);
-		String day = String.format("%02d", user.birthday);
+		String month = String.format(Locale.CHINA, "%02d", user.birthmonth);
+		String day = String.format(Locale.CHINA, "%02d", user.birthday);
 		return "" + user.birthyear + "-" + month + "-" + day;
 	}
 }

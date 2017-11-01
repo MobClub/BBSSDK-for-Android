@@ -28,6 +28,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class Theme0PageUserProfileDetails extends PageUserProfileDetails {
 
@@ -182,17 +183,17 @@ public class Theme0PageUserProfileDetails extends PageUserProfileDetails {
 								cal.set(Calendar.YEAR, (Integer) choice[0].ext);
 								cal.set(Calendar.MONTH, ((Integer) choice[1].ext) - 1);
 								cal.set(Calendar.DAY_OF_MONTH, (Integer) choice[2].ext);
-								String sel = new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
+								String sel = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(cal.getTime());
 								String birth = DataConverterHelper.getBirthday(userInfo);
 								String bid = null;
 								if (cal.getTimeInMillis() > System.currentTimeMillis()) {
 									ToastUtils.showToast(getContext(), getStringRes("theme0_setbirthday_error"));
 								} else {
 									//update the birthday unless the data set by the user don't equal to the data got from server.
-									String result = new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime()).toString();
-									String birthyear = String.format("%4d", userInfo.birthyear);
-									String birthmoth = String.format("%02d", userInfo.birthmonth);
-									String birthday = String.format("%02d", userInfo.birthday);
+									String result = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(cal.getTime()).toString();
+									String birthyear = String.format(Locale.CHINA, "%4d", userInfo.birthyear);
+									String birthmoth = String.format(Locale.CHINA, "%02d", userInfo.birthmonth);
+									String birthday = String.format(Locale.CHINA, "%02d", userInfo.birthday);
 									String userbirth = birthyear + "-" + birthmoth + "-" + birthday;
 									if (!result.equals(userbirth)) {
 										updateBirthday(result);
@@ -208,9 +209,9 @@ public class Theme0PageUserProfileDetails extends PageUserProfileDetails {
 				ArrayList<Choice> choices = scvBirthday.getChoices();
 				boolean founded = false;
 				int[] selections = new int[3];
-				String birthyear = String.format("%4d", userInfo.birthyear);
-				String birthmoth = String.format("%02d", userInfo.birthmonth);
-				String birthday = String.format("%02d", userInfo.birthday);
+				String birthyear = String.format(Locale.CHINA, "%4d", userInfo.birthyear);
+				String birthmoth = String.format(Locale.CHINA, "%02d", userInfo.birthmonth);
+				String birthday = String.format(Locale.CHINA, "%02d", userInfo.birthday);
 				boolean endloop = false;
 				for (int i = 0; i < choices.size(); i++) {
 					if (endloop) {

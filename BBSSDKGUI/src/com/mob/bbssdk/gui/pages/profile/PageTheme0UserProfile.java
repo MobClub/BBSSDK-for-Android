@@ -2,6 +2,7 @@ package com.mob.bbssdk.gui.pages.profile;
 
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -122,7 +123,7 @@ public class PageTheme0UserProfile extends BasePageWithTitle {
 		userInfo = user;
 		aivAvatar.setImageBitmap(GUIManager.getInstance().getCurrentUserAvatar());
 		textViewName.setText(userInfo.userName);
-		textViewSignature.setText(userInfo.sightml);
+		textViewSignature.setText(userInfo.sightml == null ? "" : Html.fromHtml(userInfo.sightml));
 		textViewLocation.setText(DataConverterHelper.getLocationText(userInfo));
 		textViewHistoryCount.setText("" + ForumThreadHistoryManager.getInstance().getReadedThreadCount());
 	}

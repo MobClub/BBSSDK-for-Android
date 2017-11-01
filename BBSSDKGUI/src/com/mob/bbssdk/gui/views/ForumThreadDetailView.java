@@ -20,7 +20,6 @@ import android.webkit.JsPromptResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -59,6 +58,7 @@ import java.util.List;
  * 帖子详情的View
  */
 public class ForumThreadDetailView extends BaseView {
+	private static final String URL_THREAD_DETAIL_PAGE = "file:///android_asset/bbssdk/html/details/index.html";
 	protected BaseWebView webView;
 	private ProgressBar progressBar;
 	private ViewGroup rlReply;
@@ -389,7 +389,7 @@ public class ForumThreadDetailView extends BaseView {
 	}
 
 	protected void loadNativeHtml() {
-		webView.loadUrl("file:///android_asset/html/details/index.html");
+		webView.loadUrl(URL_THREAD_DETAIL_PAGE);
 	}
 
 	private void onOwnerClick() {
@@ -411,7 +411,7 @@ public class ForumThreadDetailView extends BaseView {
 		}
 		int status = SendForumPostManager.getStatus(getContext());
 		if (status != SendForumPostManager.STATUS_SEND_IDLE && status != SendForumPostManager.STATUS_SEND_SUCCESS
-				&& status != SendForumPostManager.STATUS_SEND_CACHED) {
+				&& status != SendForumPostManager.STATUS_SEND_CACHED && status != SendForumPostManager.STATUS_SEND_FAILED) {
 			Toast.makeText(getContext(), ResHelper.getStringRes(getContext(), "bbs_writepost_send_ing_waiting"), Toast.LENGTH_SHORT).show();
 			return;
 		}

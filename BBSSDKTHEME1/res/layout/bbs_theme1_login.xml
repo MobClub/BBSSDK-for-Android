@@ -105,7 +105,6 @@
                     android:clickable="true"
                     android:gravity="center_vertical"
                     android:hint="@string/bbs_login_question"
-                    android:inputType="text"
                     android:textColorHint="@color/bbs_theme1_userinputhinttext"
                     android:textSize="@dimen/bbs_theme1_userinputtext"
                     />

@@ -13,6 +13,7 @@
         />
 
     <LinearLayout
+        android:background="@color/bbs_white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -28,23 +29,20 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp">
 
-            <EditText
-                android:id="@+id/etContent"
+            <com.mob.bbssdk.gui.views.ReplyInputEditText
+                android:id="@+id/replyInputEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:maxLines="3"
+                android:padding="10dp"
                 android:textColor="#3a4540"
                 android:textColorHint="#b4b4b4"
                 android:textSize="13sp">
 
                 <requestFocus/>
-            </EditText>
+            </com.mob.bbssdk.gui.views.ReplyInputEditText>
 
             <TextView
                 android:id="@+id/tvSend"
@@ -62,40 +60,119 @@
 
         <include layout="@layout/bbs_divider"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@color/bbs_white">
-
-            <ImageView
-                android:id="@+id/ivImg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/bbs_reply_addpic"/>
-
-            <TextView
-                android:id="@+id/tvImgCount"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/bbs_bg_reply_addpic"
-                android:gravity="center"
-                android:textColor="@color/bbs_white"
-                android:textSize="12sp"
-                tools:text="9"/>
-        </RelativeLayout>
-
-        <GridView
-            android:id="@+id/gvImg"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#F2F4F7"
-            android:numColumns="4"
-            android:visibility="gone"/>
+            android:layout_gravity="right"
+            android:background="@color/bbs_white"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@color/bbs_white">
+
+                <ImageView
+                    android:id="@+id/ivImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/bbs_reply_addpic"/>
+
+                <TextView
+                    android:id="@+id/tvImgCount"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/bbs_bg_reply_addpic"
+                    android:gravity="center"
+                    android:textColor="@color/bbs_white"
+                    android:textSize="12sp"
+                    tools:text="9"/>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/imageShowKeyboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/bbs_reply_showkeyboard"/>
+
+            <ImageView
+                android:id="@+id/imageViewAddEmoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/bbs_add_emoji"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/bbs_divider" />
+
+        <LinearLayout
+            android:id="@+id/layoutBottomContainer"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/bbs_white"
+            android:orientation="vertical">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/emojiViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/bbs_emoji_selected"
+                android:padding="10dp"/>
+
+            <LinearLayout
+                android:id="@+id/layoutEmojiTab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@color/bbs_emoji_unselected"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewEmojiGeneral"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@color/bbs_emoji_selected"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/bbs_reply_emoji_general"/>
+
+                <ImageView
+                    android:id="@+id/imageViewEmojiGrapeman"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@color/bbs_emoji_unselected"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/bbs_reply_emoji_grapeman"/>
+
+                <ImageView
+                    android:id="@+id/imageViewEmojiCoolMonkey"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@color/bbs_emoji_unselected"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/bbs_reply_emoji_coolmonkey"/>
+            </LinearLayout>
+
+            <GridView
+                android:id="@+id/gvImg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#F2F4F7"
+                android:numColumns="4"
+                android:padding="10dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

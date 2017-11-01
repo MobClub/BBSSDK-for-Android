@@ -2,6 +2,7 @@ package com.mob.bbssdk.gui.pages.profile;
 
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -38,7 +39,7 @@ public class PageEditSignature extends BasePageWithTitle {
 		titleBar.setTitle(getStringRes("theme0_pageeditsignature_title"));
 
 		editTextSignature = (EditText) contentView.findViewById(getIdRes("editTextSignature"));
-		editTextSignature.setText(strSig);
+		editTextSignature.setText(strSig == null ? "" : Html.fromHtml(strSig));
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class PageEditSignature extends BasePageWithTitle {
 
 					@Override
 					public void onError(API api, int action, int errorCode, Throwable details) {
-						ErrorCodeHelper.toastErrorCode(getContext(), errorCode);
+						ErrorCodeHelper.toastError(getContext(), errorCode, details);
 						dismissLoadingDialog();
 						if(needfinish) {
 							finish();

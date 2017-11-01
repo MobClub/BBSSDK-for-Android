@@ -52,7 +52,7 @@ public class BBSViewBuilder {
 	//	private HashMap<Class<? extends BasePage>, Class<? extends BasePage>> typeMap;
 	public static synchronized void init(BBSViewBuilder viewbuilder) {
 		if (bbsViewBuilder != null) {
-			throw new IllegalAccessError("You can only init bbsViewBuilder once!");
+//			throw new IllegalAccessError("You can only init bbsViewBuilder once!");
 		}
 		if (viewbuilder == null) {
 			bbsViewBuilder = new BBSViewBuilder();

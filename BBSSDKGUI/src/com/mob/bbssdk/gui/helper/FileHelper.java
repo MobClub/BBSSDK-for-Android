@@ -107,7 +107,7 @@ public class FileHelper {
 		try {
 			objinputstream = new ObjectInputStream(fileinputstream);
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			return null;
 		}
 

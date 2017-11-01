@@ -30,7 +30,6 @@ import com.mob.bbssdk.gui.pages.forum.PageImageViewer;
 import com.mob.bbssdk.gui.pages.misc.PageFollowers;
 import com.mob.bbssdk.gui.pages.misc.PageFollowings;
 import com.mob.bbssdk.gui.ptrlistview.BasePagedItemAdapter;
-import com.mob.bbssdk.gui.utils.ImageDownloader;
 import com.mob.bbssdk.gui.utils.ToastUtils;
 import com.mob.bbssdk.gui.views.GlideImageView;
 import com.mob.bbssdk.gui.views.pullrequestview.BBSPullToRequestView;
@@ -54,12 +53,12 @@ public class Theme1OtherUserProfilePullRequestView extends BBSPullToRequestView<
 	protected TextView textViewSignature;
 	protected TextView textViewFollowing;
 	protected TextView textViewFollowers;
+	ImageView imageViewLocationMark;
 	ImageView imageViewFollow;
 	ImageView imageViewUnfollow;
 	ImageView imageViewBlur;
 	private UserOperations userOperations;
 	private User userInfo;
-	private Bitmap bitmapAvatar;
 
 	public Theme1OtherUserProfilePullRequestView(Context context) {
 		super(context);
@@ -127,6 +126,7 @@ public class Theme1OtherUserProfilePullRequestView extends BBSPullToRequestView<
 		});
 
 		textViewName = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewName"));
+		imageViewLocationMark = (ImageView) view.findViewById(ResHelper.getIdRes(getContext(), "imageViewLocationMark"));
 		textViewLocation = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewLocation"));
 		textViewSignature = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewSignature"));
 		textViewFollowing = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewFollowing"));
@@ -213,20 +213,13 @@ public class Theme1OtherUserProfilePullRequestView extends BBSPullToRequestView<
 
 		if (view != null) {
 			if (userInfo != null) {
-				if(bitmapAvatar == null) {
-					ImageDownloader.loadImage(getContext(), userInfo.avatar, new ImageDownloader.ImageDoneListner() {
-						@Override
-						public void OnFinish(boolean success, Bitmap bitmap) {
-							if (success && bitmap != null) {
-								bitmapAvatar = bitmap;
-							}
-						}
-					});
-				} else {
-					aivAvatar.setImageBitmap(bitmapAvatar);
-				}
 				textViewName.setText(userInfo.userName);
 				textViewLocation.setText(DataConverterHelper.getLocationText(userInfo));
+				if(StringUtils.isEmpty(textViewLocation.getText().toString().trim())) {
+					imageViewLocationMark.setVisibility(INVISIBLE);
+				} else {
+					imageViewLocationMark.setVisibility(VISIBLE);
+				}
 				textViewSignature.setText(userInfo.sightml == null ? "" : Html.fromHtml(userInfo.sightml));
 				//set blur background
 				if(!StringUtils.isEmpty(userInfo.avatar)) {
@@ -238,8 +231,11 @@ public class Theme1OtherUserProfilePullRequestView extends BBSPullToRequestView<
 								@Override
 								public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
 									Blurry.with(getContext()).from(resource).into(imageViewBlur);
+									aivAvatar.setBitmap(resource);
 								}
 							});
+				} else {
+					aivAvatar.setImageResource(ResHelper.getBitmapRes(getContext(), "bbs_theme1_login_defaultportrait"));
 				}
 				view.setVisibility(VISIBLE);
 			}
@@ -260,30 +256,12 @@ public class Theme1OtherUserProfilePullRequestView extends BBSPullToRequestView<
 	}
 
 	protected void updateInfoFromServer() {
-		final User user = BBSViewBuilder.getInstance().ensureLogin(true);
-		if (user == null) {
-			return;
-		}
-		BBSSDK.getApi(UserAPI.class).getUserInfo(nUserID, false, new APICallback<User>() {
-			@Override
-			public void onSuccess(API api, int action, User result) {
-				if (result != null) {
-					userInfo = result;
-					updateViews();
-				}
-			}
-
-			@Override
-			public void onError(API api, int action, int errorCode, Throwable details) {
-				ErrorCodeHelper.toastError(getContext(), errorCode, details);
-			}
-		});
-
 		UserAPI api = BBSSDK.getApi(UserAPI.class);
 		api.getUserOperations(nUserID, false, new APICallback<UserOperations>() {
 			@Override
 			public void onSuccess(API api, int action, UserOperations result) {
 				userOperations = result;
+				userInfo = userOperations.userInfo;
 				updateViews();
 			}
 

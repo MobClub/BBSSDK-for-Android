@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mob.bbssdk.API;
@@ -48,8 +49,9 @@ import com.mob.bbssdk.model.ForumThread;
 import com.mob.bbssdk.model.User;
 import com.mob.bbssdk.model.UserOperations;
 import com.mob.bbssdk.theme1.BBSTheme1ViewBuilder;
-import com.mob.bbssdk.theme1.page.Theme1PageForumSetting;
-import com.mob.bbssdk.theme1.page.Theme1PageForumThread;
+import com.mob.bbssdk.theme1.page.forum.Theme1PageForumSetting;
+import com.mob.bbssdk.theme1.page.forum.Theme1PageForumThread;
+import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.FakeActivity;
 import com.mob.tools.utils.ResHelper;
 import com.mob.tools.utils.UIHandler;
@@ -61,6 +63,7 @@ import java.util.List;
 public class Theme1MainView extends FrameLayout implements MainViewInterface {
 	protected ForumThreadListView forumThreadListViewWithBanner;
 	protected GlideImageView imageViewAvatar;
+	protected boolean isDefaultAvatar = true;
 	protected ImageView imageViewSearch;
 	protected ImageView imageViewWritePost;
 	protected View viewTitle;
@@ -85,6 +88,9 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 	protected TextView textViewHeaderFunc3;
 	protected TextView textViewHeaderFunc4;
 	protected ViewGroup viewHeaderFuncMore;
+	protected View placeHolderView;
+	protected OnClickListener headerOnClickListener;
+	protected int defaultTotalForumPic;
 
 	public Theme1MainView(@NonNull Context context) {
 		super(context);
@@ -141,69 +147,82 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 		});
 	}
 
-	OnClickListener headerOnClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			if (forumForum == null) {
-				return;
-			}
-			ForumForum forum = null;
-			if (v == viewHeaderFunc1) {
-				forum = forumForum.get(0);
-			} else if (v == viewHeaderFunc2) {
-				forum = forumForum.get(1);
-			} else if (v == viewHeaderFunc3) {
-				forum = forumForum.get(2);
-			} else if (v == viewHeaderFunc4) {
-				forum = forumForum.get(3);
-			}
-			if (forum != null) {
-				Theme1PageForumThread page = new Theme1PageForumThread();
-				page.initData(forum);
-				page.show(getContext());
-			}
-		}
-	};
-
 	protected void updateTabFunc() {
 		//view created and data got.
 		if (viewHeaderContent != null && forumForum != null) {
-			if (forumForum.get(0) != null) {
-				final ForumForum forum = forumForum.get(0);
-				ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc1);
-				textViewHeaderFunc1.setText(forum.name);
-				viewHeaderFunc1.setVisibility(VISIBLE);
-			} else {
-				viewHeaderFunc1.setVisibility(INVISIBLE);
-			}
-			if (forumForum.get(1) != null) {
-				final ForumForum forum = forumForum.get(1);
-				ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc2);
-				textViewHeaderFunc2.setText(forum.name);
-				viewHeaderFunc2.setVisibility(VISIBLE);
-			} else {
-				viewHeaderFunc2.setVisibility(INVISIBLE);
-			}
-			if (forumForum.get(2) != null) {
-				final ForumForum forum = forumForum.get(2);
-				ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc3);
-				textViewHeaderFunc3.setText(forum.name);
-				viewHeaderFunc3.setVisibility(VISIBLE);
-			} else {
-				viewHeaderFunc3.setVisibility(INVISIBLE);
-			}
-			if (forumForum.get(3) != null) {
-				final ForumForum forum = forumForum.get(3);
-				ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc4);
-				textViewHeaderFunc4.setText(forum.name);
-				viewHeaderFunc4.setVisibility(VISIBLE);
-			} else {
-				viewHeaderFunc4.setVisibility(INVISIBLE);
+			//首页头部版块显示不超过4个
+			int size = 4 > forumForum.size() ? forumForum.size() : 4;
+
+			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) placeHolderView.getLayoutParams();
+			layoutParams.weight = 4 - size;
+			placeHolderView.setLayoutParams(layoutParams);
+			viewHeaderFunc1.setVisibility(GONE);
+			viewHeaderFunc2.setVisibility(GONE);
+			viewHeaderFunc3.setVisibility(GONE);
+			viewHeaderFunc4.setVisibility(GONE);
+
+			for (int i = 0; i < size; i++) {
+				updateTabVisible(i);
 			}
 		}
 	}
 
+	private void updateTabVisible(int index) {
+		switch (index) {
+			case 0: {
+				if (forumForum.get(0) != null) {
+					final ForumForum forum = forumForum.get(0);
+					System.out.println("forum.fid: " + forum.fid + " forumPic: " + forum.forumPic);
+					if(forum.fid == 0 && StringUtils.isEmpty(forum.forumPic)) {
+						imageViewHeaderFunc1.setImageResource(defaultTotalForumPic);
+					} else {
+						ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc1);
+					}
+					textViewHeaderFunc1.setText(forum.name);
+					viewHeaderFunc1.setVisibility(VISIBLE);
+				}
+			} break;
+			case 1: {
+				if (forumForum.get(1) != null) {
+					final ForumForum forum = forumForum.get(1);
+					if(forum.fid == 0 && StringUtils.isEmpty(forum.forumPic)) {
+						imageViewHeaderFunc2.setImageResource(defaultTotalForumPic);
+					} else {
+						ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc2);
+					}
+					textViewHeaderFunc2.setText(forum.name);
+					viewHeaderFunc2.setVisibility(VISIBLE);
+				}
+			} break;
+			case 2: {
+				if (forumForum.get(2) != null) {
+					final ForumForum forum = forumForum.get(2);
+					if(forum.fid == 0 && StringUtils.isEmpty(forum.forumPic)) {
+						imageViewHeaderFunc3.setImageResource(defaultTotalForumPic);
+					} else {
+						ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc3);
+					}
+					textViewHeaderFunc3.setText(forum.name);
+					viewHeaderFunc3.setVisibility(VISIBLE);
+				}
+			} break;
+			case 3: {
+				if (forumForum.get(3) != null) {
+					final ForumForum forum = forumForum.get(3);
+					if(forum.fid == 0 && StringUtils.isEmpty(forum.forumPic)) {
+						imageViewHeaderFunc4.setImageResource(defaultTotalForumPic);
+					} else {
+						ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc4);
+					}
+					textViewHeaderFunc4.setText(forum.name);
+					viewHeaderFunc4.setVisibility(VISIBLE);
+				}
+			} break;
+		}
+	}
+
 	protected void init(Context context) {
+		defaultTotalForumPic = ResHelper.getBitmapRes(getContext(), "bbs_theme1_totaldefault");
 		setBackgroundColor(Color.WHITE);
 		loginListener = new GUIManager.LoginListener() {
 			@Override
@@ -216,6 +235,30 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 			@Override
 			public void OnCancel() {
 
+			}
+		};
+
+		headerOnClickListener = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (forumForum == null) {
+					return;
+				}
+				ForumForum forum = null;
+				if (v == viewHeaderFunc1) {
+					forum = forumForum.get(0);
+				} else if (v == viewHeaderFunc2) {
+					forum = forumForum.get(1);
+				} else if (v == viewHeaderFunc3) {
+					forum = forumForum.get(2);
+				} else if (v == viewHeaderFunc4) {
+					forum = forumForum.get(3);
+				}
+				if (forum != null) {
+					Theme1PageForumThread page = new Theme1PageForumThread();
+					page.initData(forum);
+					page.show(getContext());
+				}
 			}
 		};
 
@@ -244,8 +287,9 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 				}
 				if (viewHeader != null && viewHeader.isShown()) {
 					float headerViewY = viewHeader.getY();
-					return eventY < viewHeader.getHeight() + headerViewY &&
-							Math.abs(headerViewY) < viewHeader.getHeight() && headerViewY <= 0 && headerViewY > -10;
+					return (eventY < viewHeader.getHeight() + headerViewY)
+							&& (Math.abs(headerViewY) < viewHeader.getHeight())
+							&& (headerViewY <= 0 && headerViewY > -10);
 				}
 				return false;
 			}
@@ -254,6 +298,7 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 			protected void init() {
 				super.init();
 				setHaveContentHeader(true);
+				basePagedItemAdapter.setDividerHeight(0);
 			}
 
 			@Override
@@ -284,6 +329,7 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 				textViewHeaderFunc2 = (TextView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "textViewHeaderFunc2"));
 				textViewHeaderFunc3 = (TextView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "textViewHeaderFunc3"));
 				textViewHeaderFunc4 = (TextView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "textViewHeaderFunc4"));
+				placeHolderView = viewheader.findViewById(ResHelper.getIdRes(getContext(), "placeHolderView"));
 
 				viewHeaderFuncMore = (ViewGroup) viewheader.findViewById(ResHelper.getIdRes(getContext(), "viewHeaderFuncMore"));
 				viewHeaderFuncMore.setOnClickListener(new OnClickListener() {
@@ -461,8 +507,52 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 			public void OnScrolledTo(int y) {
 				BBSPullToRequestView.setAlphaByScrollY(viewBackground, y, ScreenUtils.dpToPx(100));
 				BBSPullToRequestView.setAlphaByScrollY(textViewTitle, y, ScreenUtils.dpToPx(100));
+
+				smoothSwitchView(imageViewWritePost, y, 500,
+						ResHelper.getBitmapRes(getContext(), "bbs_theme1_writepost_white"),
+						ResHelper.getBitmapRes(getContext(), "bbs_theme1_writepost_black"));
+
+				smoothSwitchView(imageViewSearch, y, 500,
+						ResHelper.getBitmapRes(getContext(), "bbs_theme1_search_white"),
+						ResHelper.getBitmapRes(getContext(), "bbs_theme1_search_black"));
+
+				smoothSwitchAvatarView(y, 500);
 			}
 		});
+	}
+
+	protected void smoothSwitchAvatarView(Integer height, Integer opacityheight) {
+		if(isDefaultAvatar) {
+			if(height == null) {
+				height = forumThreadListViewWithBanner.getScrollHeight();
+			}
+			smoothSwitchView(imageViewAvatar, height, opacityheight,
+					ResHelper.getBitmapRes(getContext(), "bbs_theme1_account_white"),
+					ResHelper.getBitmapRes(getContext(), "bbs_theme1_account_black"));
+		} else {
+			imageViewAvatar.setAlpha(1.0f);
+		}
+	}
+
+	protected void smoothSwitchView(ImageView imageview, Integer height, Integer opacityheight, int residfirst, int residsecond) {
+		if(height == null) {
+			height = forumThreadListViewWithBanner.getScrollHeight();
+		}
+		int halfopacityheight = opacityheight / 2;
+		//// TODO: 2017/10/9 optimize should be made.
+		if(height < halfopacityheight) {
+			float alpha1 = (float) height / halfopacityheight;
+			alpha1 = 1 - alpha1;
+			imageview.setImageResource(residfirst);
+			imageview.setAlpha(alpha1);
+		} else if(height < opacityheight) {
+			float alpha1 = (float) (height - halfopacityheight) / halfopacityheight;
+			imageview.setImageResource(residsecond);
+			imageview.setAlpha(alpha1);
+		} else {
+			imageview.setImageResource(residsecond);
+			imageview.setAlpha(1.0f);
+		}
 	}
 
 	@Override
@@ -500,6 +590,7 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 		}
 		if (!GUIManager.isLogin()) {
 			imageViewAvatar.setImageResource(ResHelper.getBitmapRes(getContext(), "bbs_theme1_account_white"));
+			isDefaultAvatar = true;
 		} else {
 			Bitmap currenavatar = GUIManager.getInstance().getCurrentUserAvatar();
 			if (currenavatar == null) {
@@ -508,15 +599,20 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 					public void onUpdated(Bitmap bitmap) {
 						if (bitmap == null) {
 							imageViewAvatar.setImageResource(ResHelper.getBitmapRes(getContext(), "bbs_theme1_account_white"));
+							isDefaultAvatar = true;
 						} else {
 							imageViewAvatar.setImageBitmap(bitmap);
+							isDefaultAvatar = false;
 						}
+						smoothSwitchAvatarView(null, 100);
 					}
 				});
 			} else {
 				imageViewAvatar.setImageBitmap(currenavatar);
+				isDefaultAvatar = false;
 			}
 		}
+		smoothSwitchAvatarView(null, 100);
 	}
 
 	private BroadcastReceiver initSendThreadReceiver() {
@@ -542,20 +638,16 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 		switch (status) {
 			case Failed: {
 				imageViewWritePost.setImageResource(ResHelper.getBitmapRes(getContext(), "bbs_ic_writethread_failed"));
-			}
-			break;
+			} break;
 			case Success: {
 				imageViewWritePost.setImageResource(ResHelper.getBitmapRes(getContext(), "bbs_ic_writethread_success"));
-			}
-			break;
+			} break;
 			case Normal: {
 				imageViewWritePost.setImageResource(ResHelper.getBitmapRes(getContext(), "bbs_theme1_title_writepost"));
-			}
-			break;
+			} break;
 			default: {
 				imageViewWritePost.setImageResource(ResHelper.getBitmapRes(getContext(), "bbs_theme1_title_writepost"));
-			}
-			break;
+			} break;
 		}
 	}
 

@@ -35,6 +35,6 @@
     <dimen name="bbs_attachment_btn_txt_size">13sp</dimen>
     <dimen name="bbs_activemail_resend_txt_size">16sp</dimen>
 
-    <dimen name="bbs_forumlistview_banner_height">183dp</dimen>
+    <dimen name="bbs_forumlistview_banner_height">200dp</dimen>
     <dimen name="bbs_forumlistview_header_height">293dp</dimen>
 </resources>

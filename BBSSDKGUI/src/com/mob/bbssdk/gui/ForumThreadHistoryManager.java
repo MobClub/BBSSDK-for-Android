@@ -41,7 +41,6 @@ public class ForumThreadHistoryManager {
 		try {
 			setThreadReaded = fileHelper.readObj();
 		} catch (ClassCastException e) {
-			e.printStackTrace();
 			fileHelper.clearContent();
 			setThreadReaded = new ArrayList<ForumThread>();
 		}

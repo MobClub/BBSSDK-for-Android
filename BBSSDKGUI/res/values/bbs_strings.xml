@@ -179,6 +179,7 @@
     <string name="bbs_timediff_hourbefore">小时前</string>
     <string name="bbs_timediff_minutebefore">分钟前</string>
     <string name="bbs_timediff_just">刚刚</string>
+    <string name="bbs_timediff_yesterday">昨天</string>
     <string-array name="bbs_forumview_tabtitle">
         <item>最新</item>
         <item>热门</item>
@@ -235,4 +236,6 @@
     <string name="bbs_clearcache_success">清空缓存!</string>
 
     <string name="bbs_cant_follower_yourself">自己不能关注自己！</string>
+
+    <string name="bbs_tokeninvalid_relogin">Token无效，请重新登录!</string>
 </resources>

@@ -4,23 +4,23 @@
         AppKey=""/>
 
     <QQ
-        AppId="1106383066"
-        AppKey="1l7IRevPpb7xlmdf"
+        AppId="1106410295"
+        AppKey="KEYQXjmJrcrh2BcSQAP"
         Enable="true"
         Id="7"
         ShareByAppClient="true"
         SortId="7"/>
 
     <QZone
-        AppId="1106383066"
-        AppKey="1l7IRevPpb7xlmdf"
+        AppId="1106410295"
+        AppKey="KEYQXjmJrcrh2BcSQAP"
         Enable="true"
         Id="3"
         SortId="3"/>
 
     <Wechat
-        AppId="wx1a83c00079bccbea"
-        AppSecret="c0d1bc0d21df14ccac52e3d706513858"
+        AppId="wx8f541f6c92eaca46"
+        AppSecret="649d76cdd54af433cb696478db6ef0f4"
         BypassApproval="false"
         Enable="true"
         Id="4"
@@ -29,17 +29,17 @@
         userName="gh_afb25ac019c9"/>
 
     <WechatMoments
-        AppId="wx1a83c00079bccbea"
-        AppSecret="c0d1bc0d21df14ccac52e3d706513858"
+        AppId="wx8f541f6c92eaca46"
+        AppSecret="649d76cdd54af433cb696478db6ef0f4"
         BypassApproval="false"
         Enable="true"
         Id="5"
         SortId="5"/>
 
     <SinaWeibo
-        AppKey="388602172"
-        AppSecret="6139f7ca5ac4fc68f07cdd264ae52b3e"
-        Enable="true"
+        AppKey="4244735359"
+        AppSecret="3c5e2fba33c8a61095af14b8e9818b47"
+        Enable="false"
         Id="1"
         IsNewApi="true"
         RedirectUrl="http://www.sharesdk.cn"

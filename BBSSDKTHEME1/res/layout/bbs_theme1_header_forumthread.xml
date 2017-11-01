@@ -6,7 +6,7 @@
               android:gravity="bottom"
               android:orientation="vertical">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/bbs_forumlistview_banner_height">
 
@@ -14,10 +14,10 @@
             android:id="@+id/imageViewBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/bbs_theme1_forumforum"
             android:scaleType="centerCrop"/>
 
         <LinearLayout
+            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -44,16 +44,14 @@
                         android:text=""
                         android:textColor="@color/bbs_white"
                         android:layout_marginRight="10dp"
-                        android:textSize="20dp"/>
+                        android:textSize="20sp"/>
 
                     <ImageView
                         android:id="@+id/imageViewDropDown"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/bbs_theme1_forumthread_dropdownarrow"
-                        />
+                        android:src="@drawable/bbs_theme1_forumthread_dropdownarrow"/>
                 </LinearLayout>
-
 
                 <TextView
                     android:id="@+id/textViewDescription"
@@ -66,11 +64,10 @@
 
             <com.mob.bbssdk.gui.views.GlideImageView
                 android:id="@+id/imageViewIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/bbs_theme1_forumdefault"/>
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
         </LinearLayout>
-    </FrameLayout>
+    </RelativeLayout>
 
     <include layout="@layout/bbs_divider"/>
 

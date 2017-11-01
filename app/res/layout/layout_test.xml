@@ -5,11 +5,10 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <com.mob.bbssdk.theme0.HeaderMobViewPager
-        android:id="@+id/mobViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-    </com.mob.bbssdk.theme0.HeaderMobViewPager>
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImageView"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:src="@drawable/bbs_theme1_sample"/>
 </LinearLayout>

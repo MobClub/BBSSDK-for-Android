@@ -30,7 +30,7 @@ public class ListViewItemBuilder {
 
 	public static synchronized void init(ListViewItemBuilder viewbuilder) {
 		if (listViewItemBuilder != null) {
-			throw new IllegalAccessError("You can only init listViewItemBuilder once!");
+//			throw new IllegalAccessError("You can only init listViewItemBuilder once!");
 		}
 		if (viewbuilder == null) {
 			listViewItemBuilder = new ListViewItemBuilder();

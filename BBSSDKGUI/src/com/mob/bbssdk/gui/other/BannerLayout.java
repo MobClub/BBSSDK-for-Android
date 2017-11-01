@@ -191,13 +191,11 @@ public class BannerLayout extends RelativeLayout {
 			case rect: {
 				unSelectedGradientDrawable.setShape(GradientDrawable.RECTANGLE);
 				selectedGradientDrawable.setShape(GradientDrawable.RECTANGLE);
-			}
-			break;
+			} break;
 			case oval: {
 				unSelectedGradientDrawable.setShape(GradientDrawable.OVAL);
 				selectedGradientDrawable.setShape(GradientDrawable.OVAL);
-			}
-			break;
+			} break;
 		}
 		unSelectedGradientDrawable.setColor(unSelectedIndicatorColor);
 		unSelectedGradientDrawable.setSize(unSelectedIndicatorWidth, unSelectedIndicatorHeight);
@@ -348,33 +346,27 @@ public class BannerLayout extends RelativeLayout {
 			case centerBottom: {
 				params.addRule(RelativeLayout.CENTER_HORIZONTAL);
 				params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			}
-			break;
+			} break;
 			case centerTop: {
 				params.addRule(RelativeLayout.CENTER_HORIZONTAL);
 				params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-			}
-			break;
+			} break;
 			case leftBottom: {
 				params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 				params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			}
-			break;
+			} break;
 			case leftTop: {
 				params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 				params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-			}
-			break;
+			} break;
 			case rightBottom: {
 				params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 				params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			}
-			break;
+			} break;
 			case rightTop: {
 				params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 				params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-			}
-			break;
+			} break;
 		}
 		//设置margin
 		params.setMargins(indicatorMargin, indicatorMargin, indicatorMargin, indicatorMargin);
@@ -453,13 +445,11 @@ public class BannerLayout extends RelativeLayout {
 		switch (ev.getAction()) {
 			case MotionEvent.ACTION_DOWN: {
 				stopAutoPlay();
-			}
-			break;
+			} break;
 			case MotionEvent.ACTION_CANCEL:
 			case MotionEvent.ACTION_UP: {
 				startAutoPlay();
-			}
-			break;
+			} break;
 		}
 		return super.dispatchTouchEvent(ev);
 	}

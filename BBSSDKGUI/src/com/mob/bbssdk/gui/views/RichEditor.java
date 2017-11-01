@@ -44,7 +44,7 @@ import java.util.Locale;
  * limitations under the License.
  */
 public class RichEditor extends WebView {
-	private static final String SETUP_HTML = "file:///android_asset/html/editor/editor.html";
+	private static final String SETUP_HTML = "file:///android_asset/bbssdk/html/editor/editor.html";
 	private static final String CALLBACK_SCHEME = "re-callback://";
 	private static final String STATE_SCHEME = "re-state://";
 	private boolean isReady = false;
@@ -398,6 +398,9 @@ public class RichEditor extends WebView {
 		exec("javascript:RE.setNumbers();");
 	}
 
+	public void insertHTML(String html) {
+		exec("javascript:RE.insertHTML('" + html + "');");
+	}
 	public void insertImage(String url, String alt) {
 		exec("javascript:RE.prepareInsert();");
 		exec("javascript:RE.insertImage('" + url + "', '" + alt + "');");

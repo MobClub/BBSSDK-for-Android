@@ -5,6 +5,8 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.mob.MobSDK;
+import com.mob.bbssdk.gui.GUIManager;
+import com.mob.bbssdk.theme0.BBSTheme0;
 import com.mob.bbssdk.theme1.BBSTheme1;
 import com.mob.tools.utils.ResHelper;
 
@@ -17,8 +19,7 @@ public class SampleApplication extends Application {
 
 	public void onCreate() {
 		super.onCreate();
-
-		int uiType = 1;
+		int uiType = 2;
 		try {
 			int uiTypeResId = ResHelper.getStringRes(this, "BBS_UI_TYPE");
 			if (uiTypeResId > 0) {
@@ -27,16 +28,23 @@ public class SampleApplication extends Application {
 				String secret = getString(ResHelper.getStringRes(this, "BBS_APPSECRET"));
 				MobSDK.init(this, key, secret);
 				uiType = Integer.parseInt(getString(uiTypeResId));
+				try {
+					//是否启动分享功能
+					int uiShareEnableResId = ResHelper.getStringRes(this, "BBS_UI_SHARE_ENABLE");
+					if (uiShareEnableResId > 0) {
+						GUIManager.isShareEnable = Boolean.parseBoolean(getString(uiShareEnableResId));
+					}
+				} catch (Throwable t) {
+				}
 			}
 		} catch (Throwable t) {
 			uiType = 1;
 		}
-		BBSTheme1.init();
 
-//		if (uiType == 2) {
-//			BBSTheme1.init();
-//		} else {
-//			BBSTheme0.init();
-//		}
+		if (uiType == 2) {
+			BBSTheme1.init();
+		} else {
+			BBSTheme0.init();
+		}
 	}
 }

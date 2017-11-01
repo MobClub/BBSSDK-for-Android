@@ -15,6 +15,7 @@ import com.mob.bbssdk.api.UserAPI;
 import com.mob.bbssdk.gui.BBSViewBuilder;
 import com.mob.bbssdk.gui.GUIManager;
 import com.mob.bbssdk.gui.helper.ErrorCodeHelper;
+import com.mob.bbssdk.gui.pages.PageWeb;
 import com.mob.bbssdk.gui.pages.forum.PageAttachmentViewer;
 import com.mob.bbssdk.gui.pages.profile.PageOtherUserProfile;
 import com.mob.bbssdk.gui.utils.ToastUtils;
@@ -43,6 +44,7 @@ public class JsInterfaceForumThread {
 	private ForumThread forumThread;
 	private Hashon hashon;
 	private Context context;
+	private boolean hasMoreComment = true;
 
 	public JsInterfaceForumThread(Context context, JsViewClient viewClient, ForumThread forumThread) {
 		if (viewClient != null) {
@@ -145,6 +147,9 @@ public class JsInterfaceForumThread {
 			forumAPI.getPostListByThreadId(fid, tid, authorId, page, pageSize, false, new APICallback<ArrayList<ForumPost>>() {
 				public void onSuccess(API api, int action, ArrayList<ForumPost> result) {
 					if (result != null) {
+						if(result.size() < pageSize) {
+							hasMoreComment = false;
+						}
 						JSONArray array = new JSONArray();
 						try {
 							JSONObject object;
@@ -271,6 +276,11 @@ public class JsInterfaceForumThread {
 	}
 
 	public void addPost(ForumPost forumPost) {
+		if(hasMoreComment) {
+			//If there is more comment, then doesn't add the fake comment,
+			//because the one will be loaded from server.
+			return;
+		}
 		String post = null;
 		try {
 			JSONObject object = new JSONObject();
@@ -420,5 +430,12 @@ public class JsInterfaceForumThread {
 				loadJs(callback, (Object) null);
 			}
 		});
+	}
+
+	@JavascriptInterface
+	public void openHref(String url) {
+		PageWeb pageWeb = BBSViewBuilder.getInstance().buildPageWeb();
+		pageWeb.setLink(url);
+		pageWeb.show(context);
 	}
 }

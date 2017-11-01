@@ -45,6 +45,9 @@ public class SendForumThreadManager {
 		this.imgList = imgList;
 	}
 
+	/*
+	* 发帖
+	 */
 	public void sendThread() {
 		sendBroadCast(appContext, STATUS_SEND_ING, null);
 		new Thread() {

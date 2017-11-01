@@ -4,14 +4,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-
-    <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="23"/>
 
     <supports-screens
         android:anyDensity="true"
@@ -37,20 +31,26 @@
         </activity>
 
         <activity
-            android:name="com.mob.bbssdk.sample.TestActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/BBS_AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-        </activity>
-
-        <activity
             android:name=".InitActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="mlink" android:host="com.mob.bbssdk.sample" android:path="/thread/detail"/>
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http" android:host="8grm.ulml.mob.com" android:path="/http"/>
+                <data android:scheme="https" android:host="8grm.ulml.mob.com" android:path="/https"/>
             </intent-filter>
         </activity>
 

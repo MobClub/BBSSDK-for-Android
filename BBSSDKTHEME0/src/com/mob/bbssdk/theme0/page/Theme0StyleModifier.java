@@ -36,8 +36,7 @@ public class Theme0StyleModifier {
 			throw new IllegalArgumentException("mainLayout is not initialized!");
 		} else {
 			Drawable drawable = context.getResources().getDrawable(basepage.getDrawableId("bbs_theme0_bg_userpage"));
-			int sdk = android.os.Build.VERSION.SDK_INT;
-			if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
 				mainlayout.setBackgroundDrawable(drawable);
 			} else {
 				mainlayout.setBackground(drawable);
@@ -68,8 +67,7 @@ public class Theme0StyleModifier {
 			throw new IllegalArgumentException("mainLayout is not initialized!");
 		} else {
 			ColorDrawable drawable = new ColorDrawable(context.getResources().getColor(basepage.getColorId("bbs_white")));
-			int sdk = android.os.Build.VERSION.SDK_INT;
-			if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
 				mainlayout.setBackgroundDrawable(drawable);
 			} else {
 				mainlayout.setBackground(drawable);

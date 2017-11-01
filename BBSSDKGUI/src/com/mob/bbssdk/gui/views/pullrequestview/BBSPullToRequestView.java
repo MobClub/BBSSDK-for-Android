@@ -27,6 +27,7 @@ public abstract class BBSPullToRequestView<T> extends PullToRequestView {
 	private OnRequestListener onRequestListener;
 	private OnScrollListener onScrollListener;
 	private Dictionary<Integer, Integer> listViewItemHeights = new Hashtable<Integer, Integer>();
+	protected int scrollHeight = 0;
 
 	public BBSPullToRequestView(Context context) {
 		super(context);
@@ -251,15 +252,19 @@ public abstract class BBSPullToRequestView<T> extends PullToRequestView {
 
 	}
 
+	public int getScrollHeight() {
+		return scrollHeight;
+	}
+
 	public void onScroll(Scrollable scrollable, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 		if(scrollable != null && scrollable instanceof ListView) {
 			final ListView listview = (ListView) scrollable;
 			View c = listview.getChildAt(0);
 			if (c != null) {
-				int scrollheight = getScroll();
-				OnScrolledToY(scrollheight);
+				scrollHeight = getScroll();
+				OnScrolledToY(scrollHeight);
 				if (BBSPullToRequestView.this.onScrollListener != null) {
-					BBSPullToRequestView.this.onScrollListener.OnScrolledTo(scrollheight);
+					BBSPullToRequestView.this.onScrollListener.OnScrolledTo(scrollHeight);
 				}
 			}
 		}

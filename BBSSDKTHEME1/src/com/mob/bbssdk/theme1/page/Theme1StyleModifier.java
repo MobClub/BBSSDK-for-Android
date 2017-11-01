@@ -66,8 +66,7 @@ public class Theme1StyleModifier {
 			throw new IllegalArgumentException("mainLayout is not initialized!");
 		} else {
 			ColorDrawable drawable = new ColorDrawable(context.getResources().getColor(basepage.getColorId("bbs_white")));
-			int sdk = android.os.Build.VERSION.SDK_INT;
-			if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
 				mainlayout.setBackgroundDrawable(drawable);
 			} else {
 				mainlayout.setBackground(drawable);

@@ -21,6 +21,7 @@
             android:src="@drawable/bbs_init_forum"/>
 
         <TextView
+            android:id="@+id/textHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="18dp"
@@ -31,6 +32,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layoutParamsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
@@ -118,6 +120,56 @@
         android:layout_weight="1"
         />
 
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="#5583ca"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewEnterBase"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="进入基础版"
+            android:textColor="#ffffff"
+            android:textSize="16sp"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/bbs_white"
+            />
+
+        <TextView
+            android:id="@+id/textViewEnterTheme0"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="进入简约版"
+            android:textColor="#ffffff"
+            android:textSize="16sp"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/bbs_white"
+            />
+
+        <TextView
+            android:id="@+id/textViewEnterTheme1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="进入时尚版"
+            android:textColor="#ffffff"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/layoutEnterOfficial"
         android:layout_width="match_parent"
@@ -130,8 +182,7 @@
             android:layout_centerInParent="true"
             android:text="@string/bbs_init_enterofficalforum"
             android:textColor="#ffffff"
-            android:textSize="16sp"
-            />
+            android:textSize="16sp"/>
 
         <ImageView
             android:id="@+id/imageViewArrow"

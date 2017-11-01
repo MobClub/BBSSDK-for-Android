@@ -1,6 +1,8 @@
 package com.mob.bbssdk.sample;
 
 
+import android.os.Bundle;
+
 import com.mob.MobSDK;
 import com.mob.bbssdk.gui.BaseMainActivity;
 import com.mob.bbssdk.gui.pages.forum.PageAttachmentViewer;
@@ -10,6 +12,12 @@ import com.mob.bbssdk.sample.viewer.PagePDFViewer;
 import com.mob.bbssdk.sample.viewer.PageVideoViewer;
 
 public class MainActivity extends BaseMainActivity {
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+//		setStatusBarColor(getResources().getColor(ResHelper.getColorRes(this, "bbs_statusbar_grey")));
+	}
+
 	@Override
 	protected void OnAttachmentClick(ForumThreadAttachment attachment) {
 		String extension = attachment.extension;

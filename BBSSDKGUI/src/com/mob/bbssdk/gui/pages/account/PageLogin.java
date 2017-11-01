@@ -60,6 +60,7 @@ public class PageLogin extends BasePageWithTitle {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		isLoginShowing = true;
 		activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 		activity.getWindow().setWindowAnimations(ResHelper.getStyleRes(getContext(), "BBS_PageAnimUpDown"));
 	}
@@ -131,9 +132,17 @@ public class PageLogin extends BasePageWithTitle {
 	}
 
 	@Override
+	public void show(Context context) {
+		//If PageLogin is showing, don't show current one.
+		if(isLoginShowing) {
+			return;
+		}
+		super.show(context);
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
-		isLoginShowing = true;
 	}
 
 	@Override
@@ -195,6 +204,7 @@ public class PageLogin extends BasePageWithTitle {
 							}
 							ToastUtils.showToast(getContext(), getStringRes("bbs_error_code_1205"));
 						} else {
+							GUIManager.sendLoginBroadcast();
 							GUIManager.getInstance().forceUpdateCurrentUserAvatar(null);
 							//登录成功
 							ToastUtils.showToast(getContext(), getStringRes("bbs_login_success"));

@@ -53,7 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/imageViewHeaderFunc1"
@@ -79,7 +80,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/imageViewHeaderFunc2"
@@ -105,7 +107,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/imageViewHeaderFunc3"
@@ -131,7 +134,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/imageViewHeaderFunc4"
@@ -173,6 +177,12 @@
                 android:textSize="12sp"
                 />
         </LinearLayout>
+
+        <View
+            android:id="@+id/placeHolderView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="4" />
     </LinearLayout>
 
 </LinearLayout>

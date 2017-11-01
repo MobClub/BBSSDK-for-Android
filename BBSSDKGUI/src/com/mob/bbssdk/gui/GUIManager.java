@@ -1,6 +1,7 @@
 package com.mob.bbssdk.gui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
@@ -18,7 +19,6 @@ import com.mob.bbssdk.gui.datadef.PageResult;
 import com.mob.bbssdk.gui.helper.ErrorCodeHelper;
 import com.mob.bbssdk.gui.helper.FileHelper;
 import com.mob.bbssdk.gui.helper.StorageFile;
-import com.mob.bbssdk.gui.pages.BasePage;
 import com.mob.bbssdk.gui.pages.account.PageLogin;
 import com.mob.bbssdk.gui.pages.forum.PageWriteThread;
 import com.mob.bbssdk.gui.utils.SendForumThreadManager;
@@ -31,6 +31,7 @@ import com.mob.tools.utils.ResHelper;
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class GUIManager {
 
@@ -259,11 +260,11 @@ public class GUIManager {
 	public static String getCacheSizeText() {
 		float size = getCacheSizeInByte();
 		if(size < 1024) {
-			return String.format("%.02f", size) + " B";
+			return String.format(Locale.CHINA, "%.02f", size) + " B";
 		} else if(size / 1024 < 1000) {
-			return String.format("%.02f", size / 1024) + " KB";
+			return String.format(Locale.CHINA, "%.02f", size / 1024) + " KB";
 		} else {
-			return String.format("%.02f", size / 1024 / 1204) + " MB";
+			return String.format(Locale.CHINA, "%.02f", size / 1024 / 1204) + " MB";
 		}
 	}
 
@@ -287,11 +288,23 @@ public class GUIManager {
 		});
 		ForumThreadHistoryManager.getInstance().clearReaded();
 		GUIManager.getInstance().clearAccount();
-		BasePage.sendLogoutBroadcast();
+		sendLogoutBroadcast();
 	}
 
 	public static boolean isLoginShowing() {
 		return PageLogin.isLoginShowing();
+	}
+
+	public static void sendLoginBroadcast() {
+		Intent intent = new Intent();
+		intent.setAction(GUIManager.BROADCAST_LOGIN);
+		MobSDK.getContext().sendBroadcast(intent);
+	}
+
+	public static void sendLogoutBroadcast() {
+		Intent intent = new Intent();
+		intent.setAction(GUIManager.BROADCAST_LOGOUT);
+		MobSDK.getContext().sendBroadcast(intent);
 	}
 
 }

@@ -428,16 +428,15 @@ public class ForumForumView extends PullToRequestView {
 				View vEdit = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_viewEdit"));
 				View viewDivider = viewHolder.getView(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_viewDivider"));
 
-				if (isFling()) {
-					aivIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
-					aivIcon.execute(null, forum.fid == 0 ? defaultTotalForumPic : defaultForumPic);
-				} else {
-					if (!TextUtils.isEmpty(forum.forumPic)) {
-//						aivIcon.setExecuteRound(ResHelper.dipToPx(getContext(), 5));
-						aivIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
-					}
-					aivIcon.execute(forum.forumPic, forum.fid == 0 ? defaultTotalForumPic : defaultForumPic);
+//				if (isFling()) {
+//					aivIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//					aivIcon.execute(null, forum.fid == 0 ? defaultTotalForumPic : defaultForumPic);
+//				} else {
+				if (!TextUtils.isEmpty(forum.forumPic)) {
+					aivIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				}
+				aivIcon.execute(forum.forumPic, forum.fid == 0 ? defaultTotalForumPic : defaultForumPic);
+//				}
 				tvTitle.setText(forum.name);
 				if(StringUtils.isEmpty(forum.description)) {
 					forum.description = "";

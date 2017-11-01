@@ -57,7 +57,7 @@
                     android:textColor="#2d3037"
                     android:textSize="16sp"
                     tools:text="刘先生刘先生刘先生刘先生刘先生刘先生刘先生"
-                    android:singleLine="true"
+                    android:maxLines="1"
                     android:maxLength="8"
                     android:ellipsize="end"/>
 

@@ -38,7 +38,7 @@ public class ImageHelper {
 		int width = bitmap.getWidth();
 		int height = bitmap.getHeight();
 		float roundPx;
-		float left, top, right, bottom, dst_left, dst_top, dst_right, dst_bottom;
+		float left, top, right, bottom, dstleft, dsttop, dstright, dstbottom;
 		if (width <= height) {
 			roundPx = width / 2;
 			top = 0;
@@ -46,10 +46,10 @@ public class ImageHelper {
 			left = 0;
 			right = width;
 			height = width;
-			dst_left = 0;
-			dst_top = 0;
-			dst_right = width;
-			dst_bottom = width;
+			dstleft = 0;
+			dsttop = 0;
+			dstright = width;
+			dstbottom = width;
 		} else {
 			roundPx = height / 2;
 			float clip = (width - height) / 2;
@@ -58,10 +58,10 @@ public class ImageHelper {
 			top = 0;
 			bottom = height;
 			width = height;
-			dst_left = 0;
-			dst_top = 0;
-			dst_right = height;
-			dst_bottom = height;
+			dstleft = 0;
+			dsttop = 0;
+			dstright = height;
+			dstbottom = height;
 		}
 
 		Bitmap output = Bitmap.createBitmap(width, height, Config.ARGB_8888);
@@ -69,7 +69,7 @@ public class ImageHelper {
 		final int color = 0xff424242;
 		final Paint paint = new Paint();
 		final Rect src = new Rect((int) left, (int) top, (int) right, (int) bottom);
-		final Rect dst = new Rect((int) dst_left, (int) dst_top, (int) dst_right, (int) dst_bottom);
+		final Rect dst = new Rect((int) dstleft, (int) dsttop, (int) dstright, (int) dstbottom);
 		final RectF rectF = new RectF(dst);
 		paint.setAntiAlias(true);
 		canvas.drawARGB(0, 0, 0, 0);

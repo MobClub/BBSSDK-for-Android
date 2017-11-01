@@ -13,7 +13,8 @@ import com.mob.bbssdk.gui.utils.ImageDownloader;
 import com.mob.bbssdk.gui.views.GlideImageView;
 import com.mob.bbssdk.model.ForumForum;
 import com.mob.bbssdk.theme0.view.Theme0ForumForumView;
-import com.mob.bbssdk.theme1.page.Theme1PageForumThread;
+import com.mob.bbssdk.theme1.page.forum.Theme1PageForumThread;
+import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.utils.ResHelper;
 
 public class Theme1ForumForumView extends Theme0ForumForumView {
@@ -28,6 +29,13 @@ public class Theme1ForumForumView extends Theme0ForumForumView {
 
 	public Theme1ForumForumView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+	}
+
+	@Override
+	protected void init(Context context) {
+		super.init(context);
+		defaultForumPic = ResHelper.getBitmapRes(getContext(), "bbs_theme1_forumdefault");
+		defaultTotalForumPic = ResHelper.getBitmapRes(getContext(), "bbs_theme1_totaldefault");
 	}
 
 	@Override
@@ -67,7 +75,11 @@ public class Theme1ForumForumView extends Theme0ForumForumView {
 			glideimageview.setVisibility(GONE);
 		}
 		ImageView imageViewAvatar = (ImageView) view.findViewById(ResHelper.getIdRes(getContext(), "imageViewAvatar"));
-		ImageDownloader.loadCircleImage(forum.forumPic, imageViewAvatar);
+		if(StringUtils.isEmpty(forum.forumPic)) {
+			imageViewAvatar.setImageResource(forum.fid == 0 ? defaultTotalForumPic : defaultForumPic);
+		} else {
+			ImageDownloader.loadCircleImage(forum.forumPic, imageViewAvatar);
+		}
 
 		view.setOnClickListener(new OnClickListener() {
 			@Override

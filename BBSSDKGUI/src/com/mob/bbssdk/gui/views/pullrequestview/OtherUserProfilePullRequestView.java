@@ -2,6 +2,7 @@ package com.mob.bbssdk.gui.views.pullrequestview;
 
 
 import android.content.Context;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.mob.bbssdk.gui.views.GlideImageView;
 import com.mob.bbssdk.model.ForumThread;
 import com.mob.bbssdk.model.User;
 import com.mob.bbssdk.model.UserOperations;
+import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.utils.ResHelper;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class OtherUserProfilePullRequestView extends BBSPullToRequestView<ForumT
 	protected TextView textViewName;
 	protected TextView textViewSignature;
 	protected TextView textViewLocation;
+	protected ImageView imageViewLocationMark;
 	protected ImageView imageViewFollow;
 	protected ImageView imageViewUnfollow;
 	protected TextView textViewFollowing;
@@ -105,8 +108,8 @@ public class OtherUserProfilePullRequestView extends BBSPullToRequestView<ForumT
 		userAPI.getUserOperations(nUserID, false, new APICallback<UserOperations>() {
 			@Override
 			public void onSuccess(API api, int action, UserOperations result) {
-				update();
 				OtherUserProfilePullRequestView.this.userOperationsGot = result;
+				update();
 			}
 
 			@Override
@@ -125,8 +128,13 @@ public class OtherUserProfilePullRequestView extends BBSPullToRequestView<ForumT
 			if (user != null) {
 				aivAvatar.execute(user.avatar, null);
 				textViewName.setText(user.userName);
-				textViewSignature.setText(user.sightml);
+				textViewSignature.setText(user.sightml == null ? "" : Html.fromHtml(user.sightml));
 				textViewLocation.setText(DataConverterHelper.getShortLoationText(user));
+				if(StringUtils.isEmpty(textViewLocation.getText().toString().trim())) {
+					imageViewLocationMark.setVisibility(INVISIBLE);
+				} else {
+					imageViewLocationMark.setVisibility(VISIBLE);
+				}
 				if(user.follow) {
 					imageViewUnfollow.setVisibility(VISIBLE);
 					imageViewFollow.setVisibility(GONE);
@@ -155,6 +163,7 @@ public class OtherUserProfilePullRequestView extends BBSPullToRequestView<ForumT
 		aivAvatar = (GlideImageView) view.findViewById(ResHelper.getIdRes(getContext(), "aivAvatar"));
 		aivAvatar.setExecuteRound();
 		textViewName = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewName"));
+		imageViewLocationMark = (ImageView) view.findViewById(ResHelper.getIdRes(getContext(), "imageViewLocationMark"));
 		textViewSignature = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewSignature"));
 		textViewLocation = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewLocation"));
 		imageViewFollow = (ImageView) view.findViewById(ResHelper.getIdRes(getContext(), "imageViewFollow"));

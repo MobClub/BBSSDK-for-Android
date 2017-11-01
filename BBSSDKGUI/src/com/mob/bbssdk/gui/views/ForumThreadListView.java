@@ -79,6 +79,7 @@ public class ForumThreadListView extends BBSPullToRequestView<ForumThread> {
 	protected View getContentView(final int position, View convertView, ViewGroup parent) {
 		final View view = ListViewItemBuilder.getInstance().buildThreadView(getItem(position), convertView, parent);
 		final ForumThread forumthread = getItem(position);
+		setThreadReaded(view, ForumThreadHistoryManager.getInstance().isThreadReaded(forumthread));
 		view.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

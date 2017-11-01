@@ -7,4 +7,5 @@
     <dimen name="imageview_height">200dp</dimen>
     <dimen name="header_height">250dp</dimen>
     <dimen name="min_header_height">250dp</dimen>
+    <dimen name="bbs_forumlistview_banner_height">245dp</dimen>
 </resources>

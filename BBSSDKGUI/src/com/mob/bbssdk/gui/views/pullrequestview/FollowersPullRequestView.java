@@ -84,7 +84,7 @@ public class FollowersPullRequestView extends BBSPullToRequestView<Follower> {
 		aivAvatar.execute(item.avatar, null);
 		textViewName.setText(item.userName);
 
-		if(item.isFollow) {
+		if(null != item.isFollow && item.isFollow) {
 			imageViewUnfollow.setVisibility(VISIBLE);
 			imageViewFollow.setVisibility(GONE);
 		} else {

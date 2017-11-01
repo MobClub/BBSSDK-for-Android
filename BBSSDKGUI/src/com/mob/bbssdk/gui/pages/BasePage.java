@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.mob.MobSDK;
 import com.mob.bbssdk.gui.BBSViewBuilder;
 import com.mob.bbssdk.gui.GUIManager;
 import com.mob.bbssdk.gui.dialog.ModelLoadingDialog;
@@ -217,17 +216,5 @@ public abstract class BasePage extends FakeActivity {
 		if (loginoutBroadcastReceiver != null) {
 			getContext().unregisterReceiver(loginoutBroadcastReceiver);
 		}
-	}
-
-	public static void sendLoginBroadcast() {
-		Intent intent = new Intent();
-		intent.setAction(GUIManager.BROADCAST_LOGIN);
-		MobSDK.getContext().sendBroadcast(intent);
-	}
-
-	public static void sendLogoutBroadcast() {
-		Intent intent = new Intent();
-		intent.setAction(GUIManager.BROADCAST_LOGOUT);
-		MobSDK.getContext().sendBroadcast(intent);
 	}
 }

@@ -91,4 +91,8 @@
 
     <color name="bbs_theme0_blue">#5b7ef0</color>
     <color name="bbs_theme0_bg">#eaedf2</color>
+
+    <color name="bbs_statusbar_grey">#a1a1a1</color>
+    <color name="bbs_emoji_unselected">#f2f3f7</color>
+    <color name="bbs_emoji_selected">#ffffff</color>
 </resources>

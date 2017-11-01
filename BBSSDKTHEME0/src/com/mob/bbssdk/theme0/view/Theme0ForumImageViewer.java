@@ -20,6 +20,6 @@ public class Theme0ForumImageViewer extends ForumImageViewer{
 	}
 
 	protected void loadNativeHtml() {
-		webView.loadUrl("file:///android_asset/html0/details/html/imgshow.html");
+		webView.loadUrl("file:///android_asset/bbssdk/html0/details/html/imgshow.html");
 	}
 }

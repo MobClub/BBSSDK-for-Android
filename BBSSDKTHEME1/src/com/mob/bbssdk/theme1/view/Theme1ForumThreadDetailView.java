@@ -52,7 +52,7 @@ public class Theme1ForumThreadDetailView extends Theme0ForumThreadDetailView {
 
 	@Override
 	protected void loadNativeHtml() {
-		webView.loadUrl("file:///android_asset/html1/details/html/index.html");
+		webView.loadUrl("file:///android_asset/bbssdk/html1/details/html/index.html");
 	}
 
 	@Override

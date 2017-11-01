@@ -15,8 +15,8 @@ import android.widget.TextView;
 import com.mob.bbssdk.gui.BBSViewBuilder;
 import com.mob.bbssdk.gui.pages.forum.PageForumThread;
 import com.mob.bbssdk.gui.views.ForumForumView;
-import com.mob.bbssdk.model.ForumForum;
 import com.mob.bbssdk.gui.views.GlideImageView;
+import com.mob.bbssdk.model.ForumForum;
 import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.utils.ResHelper;
 
@@ -61,18 +61,29 @@ public class Theme0ForumForumView extends ForumForumView {
 		calcAndRefreshForumView();
 	}
 
-	private void calcAndRefreshStickTopView() {
+	protected void calcAndRefreshStickTopView() {
 		Collections.sort(listStickTop, new Comparator<ForumForum>() {
 			@Override
 			public int compare(ForumForum lhs, ForumForum rhs) {
 				return new Long(lhs.fid - rhs.fid).intValue();
 			}
 		});
-		layoutSticktop.removeAllViews();
+		//Reuse the view created last time.
 		for (int i = 0; i < listStickTop.size(); i++) {
-			View view = createSticktopItem(listStickTop.get(i), null);
-			layoutSticktop.addView(view);
+			View viewchild = layoutSticktop.getChildAt(i);
+			View view = createSticktopItem(listStickTop.get(i), viewchild, layoutSticktop);
+			view.setVisibility(VISIBLE);
+			if(viewchild == null) {
+				layoutSticktop.addView(view);
+			}
 		}
+		int childcount = layoutSticktop.getChildCount();
+		if(childcount > listStickTop.size()) {
+			for(int i = listStickTop.size(); i < childcount; i++) {
+				layoutSticktop.getChildAt(i).setVisibility(GONE);
+			}
+		}
+
 		if (layoutSticktop.getChildCount() == 0) {
 			layoutSticktop.setVisibility(View.GONE);
 		} else {
@@ -80,21 +91,24 @@ public class Theme0ForumForumView extends ForumForumView {
 		}
 	}
 
-	private void calcAndRefreshForumView() {
+	protected void calcAndRefreshForumView() {
 		ArrayList<ForumForum> listforum = getForumList(listStickTop);
 		adapterForum.getDataSet().clear();
 		adapterForum.getDataSet().addAll(listforum);
 		adapterForum.notifyDataSetChanged();
 	}
 
-	protected View createSticktopItem(final ForumForum forum, ViewGroup viewGroup) {
+	protected View createSticktopItem(final ForumForum forum, View viewprev, ViewGroup viewGroup) {
 		if (forum == null) {
 			return null;
 		}
-		View view = buildForumItemView(forum, viewGroup);
+		View view = viewprev;
 		if (view == null) {
-			view = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(),
-					"bbs_theme0_forumforum_sticktopitem"), viewGroup, false);
+			view = buildForumItemView(forum, viewGroup);
+			if(view == null) {
+				view = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(),
+						"bbs_theme0_forumforum_sticktopitem"), viewGroup, false);
+			}
 		}
 		GlideImageView aivIcon = (GlideImageView) view.findViewById(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_asyImageView"));
 		TextView tvTitle = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "bbs_subject_listitem_textViewTitle"));
@@ -162,7 +176,7 @@ public class Theme0ForumForumView extends ForumForumView {
 		return result;
 	}
 
-	private ArrayList<ForumForum> getForumList(List<ForumForum> list) {
+	protected ArrayList<ForumForum> getForumList(List<ForumForum> list) {
 		ArrayList<ForumForum> listforum = new ArrayList<ForumForum>(listForumAll);
 		for (ForumForum forum : list) {
 			//remove the item from forum list.

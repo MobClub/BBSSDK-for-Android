@@ -2,12 +2,15 @@ package com.mob.bbssdk.gui.pages.misc;
 
 
 import android.content.Context;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.mob.bbssdk.gui.pages.BasePageWithTitle;
 import com.mob.bbssdk.model.Notification;
+import com.mob.bbssdk.utils.StringUtils;
 
 public class PageMessageDetails extends BasePageWithTitle {
 	private Notification notification;
@@ -29,7 +32,10 @@ public class PageMessageDetails extends BasePageWithTitle {
 		TextView textViewTitle = (TextView) findViewById(getIdRes("textViewTitle"));
 		TextView textViewBody = (TextView) findViewById(getIdRes("textViewBody"));
 		textViewTitle.setText(notification.title);
-		textViewBody.setText(notification.note);
+		if (StringUtils.isNotEmpty(notification.note)) {
+			textViewBody.setText(Html.fromHtml(notification.note));
+			textViewBody.setMovementMethod(LinkMovementMethod.getInstance());
+		}
 	}
 
 }

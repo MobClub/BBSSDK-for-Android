@@ -3,6 +3,7 @@ package com.mob.bbssdk.gui.pages.profile;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -142,7 +143,7 @@ public class PageUserProfileDetails extends SelectPicBasePageWithTitle {
 		aivAvatar.setImageBitmap(GUIManager.getInstance().getCurrentUserAvatar());
 		textViewName.setText(userInfo.userName);
 		textViewGender.setText(DataConverterHelper.getGenderInfo(getContext(), userInfo));
-		textViewSignature.setText(userInfo.sightml);
+		textViewSignature.setText(userInfo.sightml == null ? "" : Html.fromHtml(userInfo.sightml));
 		textViewLocation.setText(DataConverterHelper.getShortLoationText(userInfo));
 		textViewBirthday.setText(DataConverterHelper.getBirthday(userInfo));
 		textViewMail.setText(userInfo.email);

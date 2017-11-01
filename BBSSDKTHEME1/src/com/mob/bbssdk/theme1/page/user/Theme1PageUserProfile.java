@@ -162,7 +162,8 @@ public class Theme1PageUserProfile extends BasePageWithTitle {
 
 			@Override
 			public void OnTabUpdated(Theme1UserProfilePullRequestView.TAB tab) {
-				userProfilePullRequestView.updateTabStatus(imageViewFavorite, imageViewThread, imageViewHistory, viewFavoriteMark, viewThreadMark, viewHistoryMark);
+				userProfilePullRequestView.updateTabStatus(imageViewFavorite,
+						imageViewThread, imageViewHistory, viewFavoriteMark, viewThreadMark, viewHistoryMark);
 			}
 		});
 		userProfilePullRequestView.refreshQuiet();

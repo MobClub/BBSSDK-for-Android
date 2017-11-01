@@ -9,4 +9,6 @@
     <color name="bbs_theme1_user_bg">#f2f3f7</color>
     <color name="bbs_theme1_defaultyellow">#ffb85c</color>
     <color name="bbs_theme1_cancelgrey">#acadb8</color>
+    <color name="bbs_theme1_maintitleblack">#4e4f57</color>
+    <color name="bbs_theme1_divider">#f2f4f7</color>
 </resources>

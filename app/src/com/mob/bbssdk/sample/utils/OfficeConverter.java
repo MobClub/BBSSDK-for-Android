@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -517,7 +518,7 @@ public class OfficeConverter {
 		} else if (cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
 			if (HSSFDateUtil.isCellDateFormatted(cell)) {
 				Date date = cell.getDateCellValue();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
 				value = sdf.format(date);
 			} else {
 				DecimalFormat format = new DecimalFormat("#0.###");

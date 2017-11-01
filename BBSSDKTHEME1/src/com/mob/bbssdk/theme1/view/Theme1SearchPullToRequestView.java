@@ -12,7 +12,7 @@ import com.mob.bbssdk.model.ForumThread;
 import com.mob.tools.utils.ResHelper;
 
 /**
- * Created by pgao on 2017/9/20.
+ *
  */
 
 public class Theme1SearchPullToRequestView extends SearchPullToRequestView {

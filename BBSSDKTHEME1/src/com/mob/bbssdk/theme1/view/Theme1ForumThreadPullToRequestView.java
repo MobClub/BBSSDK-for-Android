@@ -26,6 +26,7 @@ import com.mob.bbssdk.gui.views.GlideImageView;
 import com.mob.bbssdk.gui.views.pullrequestview.BBSPullToRequestView;
 import com.mob.bbssdk.model.ForumForum;
 import com.mob.bbssdk.model.ForumThread;
+import com.mob.tools.utils.ReflectHelper;
 import com.mob.tools.utils.ResHelper;
 
 import java.util.ArrayList;
@@ -141,8 +142,8 @@ public class Theme1ForumThreadPullToRequestView extends BBSPullToRequestView<For
 			if (forumForum.description != null) {
 				textViewDescription.setText(Html.fromHtml(forumForum.description));
 			}
-			imageViewBackground.execute(forumForum.forumBigPic);
-			imageViewIcon.execute(forumForum.forumPic);
+			imageViewBackground.execute(forumForum.forumBigPic, ResHelper.getBitmapRes(getContext(), "bbs_theme1_forumforum"));
+			imageViewIcon.execute(forumForum.forumPic, ResHelper.getBitmapRes(getContext(), "bbs_theme1_forumdefault"));
 		}
 		layoutTitle.setOnClickListener(new OnClickListener() {
 			@Override
@@ -186,6 +187,12 @@ public class Theme1ForumThreadPullToRequestView extends BBSPullToRequestView<For
 		}
 		getBasePagedItemAdapter().getDataSet().clear();
 		refreshQuiet();
+
+		try {
+			//取消加载效果，防止界面闪动
+			ReflectHelper.invokeInstanceMethod(this,"reversePulling");
+		} catch (Throwable throwable) {
+		}
 	}
 
 	public void updateTabView(View latest, View hot, View essence, View sticktop) {
