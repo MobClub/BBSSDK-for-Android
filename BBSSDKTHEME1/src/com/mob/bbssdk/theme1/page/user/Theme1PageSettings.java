@@ -1,18 +1,23 @@
 package com.mob.bbssdk.theme1.page.user;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mob.MobSDK;
 import com.mob.bbssdk.API;
 import com.mob.bbssdk.APICallback;
 import com.mob.bbssdk.gui.GUIManager;
 import com.mob.bbssdk.gui.pages.BasePageWithTitle;
 import com.mob.bbssdk.gui.utils.ToastUtils;
 import com.mob.bbssdk.theme1.page.Theme1StyleModifier;
+import com.mob.tools.utils.UIHandler;
 
 import java.util.HashMap;
 
@@ -38,9 +43,20 @@ public class Theme1PageSettings extends BasePageWithTitle {
 		layoutClearCache.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				GUIManager.clearCache();
-				ToastUtils.showToast(getContext(), getStringRes("bbs_clearcache_success"));
-				updateCacheView();
+				ToastUtils.showToast(getContext(), getStringRes("bbs_clearcache_ing"));
+				GUIManager.clearCache(new GUIManager.ClearCacheListener() {
+					@Override
+					public void CacheCleared() {
+						Activity activity = getActivity();
+						if(activity != null && !activity.isFinishing()) {
+							layoutClearCache.setClickable(false);
+							updateCacheView();
+						}
+						ToastUtils.showToast(MobSDK.getContext(), getStringRes("bbs_clearcache_success"));
+					}
+				});
+				//只能点击一次
+				layoutClearCache.setClickable(false);
 			}
 		});
 

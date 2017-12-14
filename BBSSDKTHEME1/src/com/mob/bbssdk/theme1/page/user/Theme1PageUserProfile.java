@@ -1,10 +1,13 @@
 package com.mob.bbssdk.theme1.page.user;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,12 +15,14 @@ import com.mob.bbssdk.gui.BBSViewBuilder;
 import com.mob.bbssdk.gui.ForumThreadHistoryManager;
 import com.mob.bbssdk.gui.pages.BasePageWithTitle;
 import com.mob.bbssdk.gui.utils.ScreenUtils;
+import com.mob.bbssdk.gui.utils.statusbar.StatusBarCompat;
 import com.mob.bbssdk.gui.views.ForumThreadListView;
 import com.mob.bbssdk.gui.views.pullrequestview.BBSPullToRequestView;
 import com.mob.bbssdk.model.User;
 import com.mob.bbssdk.model.UserOperations;
 import com.mob.bbssdk.theme1.view.Theme1UserProfilePullRequestView;
 import com.mob.tools.FakeActivity;
+import com.mob.tools.utils.DeviceHelper;
 import com.mob.tools.utils.ResHelper;
 
 import java.util.HashMap;
@@ -35,10 +40,14 @@ public class Theme1PageUserProfile extends BasePageWithTitle {
 	private TextView textViewFavoriteCount;
 	private TextView textViewThreadCount;
 	private TextView textViewHistoryCount;
+	protected ViewGroup layoutFavorite;
+	protected ViewGroup layoutThread;
+	protected ViewGroup layoutHistory;
 	private View viewMessageMark;
 	View viewFavoriteMark;
 	View viewThreadMark;
 	View viewHistoryMark;
+	View viewTitle;
 
 	@Override
 	protected View onCreateContentView(Context context) {
@@ -49,13 +58,14 @@ public class Theme1PageUserProfile extends BasePageWithTitle {
 
 	@Override
 	protected void onViewCreated(View contentView) {
-		setStatusBarColor(BBSViewBuilder.getInstance().getStatusBarColor(getContext()));
+		contentView.setFitsSystemWindows(false);
 		imageViewBack = (ImageView) contentView.findViewById(getIdRes("imageViewBack"));
 		textViewTitle = (TextView) contentView.findViewById(getIdRes("textViewTitle"));
 		imageViewMessage = (ImageView) contentView.findViewById(getIdRes("imageViewMessage"));
 		imageViewSettings = (ImageView) contentView.findViewById(getIdRes("imageViewSettings"));
 		viewBackground = contentView.findViewById(getIdRes("viewBackground"));
 		viewMessageMark = contentView.findViewById(getIdRes("viewMessageMark"));
+		viewTitle = contentView.findViewById(getIdRes("viewTitle"));
 		titleBar.setVisibility(View.GONE);
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -100,20 +110,23 @@ public class Theme1PageUserProfile extends BasePageWithTitle {
 		viewFavoriteMark = contentView.findViewById(ResHelper.getIdRes(getContext(), "viewFavoriteMark"));
 		viewThreadMark = contentView.findViewById(ResHelper.getIdRes(getContext(), "viewThreadMark"));
 		viewHistoryMark = contentView.findViewById(ResHelper.getIdRes(getContext(), "viewHistoryMark"));
+		layoutFavorite = (ViewGroup) contentView.findViewById(ResHelper.getIdRes(getContext(), "layoutFavorite"));
+		layoutThread = (ViewGroup) contentView.findViewById(ResHelper.getIdRes(getContext(), "layoutThread"));
+		layoutHistory = (ViewGroup) contentView.findViewById(ResHelper.getIdRes(getContext(), "layoutHistory"));
 
-		imageViewFavorite.setOnClickListener(new View.OnClickListener() {
+		layoutFavorite.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				userProfilePullRequestView.clickTab(Theme1UserProfilePullRequestView.TAB.FAVORITE);
 			}
 		});
-		imageViewThread.setOnClickListener(new View.OnClickListener() {
+		layoutThread.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				userProfilePullRequestView.clickTab(Theme1UserProfilePullRequestView.TAB.THREAD);
 			}
 		});
-		imageViewHistory.setOnClickListener(new View.OnClickListener() {
+		layoutHistory.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				userProfilePullRequestView.clickTab(Theme1UserProfilePullRequestView.TAB.HISTORY);
@@ -124,6 +137,7 @@ public class Theme1PageUserProfile extends BasePageWithTitle {
 		userProfilePullRequestView.setOnScrollListener(new ForumThreadListView.OnScrollListener() {
 			@Override
 			public void OnScrolledTo(int y) {
+				smoothSwitchStatusBar(y);
 				BBSPullToRequestView.setAlphaByScrollY(viewBackground, y, ScreenUtils.dpToPx(100));
 
 				int[] location = new int[2];
@@ -167,6 +181,23 @@ public class Theme1PageUserProfile extends BasePageWithTitle {
 			}
 		});
 		userProfilePullRequestView.refreshQuiet();
+		smoothSwitchStatusBar(0);
+	}
+
+	protected void smoothSwitchStatusBar(int height) {
+		if (Build.VERSION.SDK_INT >= 19) {
+			FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) viewBackground.getLayoutParams();
+			layoutParams.height = ScreenUtils.dpToPx(44) + DeviceHelper.getInstance(getContext()).getStatusBarHeight();
+			viewBackground.setLayoutParams(layoutParams);
+			FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) viewTitle.getLayoutParams();
+			lp.setMargins(0,DeviceHelper.getInstance(getContext()).getStatusBarHeight(),0,0);
+			viewTitle.setLayoutParams(lp);
+			if (height > 20) {
+				StatusBarCompat.translucentStatusBar((Activity) getContext(),true);
+			} else {
+				StatusBarCompat.translucentStatusBar((Activity) getContext(),false);
+			}
+		}
 	}
 
 	@Override

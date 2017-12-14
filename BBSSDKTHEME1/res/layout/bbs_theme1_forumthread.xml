@@ -27,6 +27,7 @@
                 android:background="@color/bbs_white"/>
 
             <LinearLayout
+                android:id="@+id/viewTitle"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:orientation="horizontal"

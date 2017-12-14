@@ -1,9 +1,9 @@
 package com.mob.bbssdk.gui.helper;
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.Nullable;
+
+import com.mob.bbssdk.gui.utils.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,29 +16,22 @@ import java.io.PrintWriter;
 
 public class FileHelper {
 	StorageFile storageFile;
+	String strFilePath;
 
 	public FileHelper(StorageFile file) {
 		this.storageFile = file;
 	}
 
 	protected boolean createIfnotExist() {
-		File file = new File(storageFile.getFilePath());
-		if (!file.exists()) {
-			try {
-				file.createNewFile();
-				return true;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
+		strFilePath = storageFile.getFilePath();
+		return FileUtils.createOrExistsFile(strFilePath);
 	}
 
 	public void saveBitmap(Bitmap bitmap) {
 		createIfnotExist();
 		FileOutputStream fileoutstream = null;
 		try {
-			fileoutstream = new FileOutputStream(new File(storageFile.getFilePath()));
+			fileoutstream = new FileOutputStream(new File(strFilePath));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;
@@ -55,7 +48,7 @@ public class FileHelper {
 		createIfnotExist();
 		FileOutputStream fileoutstream = null;
 		try {
-			fileoutstream = new FileOutputStream(new File(storageFile.getFilePath()));
+			fileoutstream = new FileOutputStream(new File(strFilePath));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;
@@ -84,13 +77,13 @@ public class FileHelper {
 		}
 	}
 
-	public @Nullable Bitmap readBitmap() {
+	public Bitmap readBitmap() {
 		if (createIfnotExist()) {
 			return null;
 		}
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-		Bitmap bitmap = BitmapFactory.decodeFile(storageFile.getFilePath(), options);
+		Bitmap bitmap = BitmapFactory.decodeFile(strFilePath, options);
 		return bitmap;
 	}
 
@@ -98,7 +91,7 @@ public class FileHelper {
 		createIfnotExist();
 		FileInputStream fileinputstream = null;
 		try {
-			fileinputstream = new FileInputStream(storageFile.getFilePath());
+			fileinputstream = new FileInputStream(strFilePath);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;
@@ -146,10 +139,14 @@ public class FileHelper {
 
 	public void clearContent() {
 		PrintWriter pw = null;
+		if (!FileUtils.isFileExists(strFilePath)) {
+			return;
+		}
 		try {
-			pw = new PrintWriter(storageFile.getFilePath());
+			pw = new PrintWriter(strFilePath);
+			pw.print("");
 			pw.close();
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

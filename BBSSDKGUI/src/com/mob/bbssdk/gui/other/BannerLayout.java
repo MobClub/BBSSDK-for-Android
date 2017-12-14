@@ -7,9 +7,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,10 +22,11 @@ import android.widget.TextView;
 
 import com.mob.bbssdk.gui.utils.ImageDownloader;
 import com.mob.bbssdk.utils.StringUtils;
+import com.mob.tools.gui.MobViewPager;
+import com.mob.tools.gui.ViewPagerAdapter;
 import com.mob.tools.utils.ReflectHelper;
 import com.mob.tools.utils.ResHelper;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class BannerLayout extends RelativeLayout {
 
 	private static final String TAG = "BannerLayout";
 
-	private ViewPager pager;
+	private MobViewPager pager;
 	//指示器容器
 	private LinearLayout indicatorContainer;
 
@@ -61,6 +59,7 @@ public class BannerLayout extends RelativeLayout {
 
 	private int indicatorSpace = 3;
 	private int indicatorMargin = 10;
+	LoopPagerAdapter pagerAdapter;
 
 	private enum Shape {
 		rect, oval
@@ -82,7 +81,7 @@ public class BannerLayout extends RelativeLayout {
 		public boolean handleMessage(Message msg) {
 			if (msg.what == nWhatAutoPlay) {
 				if (pager != null) {
-					pager.setCurrentItem(pager.getCurrentItem() + 1, true);
+					pager.scrollToScreen(pager.getCurrentScreen() + 1, false, true);
 				}
 				handler.sendEmptyMessageDelayed(nWhatAutoPlay, autoPlayDuration);
 			}
@@ -233,7 +232,6 @@ public class BannerLayout extends RelativeLayout {
 		setViews(views);
 	}
 
-	@NonNull
 	private ImageView getImageView(Integer res, final int position) {
 		ImageView imageView = new ImageView(getContext());
 		imageView.setOnClickListener(new OnClickListener() {
@@ -247,6 +245,8 @@ public class BannerLayout extends RelativeLayout {
 		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //        Glide.with(getContext()).load(res).centerCrop().into(imageView);
 		imageView.setImageResource(res);
+		int color = getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_banner_bg"));
+		imageView.setBackgroundColor(color);
 		return imageView;
 	}
 
@@ -275,7 +275,6 @@ public class BannerLayout extends RelativeLayout {
 		setViews(views);
 	}
 
-	@NonNull
 	private View getImageView(final Item item, final int position) {
 //		ImageView imageView = new ImageView(getContext());
 //		imageView.setOnClickListener(new OnClickListener() {
@@ -333,7 +332,7 @@ public class BannerLayout extends RelativeLayout {
 	//添加任意View视图
 	private void setViews(final List<View> views) {
 		//初始化pager
-		pager = new ViewPager(getContext());
+		pager = new MobViewPager(getContext());
 		//添加viewpager到SliderLayout
 		addView(pager, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		setSliderTransformDuration(scrollDuration);
@@ -381,30 +380,32 @@ public class BannerLayout extends RelativeLayout {
 			indicator.setImageDrawable(unSelectedDrawable);
 			indicatorContainer.addView(indicator);
 		}
-		LoopPagerAdapter pagerAdapter = new LoopPagerAdapter(views);
+		pagerAdapter = new LoopPagerAdapter(views) {
+			@Override
+			public void onScreenChange(int currentScreen, int lastScreen) {
+				super.onScreenChange(currentScreen, lastScreen);
+				switchIndicator(currentScreen % itemCount);
+			}
+		};
 		pager.setAdapter(pagerAdapter);
 		//设置当前item到Integer.MAX_VALUE中间的一个值，看起来像无论是往前滑还是往后滑都是ok的
 		//如果不设置，用户往左边滑动的时候已经划不动了
 		int targetItemPosition = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % itemCount;
-		pager.setCurrentItem(targetItemPosition);
+		pager.scrollToScreen(targetItemPosition, true);
 		switchIndicator(targetItemPosition % itemCount);
-		pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-			@Override
-			public void onPageSelected(int position) {
-				switchIndicator(position % itemCount);
-			}
-		});
 		startAutoPlay();
 	}
 
 	public void setSliderTransformDuration(int duration) {
-		try {
-			Field fscroller = ViewPager.class.getDeclaredField("mScroller");
-			fscroller.setAccessible(true);
-			FixedSpeedScroller scroller = new FixedSpeedScroller(pager.getContext(), null, duration);
-			fscroller.set(pager, scroller);
-		} catch (Exception e) {
-		}
+		//todo add scroller logic.
+		return;
+//		try {
+//			Field fscroller = ViewPager.class.getDeclaredField("mScroller");
+//			fscroller.setAccessible(true);
+//			FixedSpeedScroller scroller = new FixedSpeedScroller(pager.getContext(), null, duration);
+//			fscroller.set(pager, scroller);
+//		} catch (Exception e) {
+//		}
 	}
 
 	/**
@@ -439,7 +440,7 @@ public class BannerLayout extends RelativeLayout {
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
-		if(pager == null || pager.getAdapter() == null || pager.getAdapter().getCount() == 0) {
+		if(pager == null || pagerAdapter == null || pagerAdapter.getCount() == 0) {
 			return false;
 		}
 		switch (ev.getAction()) {
@@ -474,7 +475,7 @@ public class BannerLayout extends RelativeLayout {
 		void onItemClick(int position);
 	}
 
-	public class LoopPagerAdapter extends PagerAdapter {
+	public class LoopPagerAdapter extends ViewPagerAdapter {
 		private List<View> views;
 
 		public LoopPagerAdapter(List<View> views) {
@@ -488,27 +489,16 @@ public class BannerLayout extends RelativeLayout {
 		}
 
 		@Override
-		public boolean isViewFromObject(View view, Object object) {
-			return view == object;
-		}
-
-		@Override
-		public Object instantiateItem(ViewGroup container, int position) {
+		public View getView(int position, View view0, ViewGroup container) {
 			if (views.size() > 0) {
 				//position % view.size()是指虚拟的position会在[0，view.size()）之间循环
 				View view = views.get(position % views.size());
 				if (container.equals(view.getParent())) {
 					container.removeView(view);
 				}
-				container.addView(view);
 				return view;
 			}
 			return null;
-		}
-
-		@Override
-		public void destroyItem(ViewGroup container, int position, Object object) {
-
 		}
 	}
 

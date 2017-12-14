@@ -30,7 +30,7 @@
                     android:id="@+id/imageViewFavorite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/bbs_theme1_favorite_active"/>
+                    android:src="@drawable/bbs_theme1_favorite_inactive"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -49,6 +49,7 @@
             </LinearLayout>
 
             <View
+                android:visibility="invisible"
                 android:id="@+id/viewFavoriteMark"
                 android:layout_width="80dp"
                 android:layout_height="2dp"
@@ -74,7 +75,7 @@
                     android:id="@+id/imageViewThread"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/bbs_theme1_post_inactive"/>
+                    android:src="@drawable/bbs_theme1_post_active"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -93,7 +94,6 @@
             </LinearLayout>
 
             <View
-                android:visibility="invisible"
                 android:id="@+id/viewThreadMark"
                 android:layout_width="80dp"
                 android:layout_height="2dp"

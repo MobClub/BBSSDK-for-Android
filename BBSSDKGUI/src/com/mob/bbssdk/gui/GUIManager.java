@@ -4,12 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.signature.StringSignature;
 import com.mob.MobSDK;
 import com.mob.bbssdk.API;
 import com.mob.bbssdk.APICallback;
@@ -21,17 +16,23 @@ import com.mob.bbssdk.gui.helper.FileHelper;
 import com.mob.bbssdk.gui.helper.StorageFile;
 import com.mob.bbssdk.gui.pages.account.PageLogin;
 import com.mob.bbssdk.gui.pages.forum.PageWriteThread;
+import com.mob.bbssdk.gui.utils.OperationCallback;
 import com.mob.bbssdk.gui.utils.SendForumThreadManager;
 import com.mob.bbssdk.gui.utils.ToastUtils;
 import com.mob.bbssdk.model.User;
 import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.FakeActivity;
 import com.mob.tools.utils.ResHelper;
+import com.mob.bbssdk.gui.other.ImageGetter;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
 
 public class GUIManager {
 
@@ -44,6 +45,7 @@ public class GUIManager {
 	private FileHelper avatarFileHelper = null;
 	//	private HashMap<Class<? extends BasePage>, Class<? extends BasePage>> typeMap;
 	private FileHelper fileHelperAccount;
+	private static boolean isClearingCache = false;
 
 	public static boolean isShareEnable = true;
 
@@ -71,6 +73,10 @@ public class GUIManager {
 	}
 
 	public GUIManager() {
+		init();
+	}
+
+	public void init() {
 		fileHelperAccount = new FileHelper(StorageFile.AccountCache);
 		avatarFileHelper = new FileHelper(StorageFile.UserAvatar);
 		currentUserAvatar = readAvatar();
@@ -94,8 +100,7 @@ public class GUIManager {
 		clearAvatar();
 	}
 
-	public @Nullable
-	Account getAccount() {
+	public Account getAccount() {
 		//doesn't save account in this version.
 		return null;
 //		return fileHelperAccount.readObj();
@@ -118,8 +123,7 @@ public class GUIManager {
 		return result;
 	}
 
-	public @Nullable
-	Bitmap getCurrentUserAvatar() {
+	public Bitmap getCurrentUserAvatar() {
 		return currentUserAvatar;
 	}
 
@@ -128,29 +132,25 @@ public class GUIManager {
 		saveAvatar(bitmap);
 	}
 
-	public void forceUpdateCurrentUserAvatar(final @Nullable AvatarUpdatedListener listener) {
+	public void forceUpdateCurrentUserAvatar(final AvatarUpdatedListener listener) {
 		User user = null;
 		try {
 			user = BBSSDK.getApi(UserAPI.class).getCurrentUser();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			user = null;
 		}
 		if (user != null && !StringUtils.isEmpty(user.avatar)) {
-			Glide.with(MobSDK.getContext())
-					.load(user.avatar)
-					.asBitmap()
-					.signature(new StringSignature("" + System.currentTimeMillis()))
-					.into(new SimpleTarget<Bitmap>() {
-						@Override
-						public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-							currentUserAvatar = resource;
-							saveAvatar(resource);
-							if (listener != null) {
-								listener.onUpdated(currentUserAvatar);
-							}
-						}
-					});
+			ImageGetter.loadPic(user.avatar, new ImageGetter.ImageGotListener() {
+				@Override
+				public void OnImageGot(Bitmap bitmap) {
+					currentUserAvatar = bitmap;
+					saveAvatar(bitmap);
+					if (listener != null) {
+						listener.onUpdated(currentUserAvatar);
+					}
+				}
+			}, true);
 		}
 	}
 
@@ -234,21 +234,40 @@ public class GUIManager {
 		return (BBSViewBuilder.getInstance().ensureLogin(false) != null);
 	}
 
-	public static void clearCache() {
+	public interface ClearCacheListener {
+		void CacheCleared();
+	}
+
+	public static synchronized boolean clearCache(final ClearCacheListener listener) {
+		if (isClearingCache) {
+			return false;
+		}
+		isClearingCache = true;
 		AsyncTask task = new AsyncTask() {
 			@Override
 			protected Object doInBackground(Object[] objects) {
 				// This method must be called on a background thread.
-				Glide.get(MobSDK.getContext()).clearDiskCache();
+				ImageGetter.clearDiskCache();
 				ForumThreadHistoryManager.getInstance().clearReaded();
+//				BitmapProcessor.deleteCacheDir(false);
 				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Object o) {
+				super.onPostExecute(o);
+				if (listener != null) {
+					listener.CacheCleared();
+				}
+				isClearingCache = false;
 			}
 		};
 		task.execute();
+		return true;
 	}
 
-	public static long getCacheSizeInByte() {
-		File dir = Glide.getPhotoCacheDir(MobSDK.getContext());
+	public static long getImageCacheSizeInByte() {
+		File dir = new File(ImageGetter.getPhotoCacheDir());
 		long size = 0;
 		File[] files = dir.listFiles();
 		for (File f : files) {
@@ -258,10 +277,10 @@ public class GUIManager {
 	}
 
 	public static String getCacheSizeText() {
-		float size = getCacheSizeInByte();
-		if(size < 1024) {
+		float size = getImageCacheSizeInByte();
+		if (size < 1024) {
 			return String.format(Locale.CHINA, "%.02f", size) + " B";
-		} else if(size / 1024 < 1000) {
+		} else if (size / 1024 < 1000) {
 			return String.format(Locale.CHINA, "%.02f", size / 1024) + " KB";
 		} else {
 			return String.format(Locale.CHINA, "%.02f", size / 1024 / 1204) + " MB";
@@ -269,11 +288,11 @@ public class GUIManager {
 	}
 
 	public static void logout(final Context context, final APICallback<Boolean> callback) {
-		BBSSDK.getApi(UserAPI.class).logout(false, new APICallback<Boolean>(){
+		BBSSDK.getApi(UserAPI.class).logout(false, new APICallback<Boolean>() {
 			@Override
 			public void onSuccess(API api, int action, Boolean result) {
 				ToastUtils.showToast(context, ResHelper.getStringRes(context, "bbs_logout"));
-				if(callback != null) {
+				if (callback != null) {
 					callback.onSuccess(api, action, result);
 				}
 			}
@@ -281,7 +300,7 @@ public class GUIManager {
 			@Override
 			public void onError(API api, int action, int errorCode, Throwable details) {
 				ErrorCodeHelper.toastError(MobSDK.getContext(), errorCode, details);
-				if(callback != null) {
+				if (callback != null) {
 					callback.onError(api, action, errorCode, details);
 				}
 			}
@@ -299,6 +318,7 @@ public class GUIManager {
 		Intent intent = new Intent();
 		intent.setAction(GUIManager.BROADCAST_LOGIN);
 		MobSDK.getContext().sendBroadcast(intent);
+		getInstance().init();
 	}
 
 	public static void sendLogoutBroadcast() {
@@ -307,4 +327,55 @@ public class GUIManager {
 		MobSDK.getContext().sendBroadcast(intent);
 	}
 
+	public static void loginQQ(final OperationCallback<HashMap<String, Object>> callback) {
+		Platform plat = ShareSDK.getPlatform("QQ");
+		plat.removeAccount(true);
+		plat.setPlatformActionListener(new PlatformActionListener() {
+			@Override
+			public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("openid", platform.getDb().getUserId());
+				map.put("unionid", platform.getDb().get("unionid"));
+				map.put("authType", "qq");
+				map.putAll(hashMap);
+				callback.onSuccess(map);
+			}
+
+			@Override
+			public void onError(Platform platform, final int i, final Throwable throwable) {
+				callback.onFailed(i, throwable);
+			}
+
+			@Override
+			public void onCancel(Platform platform, int i) {
+				callback.onCancel();
+			}
+		});
+		plat.showUser(null);
+	}
+
+	public static void loginWeChat(final OperationCallback<HashMap<String, Object>> callback) {
+		Platform plat = ShareSDK.getPlatform("Wechat");
+		plat.removeAccount(true);
+		plat.setPlatformActionListener(new PlatformActionListener() {
+			@Override
+			public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("authType", "wechat");
+				map.putAll(hashMap);
+				callback.onSuccess(map);
+			}
+
+			@Override
+			public void onError(Platform platform, final int i, final Throwable throwable) {
+				callback.onFailed(i, throwable);
+			}
+
+			@Override
+			public void onCancel(Platform platform, int i) {
+				callback.onCancel();
+			}
+		});
+		plat.showUser(null);
+	}
 }

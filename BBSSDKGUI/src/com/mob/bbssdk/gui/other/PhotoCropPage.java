@@ -9,9 +9,9 @@ import android.os.Build;
 import android.provider.MediaStore;
 
 import com.mob.MobSDK;
+import com.mob.bbssdk.gui.jimu.gui.Page;
+import com.mob.bbssdk.gui.jimu.gui.Theme;
 import com.mob.bbssdk.gui.other.ImagePicker.OnImageGotListener;
-import com.mob.jimu.gui.Page;
-import com.mob.jimu.gui.Theme;
 import com.mob.tools.FakeActivity;
 import com.mob.tools.utils.DeviceHelper;
 import com.mob.tools.utils.ResHelper;

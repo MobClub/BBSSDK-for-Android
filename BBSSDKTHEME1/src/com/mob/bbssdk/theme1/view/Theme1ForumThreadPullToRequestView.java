@@ -75,6 +75,11 @@ public class Theme1ForumThreadPullToRequestView extends BBSPullToRequestView<For
 		Integer layout = ResHelper.getLayoutRes(getContext(), "bbs_theme1_item_forumthread");
 		final ForumThread forumthread = getItem(position);
 		final View view = ListViewItemBuilder.getInstance().buildLayoutThreadView(forumthread, convertView, parent, layout);
+		TextView subjectName = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "bbs_item_forumpost_textViewSubject"));
+		subjectName.setVisibility(GONE);
+		if(null == forumthread) {
+			return view;
+		}
 		TextView textViewTime = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewMainViewThreadTime"));
 		if (textViewTime != null) {
 			textViewTime.setText(com.mob.bbssdk.gui.utils.TimeUtils.timeDiff(getContext(), forumthread.createdOn));
@@ -185,14 +190,7 @@ public class Theme1ForumThreadPullToRequestView extends BBSPullToRequestView<For
 		if (forumThreadUpdateListner != null) {
 			forumThreadUpdateListner.OnTabUpdated(this.selectType);
 		}
-		getBasePagedItemAdapter().getDataSet().clear();
-		refreshQuiet();
-
-		try {
-			//取消加载效果，防止界面闪动
-			ReflectHelper.invokeInstanceMethod(this,"reversePulling");
-		} catch (Throwable throwable) {
-		}
+		basePagedItemAdapter.onRefresh();
 	}
 
 	public void updateTabView(View latest, View hot, View essence, View sticktop) {

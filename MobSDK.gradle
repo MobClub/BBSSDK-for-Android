@@ -1,0 +1,47 @@
+apply plugin: 'com.mob.sdk'
+
+MobSDK {
+    appKey "21b0f455db50c"
+    appSecret "70d65618dbd258834a3c05ea49df878c"
+
+    ShareSDK {
+        //平台配置信息
+        devInfo {
+            SinaWeibo {
+                appKey "4244735359"
+                appSecret "3c5e2fba33c8a61095af14b8e9818b47"
+                callbackUri "http://www.sharesdk.cn"
+                shareByAppClient true
+            }
+            Wechat {
+                appId "wx8f541f6c92eaca46"
+                appSecret "649d76cdd54af433cb696478db6ef0f4"
+                path "/page/API/pages/share/share"
+                userName "gh_afb25ac019c9"
+                bypassApproval false
+            }
+            WechatMoments {
+                appId "wx8f541f6c92eaca46"
+                appSecret "649d76cdd54af433cb696478db6ef0f4"
+                bypassApproval false
+            }
+            QQ {
+                appId "1106410295"
+                appKey "KEYQXjmJrcrh2BcSQAP"
+                shareByAppClient true
+                bypassApproval false
+
+            }
+            QZone {
+                appId "1106410295"
+                appKey "KEYQXjmJrcrh2BcSQAP"
+                bypassApproval false
+            }
+        }
+    }
+
+    MobLink {
+        gui false
+    }
+
+}

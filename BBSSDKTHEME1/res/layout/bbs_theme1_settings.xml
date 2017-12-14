@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="清理缓存"
+            android:text="@string/bbs_clear_cache"
             android:textColor="#4e4f57"
             android:textSize="15sp"/>
 

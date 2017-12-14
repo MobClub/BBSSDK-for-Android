@@ -202,7 +202,7 @@ public class BBSTheme1ViewBuilder extends BBSViewBuilder {
 
 	@Override
 	public int getStatusBarColor(Context context) {
-		return context.getResources().getColor(ResHelper.getColorRes(context, "bbs_theme1_statusbar_grey"));
+		return context.getResources().getColor(ResHelper.getColorRes(context, "bbs_theme1_statusbar"));
 	}
 
 	@Override

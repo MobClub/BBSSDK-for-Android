@@ -9,6 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mob.MobSDK;
+import com.mob.bbssdk.gui.jimu.gui.DialogAdapter;
+import com.mob.bbssdk.gui.jimu.gui.Page;
+import com.mob.bbssdk.gui.jimu.gui.PageAdapter;
+import com.mob.bbssdk.gui.jimu.gui.Theme;
 import com.mob.bbssdk.gui.other.ums.datatype.Area;
 import com.mob.bbssdk.gui.other.ums.datatype.City;
 import com.mob.bbssdk.gui.other.ums.datatype.Constellation;
@@ -19,10 +23,6 @@ import com.mob.bbssdk.gui.other.ums.datatype.Province;
 import com.mob.bbssdk.gui.other.ums.datatype.Zodiac;
 import com.mob.bbssdk.gui.other.ums.pickers.Choice;
 import com.mob.bbssdk.gui.other.ums.pickers.SingleValuePicker;
-import com.mob.jimu.gui.DialogAdapter;
-import com.mob.jimu.gui.Page;
-import com.mob.jimu.gui.PageAdapter;
-import com.mob.jimu.gui.Theme;
 import com.mob.tools.utils.ResHelper;
 
 import java.lang.reflect.Method;

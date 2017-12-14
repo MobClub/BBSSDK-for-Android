@@ -11,11 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.signature.StringSignature;
-import com.mob.MobSDK;
 import com.mob.bbssdk.API;
 import com.mob.bbssdk.APICallback;
 import com.mob.bbssdk.BBSSDK;
@@ -36,12 +31,13 @@ import com.mob.bbssdk.gui.views.pullrequestview.BBSPullToRequestView;
 import com.mob.bbssdk.model.ForumThread;
 import com.mob.bbssdk.model.User;
 import com.mob.bbssdk.model.UserOperations;
+import com.mob.bbssdk.theme1.others.wasabeef.blurry.Blurry;
 import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.utils.ResHelper;
+import com.mob.bbssdk.gui.other.ImageGetter;
 
 import java.util.ArrayList;
 
-import jp.wasabeef.blurry.Blurry;
 
 public class Theme1OtherUserProfilePullRequestView extends BBSPullToRequestView<ForumThread> {
 	public Integer nUserID = 0;
@@ -223,17 +219,13 @@ public class Theme1OtherUserProfilePullRequestView extends BBSPullToRequestView<
 				textViewSignature.setText(userInfo.sightml == null ? "" : Html.fromHtml(userInfo.sightml));
 				//set blur background
 				if(!StringUtils.isEmpty(userInfo.avatar)) {
-					Glide.with(MobSDK.getContext())
-							.load(userInfo.avatar)
-							.asBitmap()
-							.signature(new StringSignature("" + System.currentTimeMillis()))
-							.into(new SimpleTarget<Bitmap>() {
-								@Override
-								public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-									Blurry.with(getContext()).from(resource).into(imageViewBlur);
-									aivAvatar.setBitmap(resource);
-								}
-							});
+					ImageGetter.loadPic(userInfo.avatar, new ImageGetter.ImageGotListener() {
+						@Override
+						public void OnImageGot(Bitmap bitmap) {
+							Blurry.with(getContext()).from(bitmap).into(imageViewBlur);
+							aivAvatar.setBitmap(bitmap);
+						}
+					}, true);
 				} else {
 					aivAvatar.setImageResource(ResHelper.getBitmapRes(getContext(), "bbs_theme1_login_defaultportrait"));
 				}

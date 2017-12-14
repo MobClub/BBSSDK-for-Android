@@ -212,9 +212,11 @@
         // 实现native交互，添加新的评论
 //        var data = {"pid": 5,"tid": 123,"author": "小小","authorId": 2836,"avatar": "http://www.apkbus.com/uc_server/avatar.php?uid=2836","message": "<p>牛逼</p>","position":6,"createdOn": 1492832131,"deviceName": "iPhone 6p", "prePost": []};
         if(window.forumThread) {
+            details.article.replies++
             details.commentList.push(data)//将data插入即可
         } else {
             var data = {"pid": 5,"tid": 123,"author": "小小","authorId": 2836,"avatar": "http://www.apkbus.com/uc_server/avatar.php?uid=2836","message": "<p>牛逼</p>","position":6,"createdOn": 1492832131,"deviceName": "iPhone 6p", "prePost": []};
+            details.article.replies++
             details.commentList.push(data)//将data插入即可
         }
     }
@@ -305,6 +307,14 @@
         }
     }
 
+    function articleLiked(fid, tid) {
+        if (window.forumThread) {
+             details.article.recommend_add ++
+        } else {
+            console.log("article liked! fid: " + fid + " tid: " + tid);
+        }
+    }
+
     /*界面跳转到评论模块*/
     function goComment() {
         details.goComment()
@@ -331,6 +341,7 @@
         followAuthor:followAuthor,
         likeArticle:likeArticle,
         //2017-08-23新增接口
-        goComment:goComment
+        goComment:goComment,
+        articleLiked:articleLiked
     }
 })();

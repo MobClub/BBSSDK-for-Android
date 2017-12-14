@@ -1,22 +1,23 @@
 package com.mob.bbssdk.theme1.view;
 
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ import com.mob.bbssdk.gui.pages.forum.PageSearch;
 import com.mob.bbssdk.gui.utils.ImageDownloader;
 import com.mob.bbssdk.gui.utils.ScreenUtils;
 import com.mob.bbssdk.gui.utils.SendForumThreadManager;
+import com.mob.bbssdk.gui.utils.statusbar.StatusBarCompat;
 import com.mob.bbssdk.gui.views.ForumThreadListView;
 import com.mob.bbssdk.gui.views.GlideImageView;
 import com.mob.bbssdk.gui.views.MainView;
@@ -53,6 +55,7 @@ import com.mob.bbssdk.theme1.page.forum.Theme1PageForumSetting;
 import com.mob.bbssdk.theme1.page.forum.Theme1PageForumThread;
 import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.FakeActivity;
+import com.mob.tools.utils.DeviceHelper;
 import com.mob.tools.utils.ResHelper;
 import com.mob.tools.utils.UIHandler;
 
@@ -66,6 +69,7 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 	protected boolean isDefaultAvatar = true;
 	protected ImageView imageViewSearch;
 	protected ImageView imageViewWritePost;
+	protected HorizontalScrollView horizontalScrollView;
 	protected View viewTitle;
 	protected View viewBackground;
 	protected TextView textViewTitle;
@@ -74,35 +78,24 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 	private ArrayList<ForumForum> forumForum;
 	private BroadcastReceiver sendThreadReceiver;
 	private View viewHeaderContent;
-	protected ViewGroup viewHeaderFunc1;
-	protected ViewGroup viewHeaderFunc2;
-	protected ViewGroup viewHeaderFunc3;
-	protected ViewGroup viewHeaderFunc4;
-	protected ImageView imageViewHeaderFunc1;
-	protected ImageView imageViewHeaderFunc2;
-	protected ImageView imageViewHeaderFunc3;
-	protected ImageView imageViewHeaderFunc4;
-	protected ImageView imageViewFakeBanner;
-	protected TextView textViewHeaderFunc1;
-	protected TextView textViewHeaderFunc2;
-	protected TextView textViewHeaderFunc3;
-	protected TextView textViewHeaderFunc4;
+	protected LayoutInflater layoutInflater;
+	protected LinearLayout layoutScrollView;
+
 	protected ViewGroup viewHeaderFuncMore;
 	protected View placeHolderView;
-	protected OnClickListener headerOnClickListener;
 	protected int defaultTotalForumPic;
 
-	public Theme1MainView(@NonNull Context context) {
+	public Theme1MainView(Context context) {
 		super(context);
 		init(context);
 	}
 
-	public Theme1MainView(@NonNull Context context, @Nullable AttributeSet attrs) {
+	public Theme1MainView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init(context);
 	}
 
-	public Theme1MainView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+	public Theme1MainView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		init(context);
 	}
@@ -150,74 +143,30 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 	protected void updateTabFunc() {
 		//view created and data got.
 		if (viewHeaderContent != null && forumForum != null) {
-			//首页头部版块显示不超过4个
-			int size = 4 > forumForum.size() ? forumForum.size() : 4;
-
-			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) placeHolderView.getLayoutParams();
-			layoutParams.weight = 4 - size;
-			placeHolderView.setLayoutParams(layoutParams);
-			viewHeaderFunc1.setVisibility(GONE);
-			viewHeaderFunc2.setVisibility(GONE);
-			viewHeaderFunc3.setVisibility(GONE);
-			viewHeaderFunc4.setVisibility(GONE);
-
-			for (int i = 0; i < size; i++) {
-				updateTabVisible(i);
+			layoutScrollView.removeAllViews();
+			for(final ForumForum forum : forumForum) {
+				Integer layout = ResHelper.getLayoutRes(getContext(), "bbs_theme1_mainviewheader_funcitem");
+				View view = layoutInflater.inflate(layout, layoutScrollView, false);
+				ImageView imageViewHeaderFunc = (ImageView) view.findViewById(ResHelper.getIdRes(getContext(), "imageViewHeaderFunc"));
+				TextView textViewHeaderFunc = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewHeaderFunc"));
+				textViewHeaderFunc.setText(forum.name);
+				if(forum.fid == 0 && StringUtils.isEmpty(forum.forumPic)) {
+					imageViewHeaderFunc.setImageResource(defaultTotalForumPic);
+				} else {
+					ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc);
+				}
+				view.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (forum != null) {
+							Theme1PageForumThread page = new Theme1PageForumThread();
+							page.initData(forum);
+							page.show(getContext());
+						}
+					}
+				});
+				layoutScrollView.addView(view);
 			}
-		}
-	}
-
-	private void updateTabVisible(int index) {
-		switch (index) {
-			case 0: {
-				if (forumForum.get(0) != null) {
-					final ForumForum forum = forumForum.get(0);
-					System.out.println("forum.fid: " + forum.fid + " forumPic: " + forum.forumPic);
-					if(forum.fid == 0 && StringUtils.isEmpty(forum.forumPic)) {
-						imageViewHeaderFunc1.setImageResource(defaultTotalForumPic);
-					} else {
-						ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc1);
-					}
-					textViewHeaderFunc1.setText(forum.name);
-					viewHeaderFunc1.setVisibility(VISIBLE);
-				}
-			} break;
-			case 1: {
-				if (forumForum.get(1) != null) {
-					final ForumForum forum = forumForum.get(1);
-					if(forum.fid == 0 && StringUtils.isEmpty(forum.forumPic)) {
-						imageViewHeaderFunc2.setImageResource(defaultTotalForumPic);
-					} else {
-						ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc2);
-					}
-					textViewHeaderFunc2.setText(forum.name);
-					viewHeaderFunc2.setVisibility(VISIBLE);
-				}
-			} break;
-			case 2: {
-				if (forumForum.get(2) != null) {
-					final ForumForum forum = forumForum.get(2);
-					if(forum.fid == 0 && StringUtils.isEmpty(forum.forumPic)) {
-						imageViewHeaderFunc3.setImageResource(defaultTotalForumPic);
-					} else {
-						ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc3);
-					}
-					textViewHeaderFunc3.setText(forum.name);
-					viewHeaderFunc3.setVisibility(VISIBLE);
-				}
-			} break;
-			case 3: {
-				if (forumForum.get(3) != null) {
-					final ForumForum forum = forumForum.get(3);
-					if(forum.fid == 0 && StringUtils.isEmpty(forum.forumPic)) {
-						imageViewHeaderFunc4.setImageResource(defaultTotalForumPic);
-					} else {
-						ImageDownloader.loadCircleImage(forum.forumPic, imageViewHeaderFunc4);
-					}
-					textViewHeaderFunc4.setText(forum.name);
-					viewHeaderFunc4.setVisibility(VISIBLE);
-				}
-			} break;
 		}
 	}
 
@@ -235,30 +184,6 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 			@Override
 			public void OnCancel() {
 
-			}
-		};
-
-		headerOnClickListener = new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (forumForum == null) {
-					return;
-				}
-				ForumForum forum = null;
-				if (v == viewHeaderFunc1) {
-					forum = forumForum.get(0);
-				} else if (v == viewHeaderFunc2) {
-					forum = forumForum.get(1);
-				} else if (v == viewHeaderFunc3) {
-					forum = forumForum.get(2);
-				} else if (v == viewHeaderFunc4) {
-					forum = forumForum.get(3);
-				}
-				if (forum != null) {
-					Theme1PageForumThread page = new Theme1PageForumThread();
-					page.initData(forum);
-					page.show(getContext());
-				}
 			}
 		};
 
@@ -309,26 +234,12 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 				//Don't reuse the previous view to prevent the click no response bug during scroll back and forth.
 				View viewheader = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(),
 						"bbs_theme1_layout_mainviewheader"), viewGroup, false);
-				viewheader.setOnClickListener(headerOnClickListener);
 				imageViewFakeBanner = (ImageView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "imageViewFakeBanner"));
 				bannerLayout = (BannerLayout) viewheader.findViewById(ResHelper.getIdRes(getContext(), "bannerLayout"));
-				viewHeaderFunc1 = (ViewGroup) viewheader.findViewById(ResHelper.getIdRes(getContext(), "viewHeaderFunc1"));
-				viewHeaderFunc2 = (ViewGroup) viewheader.findViewById(ResHelper.getIdRes(getContext(), "viewHeaderFunc2"));
-				viewHeaderFunc3 = (ViewGroup) viewheader.findViewById(ResHelper.getIdRes(getContext(), "viewHeaderFunc3"));
-				viewHeaderFunc4 = (ViewGroup) viewheader.findViewById(ResHelper.getIdRes(getContext(), "viewHeaderFunc4"));
-				viewHeaderFunc1.setOnClickListener(headerOnClickListener);
-				viewHeaderFunc2.setOnClickListener(headerOnClickListener);
-				viewHeaderFunc3.setOnClickListener(headerOnClickListener);
-				viewHeaderFunc4.setOnClickListener(headerOnClickListener);
-
-				imageViewHeaderFunc1 = (ImageView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "imageViewHeaderFunc1"));
-				imageViewHeaderFunc2 = (ImageView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "imageViewHeaderFunc2"));
-				imageViewHeaderFunc3 = (ImageView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "imageViewHeaderFunc3"));
-				imageViewHeaderFunc4 = (ImageView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "imageViewHeaderFunc4"));
-				textViewHeaderFunc1 = (TextView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "textViewHeaderFunc1"));
-				textViewHeaderFunc2 = (TextView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "textViewHeaderFunc2"));
-				textViewHeaderFunc3 = (TextView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "textViewHeaderFunc3"));
-				textViewHeaderFunc4 = (TextView) viewheader.findViewById(ResHelper.getIdRes(getContext(), "textViewHeaderFunc4"));
+				layoutScrollView = (LinearLayout) viewheader.findViewById(ResHelper.getIdRes(getContext(), "layoutScrollView"));
+				horizontalScrollView = (HorizontalScrollView) viewheader.findViewById(ResHelper.getIdRes(getContext(),
+						"horizontalScrollView"));
+				horizontalScrollView.setHorizontalScrollBarEnabled(false);
 				placeHolderView = viewheader.findViewById(ResHelper.getIdRes(getContext(), "placeHolderView"));
 
 				viewHeaderFuncMore = (ViewGroup) viewheader.findViewById(ResHelper.getIdRes(getContext(), "viewHeaderFuncMore"));
@@ -353,6 +264,7 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 				Integer layout = ResHelper.getLayoutRes(getContext(), "bbs_theme1_item_mainviewthread");
 				final View view = ListViewItemBuilder.getInstance().buildLayoutThreadView(getItem(position), convertView, parent, layout);
 				final ForumThread forumthread = getItem(position);
+				setThreadReaded(view, ForumThreadHistoryManager.getInstance().isThreadReaded(forumthread));
 				view.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -465,7 +377,6 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 		textViewTitle = (TextView) viewTitle.findViewById(ResHelper.getIdRes(context, "textViewTitle"));
 		viewMessageMark = viewTitle.findViewById(ResHelper.getIdRes(context, "viewMessageMark"));
 		addView(viewTitle);
-		setFitsSystemWindows(true);
 		imageViewAvatar.setExecuteRound();
 
 		imageViewSearch.setOnClickListener(new OnClickListener() {
@@ -493,6 +404,7 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 								Boolean logout = ResHelper.forceCast(data.get("logout"));
 								if (logout != null && logout) {
 									forumThreadListViewWithBanner.performPullingDown(true);
+									viewMessageMark.setVisibility(GONE);
 								}
 							}
 						}
@@ -505,6 +417,7 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 		forumThreadListViewWithBanner.setOnScrollListener(new ForumThreadListView.OnScrollListener() {
 			@Override
 			public void OnScrolledTo(int y) {
+				smoothSwitchStatusBar(y);
 				BBSPullToRequestView.setAlphaByScrollY(viewBackground, y, ScreenUtils.dpToPx(100));
 				BBSPullToRequestView.setAlphaByScrollY(textViewTitle, y, ScreenUtils.dpToPx(100));
 
@@ -519,6 +432,23 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 				smoothSwitchAvatarView(y, 500);
 			}
 		});
+		layoutInflater = LayoutInflater.from(getContext());
+	}
+
+	protected void smoothSwitchStatusBar(int height) {
+		if (Build.VERSION.SDK_INT >= 19) {
+			LayoutParams layoutParams = (LayoutParams) viewBackground.getLayoutParams();
+			layoutParams.height = ScreenUtils.dpToPx(40) + DeviceHelper.getInstance(getContext()).getStatusBarHeight();
+			viewBackground.setLayoutParams(layoutParams);
+			LayoutParams lp = (LayoutParams) viewTitle.getLayoutParams();
+			lp.height = ScreenUtils.dpToPx(40) + DeviceHelper.getInstance(getContext()).getStatusBarHeight();
+			viewTitle.setLayoutParams(lp);
+			if (height > 20) {
+				StatusBarCompat.translucentStatusBar((Activity) getContext(),true);
+			} else {
+				StatusBarCompat.translucentStatusBar((Activity) getContext(),false);
+			}
+		}
 	}
 
 	protected void smoothSwitchAvatarView(Integer height, Integer opacityheight) {
@@ -564,6 +494,7 @@ public class Theme1MainView extends FrameLayout implements MainViewInterface {
 	public void onCreate() {
 		getContext().registerReceiver(initSendThreadReceiver(), new IntentFilter(SendForumThreadManager.BROADCAST_SEND_THREAD));
 		updateTitleBarRight(SendForumThreadManager.getStatus(getContext()));
+		smoothSwitchStatusBar(0);
 	}
 
 	@Override

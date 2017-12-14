@@ -88,8 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <View
                 android:layout_width="match_parent"
@@ -182,21 +181,114 @@
         android:text="@string/bbs_login_login"
         android:textColor="#2d3037"/>
 
+    <TextView
+        android:id="@+id/bbs_login_viewregister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="38dp"
+        android:gravity="bottom|center_horizontal"
+        android:padding="10dp"
+        android:text="注册新用户"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        />
+
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1"
         />
-    <TextView
-        android:layout_gravity="center"
-        android:id="@+id/bbs_login_viewregister"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:id="@+id/bbs_other_root"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="bottom|center_horizontal"
-        android:text="注册新用户"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        />
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="0.5dp"
+                android:background="#ffffff"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
+                android:text="@string/bbs_other_login"
+                android:textColor="#ffffff"
+                android:textSize="12sp"
+                />
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="0.5dp"
+                android:background="#ffffff"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:orientation="horizontal"
+            android:paddingBottom="36dp"
+            >
+
+
+            <FrameLayout
+                android:id="@+id/bbs_login_qq_fl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/bbs_login_qq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/bbs_theme0_qq"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/bbs_login_wx_fl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone"
+                >
+
+                <ImageView
+                    android:id="@+id/bbs_login_wx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/bbs_theme0_wx"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/bbs_login_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bbs_theme0_phone"/>
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

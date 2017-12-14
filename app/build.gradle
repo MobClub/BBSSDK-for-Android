@@ -1,14 +1,11 @@
 apply plugin: 'com.android.application'
 apply from: "${project.rootProject.file('buildCommon.gradle')}"
+apply from: "${project.rootProject.file('MobSDK.gradle')}"
 
 android {
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-
-        ndk {
-            abiFilters 'armeabi', 'x86'
-        }
     }
 
     dexOptions {

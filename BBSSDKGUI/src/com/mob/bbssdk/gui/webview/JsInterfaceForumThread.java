@@ -275,6 +275,10 @@ public class JsInterfaceForumThread {
 		loadJs("BBSSDKNative.updateCommentHtml", (forumThread == null ? 0L : forumThread.authorId), false);
 	}
 
+	public void articleLiked(long fid, long tid) {
+		loadJs("BBSSDKNative.articleLiked", fid, tid);
+	}
+
 	public void addPost(ForumPost forumPost) {
 		if(hasMoreComment) {
 			//If there is more comment, then doesn't add the fake comment,

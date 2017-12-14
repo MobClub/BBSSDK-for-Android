@@ -305,6 +305,14 @@
         }
     }
 
+    function articleLiked(fid, tid) {
+        if (window.forumThread) {
+             details.article.recommend_add ++
+        } else {
+            console.log("article liked! fid: " + fid + " tid: " + tid);
+        }
+    }
+
     /*界面跳转到评论模块*/
     function goComment() {
     	console.log("gotoposts js gocomment")
@@ -332,6 +340,7 @@
         followAuthor:followAuthor,
         likeArticle:likeArticle,
         //2017-08-23新增接口
-        goComment:goComment
+        goComment:goComment,
+        articleLiked:articleLiked
     }
 })();

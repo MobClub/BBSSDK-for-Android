@@ -1,9 +1,6 @@
 apply plugin: 'com.android.library'
 apply from: '../buildCommon.gradle'
+apply from: '../MobSDK.gradle'
 
 dependencies {
-    compile 'org.apache.commons:commons-csv:1.4'
-    compile 'com.android.support:support-v4:22.2.1'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.8'
-    compile 'com.github.bumptech.glide:glide:3.8.0'
 }

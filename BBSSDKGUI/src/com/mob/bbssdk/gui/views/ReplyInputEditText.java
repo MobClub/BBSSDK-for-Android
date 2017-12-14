@@ -26,8 +26,7 @@ public class ReplyInputEditText extends EditText {
 
 	@Override
 	public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK &&
-				event.getAction() == KeyEvent.ACTION_UP) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
 			if (keyPreImeListener != null) {
 				keyPreImeListener.OnKeyPreImeBack();
 			}

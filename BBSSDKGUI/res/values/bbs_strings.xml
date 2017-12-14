@@ -233,9 +233,17 @@
     <string name="bbs_message_like">喜欢了您的帖子</string>
     <string name="bbs_message_follow">关注了您</string>
     <string name="bbs_message_threadinvalid">帖子无法找到！</string>
-    <string name="bbs_clearcache_success">清空缓存!</string>
+    <string name="bbs_clearcache_success">已经清空缓存!</string>
+    <string name="bbs_clearcache_ing">正在清空缓存!</string>
 
     <string name="bbs_cant_follower_yourself">自己不能关注自己！</string>
 
     <string name="bbs_tokeninvalid_relogin">Token无效，请重新登录!</string>
+
+    <string name="bbs_other_login">其它登录方式</string>
+    <string name="bbs_other_login_bind_title">绑定账号</string>
+    <string name="bbs_other_login_bind_hint">您如果已通过其他方式注册过本论坛的账号\n可输入注册的用户名和密码进行绑定</string>
+    <string name="bbs_other_login_bind">立即绑定</string>
+    <string name="bbs_other_login_go">直接进入</string>
+    <string name="bbs_clear_cache">清理缓存</string>
 </resources>

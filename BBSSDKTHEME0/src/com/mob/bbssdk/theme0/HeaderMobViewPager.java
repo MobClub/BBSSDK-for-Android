@@ -2,7 +2,6 @@ package com.mob.bbssdk.theme0;
 
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import com.mob.tools.gui.ViewPagerAdapter;
 
 public class HeaderMobViewPager extends MobViewPager {
 
-	@Nullable ForumThreadListPageAdapter viewPagerAdapter;
+	ForumThreadListPageAdapter viewPagerAdapter;
 	public HeaderMobViewPager(Context context) {
 		super(context);
 	}

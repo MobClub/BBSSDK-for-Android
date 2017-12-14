@@ -1,7 +1,7 @@
 package com.mob.bbssdk.gui.other.ums.pickers;
 
-import com.mob.jimu.gui.Page;
-import com.mob.jimu.gui.Theme;
+import com.mob.bbssdk.gui.jimu.gui.Page;
+import com.mob.bbssdk.gui.jimu.gui.Theme;
 
 public class TextPicker extends Page<TextPicker> {
 	private String titleResName;

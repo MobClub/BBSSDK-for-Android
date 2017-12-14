@@ -2,8 +2,8 @@ package com.mob.bbssdk.gui.other.ums.pickers;
 
 import android.content.Context;
 
-import com.mob.jimu.gui.Dialog;
-import com.mob.jimu.gui.Theme;
+import com.mob.bbssdk.gui.jimu.gui.Dialog;
+import com.mob.bbssdk.gui.jimu.gui.Theme;
 
 import java.util.HashMap;
 

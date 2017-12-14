@@ -1,24 +1,17 @@
 package com.mob.bbssdk.gui.views;
 
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
+import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.bumptech.glide.BitmapTypeRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.signature.StringSignature;
 import com.mob.bbssdk.gui.helper.ImageHelper;
 import com.mob.bbssdk.gui.utils.ScreenUtils;
 import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.utils.ReflectHelper;
+import com.mob.bbssdk.gui.other.ImageGetter;
 
 public class GlideImageView extends ImageView {
 	private static final String TAG = "GlideImageView";
@@ -32,12 +25,12 @@ public class GlideImageView extends ImageView {
 		init(null, 0);
 	}
 
-	public GlideImageView(Context context, @Nullable AttributeSet attrs) {
+	public GlideImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init(attrs, 0);
 	}
 
-	public GlideImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+	public GlideImageView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		init(attrs, defStyleAttr);
 	}
@@ -129,30 +122,11 @@ public class GlideImageView extends ImageView {
 			return;
 		}
 		Context context = getContext();
-		BitmapTypeRequest<String> typerequest = Glide.with(context).load(strUrl).asBitmap();
-		if (forceupdate) {
-			//add time signature to force update the photo.
-			typerequest.signature(new StringSignature("" + System.currentTimeMillis()));
+		if(null == nDefaultRes) {
+			nDefaultRes = -1;
 		}
-		typerequest.listener(new RequestListener<String, Bitmap>() {
-			@Override
-			public boolean onException(Exception e, String s, Target<Bitmap> target, boolean b) {
-				if (nDefaultRes != null && nDefaultRes > 0) {
-					setImageResource(nDefaultRes);
-				}
-				return false;
-			}
-
-			@Override
-			public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
-				return false;
-			}
-		}).into(new SimpleTarget<Bitmap>() {
-			@Override
-			public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-				setImageBitmap(bitmap);
-			}
-		});
+		Bitmap bm = BitmapFactory.decodeResource(getResources(), nDefaultRes);
+		ImageGetter.loadPic(this, strUrl, bm, forceupdate);
 	}
 
 	@Override
@@ -163,6 +137,9 @@ public class GlideImageView extends ImageView {
 
 	@Override
 	public void setImageBitmap(Bitmap bitmap) {
+		if (bitmap == null) {
+			return;
+		}
 		super.setImageBitmap(getRoundedBitmap(bitmap));
 	}
 
@@ -171,6 +148,9 @@ public class GlideImageView extends ImageView {
 	}
 
 	private Bitmap getRoundedBitmap(Bitmap bitmap) {
+		if (bitmap == null) {
+			return null;
+		}
 		Bitmap bitmapround = bitmap;
 		if (roundedPic) {
 			bitmapround = ImageHelper.getRoundBitmap(bitmap);

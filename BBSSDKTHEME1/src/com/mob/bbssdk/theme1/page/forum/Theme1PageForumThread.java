@@ -3,10 +3,12 @@ package com.mob.bbssdk.theme1.page.forum;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.mob.bbssdk.gui.BBSViewBuilder;
@@ -14,11 +16,13 @@ import com.mob.bbssdk.gui.datadef.ThreadListSelectType;
 import com.mob.bbssdk.gui.pages.BasePageWithTitle;
 import com.mob.bbssdk.gui.pages.forum.PageWriteThread;
 import com.mob.bbssdk.gui.utils.ScreenUtils;
+import com.mob.bbssdk.gui.utils.statusbar.StatusBarCompat;
 import com.mob.bbssdk.gui.views.ForumThreadListView;
 import com.mob.bbssdk.gui.views.pullrequestview.BBSPullToRequestView;
 import com.mob.bbssdk.model.ForumForum;
 import com.mob.bbssdk.theme1.view.Theme1ForumThreadPullToRequestView;
 import com.mob.bbssdk.utils.StringUtils;
+import com.mob.tools.utils.DeviceHelper;
 import com.mob.tools.utils.ResHelper;
 
 /*
@@ -32,6 +36,7 @@ public class Theme1PageForumThread extends BasePageWithTitle {
 	private View viewMarkHot;
 	private View viewMarkEssence;
 	private View viewMarkSticktop;
+	private View viewTitle;
 	private TextView textViewLatest;
 	private TextView textViewHot;
 	private TextView textViewEssence;
@@ -74,6 +79,7 @@ public class Theme1PageForumThread extends BasePageWithTitle {
 		forumThreadPullToRequestView.initData(this.forumForum);
 		titleBar.setVisibility(View.GONE);
 		viewBackground = contentView.findViewById(getIdRes("viewBackground"));
+		viewTitle = contentView.findViewById(getIdRes("viewTitle"));
 		layoutStickTab = (ViewGroup) contentView.findViewById(getIdRes("layoutStickTab"));
 		textViewTitle = (TextView) contentView.findViewById(getIdRes("textViewTitle"));
 		if(forumForum != null && !StringUtils.isEmpty(forumForum.name)) {
@@ -91,6 +97,7 @@ public class Theme1PageForumThread extends BasePageWithTitle {
 		forumThreadPullToRequestView.setOnScrollListener(new ForumThreadListView.OnScrollListener() {
 			@Override
 			public void OnScrolledTo(int y) {
+				smoothSwitchStatusBar(y);
 				BBSPullToRequestView.setAlphaByScrollY(viewBackground, y, ScreenUtils.dpToPx(100));
 				BBSPullToRequestView.setAlphaByScrollY(layoutTitleDropDown, y, ScreenUtils.dpToPx(100));
 
@@ -174,5 +181,23 @@ public class Theme1PageForumThread extends BasePageWithTitle {
 			}
 		});
 		forumThreadPullToRequestView.refreshQuiet();
+		contentView.setFitsSystemWindows(false);
+		smoothSwitchStatusBar(0);
+	}
+
+	protected void smoothSwitchStatusBar(int height) {
+		if (Build.VERSION.SDK_INT >= 19) {
+			FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) viewBackground.getLayoutParams();
+			layoutParams.height = ScreenUtils.dpToPx(44) + DeviceHelper.getInstance(getContext()).getStatusBarHeight();
+			viewBackground.setLayoutParams(layoutParams);
+			FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) viewTitle.getLayoutParams();
+			lp.setMargins(0,DeviceHelper.getInstance(getContext()).getStatusBarHeight(),0,0);
+			viewTitle.setLayoutParams(lp);
+			if (height > 20) {
+				StatusBarCompat.translucentStatusBar((Activity) getContext(),true);
+			} else {
+				StatusBarCompat.translucentStatusBar((Activity) getContext(),false);
+			}
+		}
 	}
 }

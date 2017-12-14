@@ -1,6 +1,7 @@
 package com.mob.bbssdk.gui;
 
 
+import android.Manifest;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -139,10 +140,10 @@ public class BaseMainActivity extends BaseActivity {
 	private boolean checkPermissions() {
 		if (Build.VERSION.SDK_INT >= 23) {
 			try {
-				PackageManager pm = getPackageManager();
-				PackageInfo pi = pm.getPackageInfo(getPackageName(), PackageManager.GET_PERMISSIONS);
+				String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_NETWORK_STATE,
+						Manifest.permission.ACCESS_WIFI_STATE};
 				ArrayList<String> list = new ArrayList<String>();
-				for (String p : pi.requestedPermissions) {
+				for (String p : permission) {
 					if (!DeviceHelper.getInstance(this).checkPermission(p)) {
 						list.add(p);
 					}

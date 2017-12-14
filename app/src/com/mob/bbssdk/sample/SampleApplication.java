@@ -19,7 +19,7 @@ public class SampleApplication extends Application {
 
 	public void onCreate() {
 		super.onCreate();
-		int uiType = 2;
+		int uiType = 1;
 		try {
 			int uiTypeResId = ResHelper.getStringRes(this, "BBS_UI_TYPE");
 			if (uiTypeResId > 0) {

@@ -23,15 +23,9 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mob.bbssdk.API;
-import com.mob.bbssdk.APICallback;
-import com.mob.bbssdk.BBSSDK;
-import com.mob.bbssdk.api.UserAPI;
 import com.mob.bbssdk.gui.dialog.ModelLoadingDialog;
-import com.mob.bbssdk.gui.helper.ErrorCodeHelper;
 import com.mob.bbssdk.gui.other.ErrorDialog;
 import com.mob.bbssdk.gui.other.PhotoCropPage;
-import com.mob.bbssdk.model.User;
 import com.mob.tools.gui.ScaledImageView;
 import com.mob.tools.utils.ResHelper;
 import com.mob.tools.utils.UIHandler;
@@ -76,7 +70,7 @@ public class PhotoCropPageAdapter extends DefaultThemePageAdapter<PhotoCropPage>
 		rl.addView(ivPhoto, lprl);
 
 		View vCrop = new View(activity);
-		vCrop.setId(1);
+		vCrop.setId(View.generateViewId());
 		int screenWidth = ResHelper.getScreenWidth(getPage().getContext());
 		lprl = new RelativeLayout.LayoutParams(screenWidth, screenWidth);
 		lprl.addRule(RelativeLayout.CENTER_IN_PARENT);

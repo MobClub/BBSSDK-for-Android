@@ -13,11 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.signature.StringSignature;
-import com.mob.MobSDK;
 import com.mob.bbssdk.API;
 import com.mob.bbssdk.APICallback;
 import com.mob.bbssdk.BBSSDK;
@@ -38,14 +33,14 @@ import com.mob.bbssdk.model.FavoriteThread;
 import com.mob.bbssdk.model.ForumThread;
 import com.mob.bbssdk.model.User;
 import com.mob.bbssdk.model.UserOperations;
+import com.mob.bbssdk.theme1.others.wasabeef.blurry.Blurry;
 import com.mob.bbssdk.utils.StringUtils;
-import com.mob.tools.utils.ReflectHelper;
 import com.mob.tools.utils.ResHelper;
+import com.mob.bbssdk.gui.other.ImageGetter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.blurry.Blurry;
 
 public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Object> {
 	public enum TAB {
@@ -79,7 +74,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 	View viewThreadMark;
 	View viewHistoryMark;
 
-	private TAB currentTab = TAB.FAVORITE;
+	private TAB currentTab = TAB.THREAD;
 	private UserProfileUpdatedListener userProfileUpdatedListener;
 	private User userInfo;
 	private UserOperations userOperations;
@@ -110,6 +105,33 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 					userapi.getFavoritePostList(page, nDefaultLoadOnceCount, false, new APICallback<ArrayList<FavoriteThread>>() {
 						@Override
 						public void onSuccess(API api, int action, ArrayList<FavoriteThread> result) {
+							if (null == result || result.size() <= 0) {
+								setShowEmpty(true);
+								basePagedItemAdapter.getListView().setDividerHeight(0);
+							} else {
+								basePagedItemAdapter.getListView().setDividerHeight(ResHelper.dipToPx(getContext(), 1));
+								setShowEmpty(false);
+							}
+							callback.onFinished(true, hasMoreData(result), result);
+						}
+
+						@Override
+						public void onError(API api, int action, int errorCode, Throwable details) {
+							ErrorCodeHelper.toastError(getContext(), errorCode, details);
+
+						}
+					});
+				} else if (currentTab == TAB.THREAD) {
+					userapi.getPersonalPostList(null, page, nDefaultLoadOnceCount, false, new APICallback<ArrayList<ForumThread>>() {
+						@Override
+						public void onSuccess(API api, int action, ArrayList<ForumThread> result) {
+							if (null == result || result.size() <= 0) {
+								basePagedItemAdapter.getListView().setDividerHeight(0);
+								setShowEmpty(true);
+							} else {
+								basePagedItemAdapter.getListView().setDividerHeight(ResHelper.dipToPx(getContext(), 1));
+								setShowEmpty(false);
+							}
 							callback.onFinished(true, hasMoreData(result), result);
 						}
 
@@ -118,20 +140,15 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 							ErrorCodeHelper.toastError(getContext(), errorCode, details);
 						}
 					});
-				} else if (currentTab == TAB.THREAD) {
-					userapi.getPersonalPostList(null, page, nDefaultLoadOnceCount, false, new APICallback<ArrayList<ForumThread>>() {
-						@Override
-						public void onSuccess(API api, int action, ArrayList<ForumThread> result) {
-							callback.onFinished(true, hasMoreData(result), result);
-						}
-
-						@Override
-						public void onError(API api, int action, int errorCode, Throwable details) {
-
-						}
-					});
 				} else if (currentTab == TAB.HISTORY) {
 					List<ForumThread> list = ForumThreadHistoryManager.getInstance().getReadedThread();
+					if (null == list || list.size() <= 0) {
+						basePagedItemAdapter.getListView().setDividerHeight(0);
+						setShowEmpty(true);
+					} else {
+						basePagedItemAdapter.getListView().setDividerHeight(ResHelper.dipToPx(getContext(), 1));
+						setShowEmpty(false);
+					}
 					callback.onFinished(true, false, list);
 				}
 				if (isClickTabEvent) {
@@ -145,17 +162,18 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 
 	@Override
 	protected View getContentHeader(ViewGroup viewGroup, View viewprev) {
-		if(viewprev != null) {
+		if (viewprev != null) {
 			return viewprev;
 		}
-		View view = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_theme1_header_userprofile"), viewGroup, false);
+		View view = LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_theme1_header_userprofile"),
+				viewGroup, false);
 		layoutTab = (ViewGroup) view.findViewById(ResHelper.getIdRes(getContext(), "layoutTab"));
 		aivAvatar = (GlideImageView) view.findViewById(ResHelper.getIdRes(getContext(), "aivAvatar"));
 		aivAvatar.setExecuteRound();
 		aivAvatar.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(userInfo == null || StringUtils.isEmpty(userInfo.avatar)) {
+				if (userInfo == null || StringUtils.isEmpty(userInfo.avatar)) {
 					return;
 				}
 				PageImageViewer page = BBSViewBuilder.getInstance().buildPageImageViewer();
@@ -237,13 +255,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 		isClickTabEvent = true;
 		currentTab = tab;
 		updateTabView();
-		getBasePagedItemAdapter().getDataSet().clear();
-		refreshQuiet();
-		try {
-			//取消加载效果，防止界面闪动
-			ReflectHelper.invokeInstanceMethod(this,"reversePulling");
-		} catch (Throwable throwable) {
-		}
+		basePagedItemAdapter.onRefresh();
 	}
 
 	public void updateTabView() {
@@ -284,7 +296,9 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 
 	public interface UserProfileUpdatedListener {
 		void OnTabUpdated(TAB tab);
+
 		void OnUserInfoUpdated(User user);
+
 		void OnUserOperationUpdated(UserOperations useroper);
 	}
 
@@ -294,7 +308,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 
 	protected void updateViews(View view) {
 		//make sure the view was created, and the date got from server.
-		if(view == null) {
+		if (view == null) {
 			view = viewHeader;
 		}
 		if (view != null) {
@@ -302,7 +316,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 				aivAvatar.setImageBitmap(GUIManager.getInstance().getCurrentUserAvatar());
 				textViewName.setText(userInfo.userName);
 				textViewLocation.setText(DataConverterHelper.getLocationText(userInfo));
-				if(StringUtils.isEmpty(textViewLocation.getText().toString().trim())) {
+				if (StringUtils.isEmpty(textViewLocation.getText().toString().trim())) {
 					imageViewLocationMark.setVisibility(INVISIBLE);
 				} else {
 					imageViewLocationMark.setVisibility(VISIBLE);
@@ -311,16 +325,12 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 
 				//set blur background
 				if (!StringUtils.isEmpty(userInfo.avatar)) {
-					Glide.with(MobSDK.getContext())
-							.load(userInfo.avatar)
-							.asBitmap()
-							.signature(new StringSignature("" + System.currentTimeMillis()))
-							.into(new SimpleTarget<Bitmap>() {
-								@Override
-								public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-									Blurry.with(getContext()).from(resource).into(imageViewBlur);
-								}
-							});
+					ImageGetter.loadPic(userInfo.avatar, new ImageGetter.ImageGotListener() {
+						@Override
+						public void OnImageGot(Bitmap bitmap) {
+							Blurry.with(getContext()).from(bitmap).into(imageViewBlur);
+						}
+					}, true);
 				}
 			}
 			if (userOperations != null) {
@@ -338,23 +348,6 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 		if (user == null) {
 			return;
 		}
-		BBSSDK.getApi(UserAPI.class).getUserInfo(null, false, new APICallback<User>() {
-			@Override
-			public void onSuccess(API api, int action, User result) {
-				if (result != null) {
-					userInfo = result;
-					updateViews();
-				}
-				if (userProfileUpdatedListener != null) {
-					userProfileUpdatedListener.OnUserInfoUpdated(userInfo);
-				}
-			}
-
-			@Override
-			public void onError(API api, int action, int errorCode, Throwable details) {
-				ErrorCodeHelper.toastError(getContext(), errorCode, details);
-			}
-		});
 
 		UserAPI api = BBSSDK.getApi(UserAPI.class);
 		api.getUserOperations(null, false, new APICallback<UserOperations>() {
@@ -362,6 +355,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 			public void onSuccess(API api, int action, UserOperations result) {
 				if (result != null) {
 					userOperations = result;
+					userInfo = result.userInfo;
 					updateViews();
 				}
 				if (userProfileUpdatedListener != null) {
@@ -386,13 +380,13 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 			TextView textviewComment = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "bbs_item_forumpost_textViewPageComment"));
 			TextView textViewPageLike = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "textViewPageLike"));
 			TextView textViewPageView = (TextView) view.findViewById(ResHelper.getIdRes(getContext(), "bbs_item_forumpost_textViewPageView"));
-			if(textviewComment != null) {
+			if (textviewComment != null) {
 				textviewComment.setText("" + thread.phoneReplies);
 			}
-			if(textViewPageLike != null) {
+			if (textViewPageLike != null) {
 				textViewPageLike.setText("" + thread.recommendadd);
 			}
-			if(textViewPageView != null) {
+			if (textViewPageView != null) {
 				textViewPageView.setText("" + thread.phoneViews);
 			}
 			view.setOnClickListener(new View.OnClickListener() {
@@ -408,7 +402,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 			view.setOnLongClickListener(new OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View v) {
-					if(currentTab != TAB.FAVORITE) {
+					if (currentTab != TAB.FAVORITE) {
 						return true;
 					}
 					AlertDialog dialog = new AlertDialog.Builder(getContext())
@@ -425,6 +419,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 											Theme1UserProfilePullRequestView.this.getBasePagedItemAdapter().notifyDataSetChanged();
 											ToastUtils.showToast(getContext(), ResHelper.getStringRes(getContext(), "bbs_unfavorite_success"));
 										}
+
 										@Override
 										public void onError(API api, int action, int errorCode, Throwable details) {
 											ErrorCodeHelper.toastError(getContext(), errorCode, details);
@@ -463,7 +458,7 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 			view.setOnLongClickListener(new OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View v) {
-					if(currentTab != TAB.HISTORY) {
+					if (currentTab != TAB.HISTORY) {
 						return true;
 					}
 					AlertDialog dialog = new AlertDialog.Builder(getContext())
@@ -490,7 +485,9 @@ public class Theme1UserProfilePullRequestView extends BBSPullToRequestView<Objec
 			});
 			return view;
 		} else {
-			throw new IllegalStateException("Error State");
+//			throw new IllegalStateException("Error State");
+			return LayoutInflater.from(getContext()).inflate(ResHelper.getLayoutRes(getContext(), "bbs_theme1_item_empty"),
+					parent, false);
 		}
 	}
 }

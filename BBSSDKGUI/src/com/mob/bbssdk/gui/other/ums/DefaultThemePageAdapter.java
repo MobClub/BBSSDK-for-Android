@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Window;
 
-import com.mob.jimu.gui.Page;
-import com.mob.jimu.gui.PageAdapter;
+import com.mob.bbssdk.gui.jimu.gui.Page;
+import com.mob.bbssdk.gui.jimu.gui.PageAdapter;
+
 
 public class DefaultThemePageAdapter<P extends Page<P>> extends PageAdapter<P> {
 

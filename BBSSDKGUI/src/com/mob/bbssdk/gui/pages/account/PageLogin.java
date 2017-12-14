@@ -202,7 +202,7 @@ public class PageLogin extends BasePageWithTitle {
 							if(layoutAnswerQuestion != null) {
 								layoutAnswerQuestion.setVisibility(View.VISIBLE);
 							}
-							ToastUtils.showToast(getContext(), getStringRes("bbs_error_code_1205"));
+							ToastUtils.showToast(getContext(), getStringRes("bbs_error_code_605"));
 						} else {
 							GUIManager.sendLoginBroadcast();
 							GUIManager.getInstance().forceUpdateCurrentUserAvatar(null);

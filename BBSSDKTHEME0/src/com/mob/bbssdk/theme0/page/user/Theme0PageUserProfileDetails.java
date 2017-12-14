@@ -1,16 +1,24 @@
 package com.mob.bbssdk.theme0.page.user;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.mob.MobSDK;
 import com.mob.bbssdk.API;
 import com.mob.bbssdk.APICallback;
 import com.mob.bbssdk.BBSSDK;
 import com.mob.bbssdk.api.UserAPI;
 import com.mob.bbssdk.gui.BBSViewBuilder;
+import com.mob.bbssdk.gui.GUIManager;
 import com.mob.bbssdk.gui.helper.DataConverterHelper;
 import com.mob.bbssdk.gui.helper.ErrorCodeHelper;
+import com.mob.bbssdk.gui.helper.LocationDBHelper;
 import com.mob.bbssdk.gui.other.ums.SingleChoiceView;
 import com.mob.bbssdk.gui.other.ums.datatype.Gender;
 import com.mob.bbssdk.gui.other.ums.pickers.Choice;
@@ -22,8 +30,7 @@ import com.mob.bbssdk.theme0.LocationUtils;
 import com.mob.bbssdk.theme0.page.Theme0StyleModifier;
 import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.utils.ResHelper;
-
-import org.apache.commons.csv.CSVRecord;
+import com.mob.tools.utils.UIHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +42,8 @@ public class Theme0PageUserProfileDetails extends PageUserProfileDetails {
 	SingleChoiceView scvBirthday;
 	SingleChoiceView scvLocation;
 	SingleChoiceView scvGender;
+	private TextView textViewCacheSize;
+	private ViewGroup layoutClearCache;
 
 	@Override
 	protected View onCreateContentView(Context context) {
@@ -48,6 +57,30 @@ public class Theme0PageUserProfileDetails extends PageUserProfileDetails {
 		titleBar.setLeftImageResource(getDrawableId("bbs_titlebar_back_black"));
 		titleBar.setTitle(getStringRes("theme0_pageuserprofiledetails_title"));
 		Theme0StyleModifier.modifyUniformWhiteStyle(this);
+		textViewCacheSize = (TextView) contentView.findViewById(getIdRes("textViewCacheSize"));
+		layoutClearCache = (ViewGroup) contentView.findViewById(getIdRes("layoutClearCache"));
+
+		updateCacheView();
+		layoutClearCache.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ToastUtils.showToast(getContext(), getStringRes("bbs_clearcache_ing"));
+				GUIManager.clearCache(new GUIManager.ClearCacheListener() {
+					@Override
+					public void CacheCleared() {
+						Activity activity = getActivity();
+						if(activity != null && !activity.isFinishing()) {
+							layoutClearCache.setClickable(false);
+							updateCacheView();
+						}
+						ToastUtils.showToast(MobSDK.getContext(), getStringRes("bbs_clearcache_success"));
+					}
+				});
+				//只能点击一次
+				layoutClearCache.setClickable(false);
+			}
+		});
+
 
 		layoutSignature.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -106,9 +139,9 @@ public class Theme0PageUserProfileDetails extends PageUserProfileDetails {
 							super.onSelectionsChange();
 							Choice[] choice = getSelections();
 							if (choice != null && choice.length == 3) {
-								CSVRecord province = choice[0] == null ? null : (CSVRecord) choice[0].ext;
-								CSVRecord city = choice[1] == null ? null : (CSVRecord) choice[1].ext;
-								CSVRecord district = choice[2] == null ? null : (CSVRecord) choice[2].ext;
+								LocationDBHelper.Item province = choice[0] == null ? null : (LocationDBHelper.Item) choice[0].ext;
+								LocationDBHelper.Item city = choice[1] == null ? null : (LocationDBHelper.Item) choice[1].ext;
+								LocationDBHelper.Item district = choice[2] == null ? null : (LocationDBHelper.Item) choice[2].ext;
 								String strprovince = getText(choice[0]);
 								String strcity = getText(choice[1]);
 								String strdistrict = getText(choice[2]);
@@ -338,5 +371,9 @@ public class Theme0PageUserProfileDetails extends PageUserProfileDetails {
 			}
 		}
 		return years;
+	}
+
+	protected void updateCacheView() {
+		textViewCacheSize.setText(GUIManager.getCacheSizeText());
 	}
 }

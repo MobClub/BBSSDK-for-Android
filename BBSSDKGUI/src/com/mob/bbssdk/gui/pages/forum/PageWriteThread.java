@@ -8,7 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,7 +34,9 @@ import com.mob.bbssdk.gui.views.TitleBar;
 import com.mob.bbssdk.model.ForumForum;
 import com.mob.bbssdk.model.User;
 import com.mob.tools.FakeActivity;
+import com.mob.tools.gui.MobViewPager;
 import com.mob.tools.utils.ResHelper;
+import com.mob.tools.utils.UIHandler;
 
 import java.io.File;
 import java.util.HashMap;
@@ -44,6 +46,10 @@ import java.util.List;
  * 发帖界面
  */
 public class PageWriteThread extends SelectPicBasePageWithTitle implements View.OnClickListener {
+
+	private static final String MDASH = "-";
+	private static final String NDASH = "_";
+
 	private GlideImageView aivAvatar;
 	private TextView textViewTitle;
 	protected TextView textViewChooseCat;
@@ -63,8 +69,8 @@ public class PageWriteThread extends SelectPicBasePageWithTitle implements View.
 	private ViewGroup layoutEmojiContainer;
 	private View llEditorBar;
 	private EmojiPagerAdapter emojiPagerAdapter;
-	private ViewPager emojiViewPager;
-	private Handler mHandler = new Handler();
+	private MobViewPager emojiViewPager;
+	private UIHandler uiHandler = new UIHandler();
 	private ImageView imageViewEmojiGeneral;
 	private ImageView imageViewEmojiGrapeman;
 	private ImageView imageViewEmojiCoolMonkey;
@@ -174,16 +180,17 @@ public class PageWriteThread extends SelectPicBasePageWithTitle implements View.
 				if (isKeyboardShown) {
 					hideSoftInput();
 				}
-				mHandler.postDelayed(new Runnable() {
+				uiHandler.sendMessageDelayed(null, 500, new Handler.Callback() {
 					@Override
-					public void run() {
+					public boolean handleMessage(Message msg) {
 						layoutEmojiContainer.setVisibility(View.VISIBLE);
+						return false;
 					}
-				}, 500);
+				});
 			}
 		});
 
-		emojiViewPager = (ViewPager) view.findViewById(getIdRes("emojiViewPager"));
+		emojiViewPager = (MobViewPager) view.findViewById(getIdRes("emojiViewPager"));
 		emojiPagerAdapter = new EmojiPagerAdapter(getContext(), new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -191,26 +198,15 @@ public class PageWriteThread extends SelectPicBasePageWithTitle implements View.
 				key = htmlReplace(key);
 				richEditor.insertHTML(key);
 			}
-		});
-		emojiViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+		}) {
 			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+			public void onScreenChange(int currentScreen, int lastScreen) {
+				super.onScreenChange(currentScreen, lastScreen);
+				onEmojiPageSelected(currentScreen);
 			}
-
-			@Override
-			public void onPageSelected(int position) {
-				onEmojiPageSelected(position);
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int state) {
-
-			}
-		});
+		};
 		emojiViewPager.setAdapter(emojiPagerAdapter);
-		emojiPagerAdapter.notifyDataSetChanged();
-
 		textViewChooseCat.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				ChooseForum();
@@ -282,8 +278,8 @@ public class PageWriteThread extends SelectPicBasePageWithTitle implements View.
 
 	public static String htmlReplace(String str){
 		str = str.replace("'", "&apos;");
-		str = str.replace("—", "&mdash;");
-		str = str.replace("–", "&ndash;");
+		str = str.replace(MDASH, "&mdash;");
+		str = str.replace(NDASH, "&ndash;");
 		str = str.replace("\"", "&quot;");
 		str = str.replace(">", "&gt;");
 		str = str.replace("<", "&lt;");
@@ -309,17 +305,17 @@ public class PageWriteThread extends SelectPicBasePageWithTitle implements View.
 		int selectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_selected"));
 		int unselectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_unselected"));
 		if (tab == EmojiTab.General) {
-			emojiViewPager.setCurrentItem(0);
+			emojiViewPager.scrollToScreen(0, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(selectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
 		} else if (tab == EmojiTab.Grapeman) {
-			emojiViewPager.setCurrentItem(1);
+			emojiViewPager.scrollToScreen(1, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(selectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
 		} else if (tab == EmojiTab.CoolMonkey) {
-			emojiViewPager.setCurrentItem(2);
+			emojiViewPager.scrollToScreen(2, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(selectedcolor);
@@ -331,17 +327,17 @@ public class PageWriteThread extends SelectPicBasePageWithTitle implements View.
 		int selectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_selected"));
 		int unselectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_unselected"));
 		if (tab == EmojiTab.General) {
-			emojiViewPager.setCurrentItem(0);
+			emojiViewPager.scrollToScreen(0, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(selectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
 		} else if (tab == EmojiTab.Grapeman) {
-			emojiViewPager.setCurrentItem(1);
+			emojiViewPager.scrollToScreen(1, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(selectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
 		} else if (tab == EmojiTab.CoolMonkey) {
-			emojiViewPager.setCurrentItem(2);
+			emojiViewPager.scrollToScreen(2, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(selectedcolor);

@@ -3,7 +3,7 @@ package com.mob.bbssdk.gui.dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,13 +20,15 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.mob.bbssdk.gui.utils.SendForumPostManager;
 import com.mob.bbssdk.gui.views.EmojiPagerAdapter;
 import com.mob.bbssdk.gui.views.EmojiTab;
 import com.mob.bbssdk.gui.views.GlideImageView;
 import com.mob.bbssdk.gui.views.ReplyInputEditText;
+import com.mob.tools.gui.MobViewPager;
 import com.mob.tools.utils.ResHelper;
+import com.mob.tools.utils.UIHandler;
+import com.mob.bbssdk.gui.other.ImageGetter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +43,7 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 	private OnImgAddClickListener onImgAddClickListener;
 	private ReplyInputEditText replyInputEditText;
 	private GridView gvImg;
-	private ViewPager emojiViewPager;
+	private MobViewPager emojiViewPager;
 	private TextView tvImgCount;
 	private ImageView ivImg;
 	private TextView tvSend;
@@ -94,7 +96,7 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 		imageViewEmojiGeneral = (ImageView) contentView.findViewById(ResHelper.getIdRes(context, "imageViewEmojiGeneral"));
 		imageViewEmojiGrapeman = (ImageView) contentView.findViewById(ResHelper.getIdRes(context, "imageViewEmojiGrapeman"));
 		imageViewEmojiCoolMonkey = (ImageView) contentView.findViewById(ResHelper.getIdRes(context, "imageViewEmojiCoolMonkey"));
-		emojiViewPager = (ViewPager) contentView.findViewById(ResHelper.getIdRes(context, "emojiViewPager"));
+		emojiViewPager = (MobViewPager) contentView.findViewById(ResHelper.getIdRes(context, "emojiViewPager"));
 		layoutBottomContainer = (LinearLayout) contentView.findViewById(ResHelper.getIdRes(context, "layoutBottomContainer"));
 		layoutEmojiTab = (LinearLayout) contentView.findViewById(ResHelper.getIdRes(context, "layoutEmojiTab"));
 
@@ -103,25 +105,14 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 		imageViewEmojiGrapeman.setOnClickListener(this);
 		imageViewEmojiCoolMonkey.setOnClickListener(this);
 
-		emojiPagerAdapter = new EmojiPagerAdapter(replyInputEditText);
+		emojiPagerAdapter = new EmojiPagerAdapter(replyInputEditText) {
+			@Override
+			public void onScreenChange(int currentScreen, int lastScreen) {
+				super.onScreenChange(currentScreen, lastScreen);
+				onEmojiPageSelected(currentScreen);
+			}
+		};
 		emojiViewPager.setAdapter(emojiPagerAdapter);
-		emojiPagerAdapter.notifyDataSetChanged();
-		emojiViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-			}
-
-			@Override
-			public void onPageSelected(int position) {
-				onEmojiPageSelected(position);
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int state) {
-
-			}
-		});
 		viewFiller.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -247,19 +238,21 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 		}
 		popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 		popupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
-		final Handler handler = new Handler();
-		handler.postDelayed(new Runnable() {
-			public void run() {
-				showSoftInput();
-			}
-		}, 500);
-		layoutBottomContainer.setVisibility(View.INVISIBLE);
-		handler.postDelayed(new Runnable() {
+		UIHandler.sendMessageDelayed(null, 500, new Handler.Callback() {
 			@Override
-			public void run() {
-				layoutBottomContainer.setVisibility(View.VISIBLE);
+			public boolean handleMessage(Message msg) {
+				showSoftInput();
+				return false;
 			}
-		}, 800);
+		});
+		layoutBottomContainer.setVisibility(View.INVISIBLE);
+		UIHandler.sendMessageDelayed(null, 800, new Handler.Callback() {
+			@Override
+			public boolean handleMessage(Message msg) {
+				layoutBottomContainer.setVisibility(View.VISIBLE);
+				return false;
+			}
+		});
 	}
 
 	public void onClick(View v) {
@@ -312,17 +305,17 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 		int selectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_selected"));
 		int unselectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_unselected"));
 		if (tab == EmojiTab.General) {
-			emojiViewPager.setCurrentItem(0);
+			emojiViewPager.scrollToScreen(0, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(selectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
 		} else if (tab == EmojiTab.Grapeman) {
-			emojiViewPager.setCurrentItem(1);
+			emojiViewPager.scrollToScreen(1, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(selectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
 		} else if (tab == EmojiTab.CoolMonkey) {
-			emojiViewPager.setCurrentItem(2);
+			emojiViewPager.scrollToScreen(2, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(selectedcolor);
@@ -334,17 +327,17 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 		int selectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_selected"));
 		int unselectedcolor = getContext().getResources().getColor(ResHelper.getColorRes(getContext(), "bbs_emoji_unselected"));
 		if (tab == EmojiTab.General) {
-			emojiViewPager.setCurrentItem(0);
+			emojiViewPager.scrollToScreen(0, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(selectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
 		} else if (tab == EmojiTab.Grapeman) {
-			emojiViewPager.setCurrentItem(1);
+			emojiViewPager.scrollToScreen(1, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(selectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(unselectedcolor);
 		} else if (tab == EmojiTab.CoolMonkey) {
-			emojiViewPager.setCurrentItem(2);
+			emojiViewPager.scrollToScreen(2, true, true);
 			imageViewEmojiGeneral.setBackgroundColor(unselectedcolor);
 			imageViewEmojiGrapeman.setBackgroundColor(unselectedcolor);
 			imageViewEmojiCoolMonkey.setBackgroundColor(selectedcolor);
@@ -469,7 +462,7 @@ public class ReplyEditorPopWindow implements View.OnClickListener {
 						ivImg.setImageResource(id);
 					} else {
 						ivDelete.setVisibility(View.VISIBLE);
-						Glide.with(context).load(path).into(ivImg);
+						ImageGetter.loadPic(ivImg, path);
 					}
 
 					ivDelete.setOnClickListener(new View.OnClickListener() {

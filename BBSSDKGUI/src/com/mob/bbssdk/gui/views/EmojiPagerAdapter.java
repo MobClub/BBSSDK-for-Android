@@ -1,8 +1,6 @@
 package com.mob.bbssdk.gui.views;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +11,20 @@ import android.widget.ImageView;
 
 import com.mob.bbssdk.gui.EmojiManager;
 import com.mob.bbssdk.gui.utils.ScreenUtils;
+import com.mob.bbssdk.gui.views.felipecsl.gifimageview.GifImageView;
+import com.mob.tools.gui.ViewPagerAdapter;
 import com.mob.tools.utils.ResHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import pl.droidsonroids.gif.GifImageView;
 
 /**
  *
  */
 
-public class EmojiPagerAdapter extends PagerAdapter implements View.OnClickListener {
+public class EmojiPagerAdapter extends ViewPagerAdapter implements View.OnClickListener {
 	private List<List<String>> emojiList = new ArrayList<List<String>>();
 	private EditText editText;
 	private View.OnClickListener onClickListener;
@@ -74,9 +73,9 @@ public class EmojiPagerAdapter extends PagerAdapter implements View.OnClickListe
 	}
 
 	@Override
-	public Object instantiateItem(ViewGroup viewgroup, int position) {
+	public View getView(int position, View view0, ViewGroup viewgroup) {
 		View view = (View) LayoutInflater.from(context).
-				inflate(ResHelper.getLayoutRes(context, "bbs_replywindow_emojigrid"), viewgroup, false);
+				inflate(ResHelper.getLayoutRes(context, "bbs_replywindow_emojigrid"), null, false);
 		GridView gridview =
 				(GridView) view.findViewById(ResHelper.getIdRes(context, "expandableHeightGridView"));
 		final List<String> listkey = emojiList.get(position);
@@ -99,28 +98,15 @@ public class EmojiPagerAdapter extends PagerAdapter implements View.OnClickListe
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				GifImageView gifimageview = new GifImageView(context);
-				gifimageview.setImageBitmap(EmojiManager.getInstance().getEmoji((String) getItem(position)));
+				EmojiManager.setGifImageView(gifimageview, (String) getItem(position));
 				gifimageview.setTag(listkey.get(position));
 				gifimageview.setOnClickListener(EmojiPagerAdapter.this);
-				ViewPager.LayoutParams layoutParams = new ViewPager.LayoutParams();
-				layoutParams.width = ScreenUtils.dpToPx(20);
-				layoutParams.height = ScreenUtils.dpToPx(20);
+				ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ScreenUtils.dpToPx(20), ScreenUtils.dpToPx(20));
 				gifimageview.setLayoutParams(layoutParams);
 				gifimageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
 				return gifimageview;
 			}
 		});
-		viewgroup.addView(view);
 		return view;
-	}
-
-	@Override
-	public void destroyItem(ViewGroup container, int position, Object object) {
-		container.removeView((View) object);
-	}
-
-	@Override
-	public boolean isViewFromObject(View view, Object object) {
-		return view == object;
 	}
 }

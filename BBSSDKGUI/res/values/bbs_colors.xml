@@ -95,4 +95,6 @@
     <color name="bbs_statusbar_grey">#a1a1a1</color>
     <color name="bbs_emoji_unselected">#f2f3f7</color>
     <color name="bbs_emoji_selected">#ffffff</color>
+
+    <color name="bbs_banner_bg">#cfd3d9</color>
 </resources>

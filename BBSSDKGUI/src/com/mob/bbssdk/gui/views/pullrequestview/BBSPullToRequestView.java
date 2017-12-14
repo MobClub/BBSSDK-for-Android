@@ -28,6 +28,7 @@ public abstract class BBSPullToRequestView<T> extends PullToRequestView {
 	private OnScrollListener onScrollListener;
 	private Dictionary<Integer, Integer> listViewItemHeights = new Hashtable<Integer, Integer>();
 	protected int scrollHeight = 0;
+	private boolean isShowEmpty;
 
 	public BBSPullToRequestView(Context context) {
 		super(context);
@@ -80,12 +81,14 @@ public abstract class BBSPullToRequestView<T> extends PullToRequestView {
 			public int getItemViewType(int position) {
 				if (position == 0 && haveContentHeader()) {
 					return 2;
+				} else if(isShowEmpty && position == 1) {
+					return 3;
 				}
 				return super.getItemViewType(position);
 			}
 
 			public int getViewTypeCount() {
-				return 3;
+				return 4;
 			}
 
 			@Override
@@ -191,7 +194,11 @@ public abstract class BBSPullToRequestView<T> extends PullToRequestView {
 		void onRequest(int page, BasePagedItemAdapter.RequestCallback callback);
 	}
 
-//	@Override
+	public void setShowEmpty(boolean showEmpty) {
+		isShowEmpty = showEmpty;
+	}
+
+	//	@Override
 //	public void scrollTo(int x, int y) {
 //		new Throwable().printStackTrace();
 //		super.scrollTo(x, y);

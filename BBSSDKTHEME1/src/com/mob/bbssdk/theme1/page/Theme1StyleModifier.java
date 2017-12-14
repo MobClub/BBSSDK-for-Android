@@ -72,7 +72,7 @@ public class Theme1StyleModifier {
 				mainlayout.setBackground(drawable);
 			}
 		}
-		basepage.setStatusBarColor(context.getResources().getColor(basepage.getColorId("bbs_theme1_statusbar_grey")));
+		basepage.setStatusBarColor(context.getResources().getColor(basepage.getColorId("bbs_theme1_statusbar")));
 	}
 
 	public static void setTextSize(TextView textview, String strdimen) {

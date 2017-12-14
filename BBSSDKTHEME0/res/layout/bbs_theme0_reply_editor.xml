@@ -125,7 +125,7 @@
             android:background="@color/bbs_white"
             android:orientation="vertical">
 
-            <android.support.v4.view.ViewPager
+            <com.mob.tools.gui.MobViewPager
                 android:id="@+id/emojiViewPager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

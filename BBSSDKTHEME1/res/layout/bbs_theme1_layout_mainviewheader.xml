@@ -47,119 +47,25 @@
         android:paddingBottom="23dp"
         android:paddingTop="15dp">
 
-        <LinearLayout
-            android:id="@+id/viewHeaderFunc1"
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/imageViewHeaderFunc1"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/bbs_theme1_forumdefault"/>
-
-            <TextView
-                android:id="@+id/textViewHeaderFunc1"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <LinearLayout
+                android:id="@+id/layoutScrollView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text=""
-                android:textColor="#4e4f57"
-                android:textSize="12sp"
-                />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+            </LinearLayout>
+        </HorizontalScrollView>
 
         <LinearLayout
-            android:id="@+id/viewHeaderFunc2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/imageViewHeaderFunc2"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/bbs_theme1_forumdefault"/>
-
-            <TextView
-                android:id="@+id/textViewHeaderFunc2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text=""
-                android:textColor="#4e4f57"
-                android:textSize="12sp"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/viewHeaderFunc3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/imageViewHeaderFunc3"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/bbs_theme1_forumdefault"/>
-
-            <TextView
-                android:id="@+id/textViewHeaderFunc3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text=""
-                android:textColor="#4e4f57"
-                android:textSize="12sp"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/viewHeaderFunc4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/imageViewHeaderFunc4"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/bbs_theme1_forumdefault"/>
-
-            <TextView
-                android:id="@+id/textViewHeaderFunc4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text=""
-                android:textColor="#4e4f57"
-                android:textSize="12sp"
-                />
-        </LinearLayout>
-
-        <LinearLayout
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:id="@+id/viewHeaderFuncMore"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -174,15 +80,8 @@
                 android:layout_marginTop="10dp"
                 android:text="更多"
                 android:textColor="#4e4f57"
-                android:textSize="12sp"
-                />
+                android:textSize="12sp"/>
         </LinearLayout>
-
-        <View
-            android:id="@+id/placeHolderView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="4" />
     </LinearLayout>
 
 </LinearLayout>

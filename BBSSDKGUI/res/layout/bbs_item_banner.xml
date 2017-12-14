@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="@color/bbs_banner_bg"
              android:orientation="vertical">
 
     <ImageView
@@ -30,5 +31,5 @@
         android:maxLines="2"
         android:text="TITLE"
         android:textColor="@color/bbs_white"
-        android:textSize="20sp"/>
+        android:textSize="18sp"/>
 </FrameLayout>

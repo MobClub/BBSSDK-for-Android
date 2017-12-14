@@ -11,4 +11,5 @@
     <color name="bbs_theme1_cancelgrey">#acadb8</color>
     <color name="bbs_theme1_maintitleblack">#4e4f57</color>
     <color name="bbs_theme1_divider">#f2f4f7</color>
+    <color name="bbs_theme1_statusbar">#ffffff</color>
 </resources>

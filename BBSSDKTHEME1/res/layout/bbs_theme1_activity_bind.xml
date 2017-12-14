@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="37dp"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:text="@string/bbs_other_login_bind_hint"
+            android:textColor="@color/bbs_theme1_userinputhinttext"
+            android:textSize="15sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/bbs_login_edittextusername"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:hint="@string/bbs_login_username_hint"
+                android:inputType="text"
+                android:textColorHint="@color/bbs_theme1_userinputhinttext"
+                android:textSize="@dimen/bbs_theme1_userinputtext"/>
+
+            <include layout="@layout/bbs_theme1_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/bbs_login_edittextpassword"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:digits="@string/bbs_password_digits"
+                    android:hint="@string/bbs_login_password_hint"
+                    android:inputType="textPassword"
+                    android:textColorHint="@color/bbs_theme1_userinputhinttext"
+                    android:textSize="@dimen/bbs_theme1_userinputtext"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/bbs_theme1_divider"/>
+
+            <LinearLayout
+                android:id="@+id/bbs_login_layoutAnswerQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/bbs_login_textviewquestion"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:hint="@string/bbs_login_question"
+                        android:textColorHint="@color/bbs_theme1_userinputhinttext"
+                        android:textSize="@dimen/bbs_theme1_userinputtext"
+                        />
+
+                    <ImageView
+                        android:id="@+id/bbs_login_viewdropdown"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="20dp"
+                        android:src="@drawable/bbs_login_question_dropdown"
+                        />
+
+                </LinearLayout>
+
+                <include layout="@layout/bbs_theme1_divider"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/bbs_login_edittextanswer"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_centerVertical="true"
+                        android:background="@null"
+                        android:hint="@string/bbs_login_answer_hint"
+                        android:inputType="text"
+                        android:textColorHint="@color/bbs_theme1_userinputhinttext"
+                        android:textSize="@dimen/bbs_theme1_userinputtext"/>
+
+                </LinearLayout>
+
+                <include layout="@layout/bbs_theme1_divider"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bbs_bind_login"
+            style="@style/BBS_theme1_SolidYellowButton"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/bbs_other_login_bind"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/bbs_unbind_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="@string/bbs_other_login_go"
+            android:textColor="#2a2b30"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.mob.MobSDK;
+import com.mob.bbssdk.gui.views.felipecsl.gifimageview.GifImageView;
 import com.mob.bbssdk.utils.StringUtils;
 import com.mob.tools.utils.Hashon;
 
@@ -16,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
 
 /**
  *
@@ -41,14 +40,14 @@ public class EmojiManager {
 		}
 
 		public static EmojiClass fromString(String key) {
-			if(key == null || StringUtils.isEmpty(key)) {
+			if (key == null || StringUtils.isEmpty(key)) {
 				return null;
 			}
-			if(Default.getKey().equals(key)) {
+			if (Default.getKey().equals(key)) {
 				return Default;
-			} else if(CoolMonkey.getKey().equals(key)) {
+			} else if (CoolMonkey.getKey().equals(key)) {
 				return CoolMonkey;
-			} else if(Grapman.getKey().equals(key)) {
+			} else if (Grapman.getKey().equals(key)) {
 				return Grapman;
 			}
 			return null;
@@ -81,19 +80,23 @@ public class EmojiManager {
 		splitEmojiMap();
 	}
 
-	public boolean setGifImageView(GifImageView gifimageview, String key) {
+	public static boolean setGifImageView(GifImageView gifimageview, String key) {
 		if (gifimageview == null || StringUtils.isEmpty(key)) {
 			return false;
 		}
-		GifDrawable drawable = null;
+		byte[] gifbytes = null;
 		try {
-			drawable = new GifDrawable(MobSDK.getContext().getAssets(),
-					EmojiManager.getInstance().getEmojiDir(key));
+			String filename = EmojiManager.getInstance().getEmojiDir(key);
+			InputStream is = MobSDK.getContext().getAssets().open(filename);
+			gifbytes = new byte[is.available()];
+			is.read(gifbytes);
+			is.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if (drawable != null) {
-			gifimageview.setImageDrawable(drawable);
+		if (gifbytes != null) {
+			gifimageview.setBytes(gifbytes);
+			gifimageview.startAnimation();
 			return true;
 		}
 		return false;
@@ -168,8 +171,8 @@ public class EmojiManager {
 				listcurrent.add(entry.getKey());
 			}
 			EmojiClass emojiclass = EmojiClass.fromString(valuecurrent);
-			if(emojiclass != null) {
-				if(mapEmojiType.get(emojiclass) == null) {
+			if (emojiclass != null) {
+				if (mapEmojiType.get(emojiclass) == null) {
 					mapEmojiType.put(emojiclass, listcurrent);
 				}
 			}

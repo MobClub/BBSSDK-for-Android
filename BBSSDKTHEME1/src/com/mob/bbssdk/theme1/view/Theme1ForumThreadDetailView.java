@@ -107,6 +107,7 @@ public class Theme1ForumThreadDetailView extends Theme0ForumThreadDetailView {
 						updateCountView();
 						liked = true;
 						imageViewLike.setImageResource(ResHelper.getBitmapRes(getContext(), "bbs_theme1_forumthreadliked"));
+						jsInterfaceForumThread.articleLiked(forumThread.fid, forumThread.tid);
 					}
 
 					@Override

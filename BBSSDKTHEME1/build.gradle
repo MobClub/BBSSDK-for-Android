@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply from: '../buildCommon.gradle'
+apply from: '../MobSDK.gradle'
 dependencies {
     compile project(':BBSSDKGUI')
     compile project(':BBSSDKTHEME0')
-    compile 'jp.wasabeef:blurry:2.1.1'
 }

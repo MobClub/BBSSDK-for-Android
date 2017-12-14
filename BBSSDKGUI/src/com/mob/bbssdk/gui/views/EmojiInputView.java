@@ -2,7 +2,6 @@ package com.mob.bbssdk.gui.views;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -18,11 +17,11 @@ public class EmojiInputView extends LinearLayout {
 		super(context);
 	}
 
-	public EmojiInputView(Context context, @Nullable AttributeSet attrs) {
+	public EmojiInputView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
-	public EmojiInputView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+	public EmojiInputView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 	}
 

@@ -2,7 +2,6 @@ package com.mob.bbssdk.gui;
 
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -331,7 +330,7 @@ public class BBSViewBuilder {
 		return new PageEditSignature();
 	}
 
-	public @Nullable User ensureLogin(boolean gotologinpage) {
+	public User ensureLogin(boolean gotologinpage) {
 		User user = null;
 		try {
 			user = BBSSDK.getApi(UserAPI.class).getCurrentUser();

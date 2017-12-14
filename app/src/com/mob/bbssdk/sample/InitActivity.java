@@ -4,6 +4,8 @@ package com.mob.bbssdk.sample;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
@@ -12,21 +14,20 @@ import android.widget.TextView;
 
 import com.mob.MobSDK;
 import com.mob.bbssdk.gui.BBSViewBuilder;
-import com.mob.bbssdk.gui.pages.PageWeb;
+import com.mob.bbssdk.gui.pages.forum.PageForumThreadDetail;
 import com.mob.bbssdk.gui.utils.AppUtils;
 import com.mob.bbssdk.gui.utils.ToastUtils;
 import com.mob.bbssdk.theme0.BBSTheme0;
 import com.mob.bbssdk.theme1.BBSTheme1;
 import com.mob.bbssdk.utils.CheckKeyUtils;
 import com.mob.bbssdk.utils.StringUtils;
-import com.mob.moblink.MobLink;
-import com.mob.moblink.RestoreSceneListener;
+import com.mob.moblink.Scene;
+import com.mob.moblink.SceneRestorable;
 import com.mob.tools.utils.ResHelper;
 import com.mob.tools.utils.SharePrefrenceHelper;
+import com.mob.tools.utils.UIHandler;
 
-import java.util.HashMap;
-
-public class InitActivity extends Activity {
+public class InitActivity extends Activity implements SceneRestorable {
 	private static final String SP_NAME = "sp_init";
 	private static final int SP_VERSION = 1;
 	private static final String SP_KEY = "sp_key";
@@ -44,6 +45,8 @@ public class InitActivity extends Activity {
 	private SharePrefrenceHelper spInit;
 	private Integer initTheme = null;
 	private String strUrl;
+	private String strFid;
+	private String strTid;
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -105,39 +108,15 @@ public class InitActivity extends Activity {
 
 		//process moblink relatives.
 		Intent intent = getIntent();
-		if(intent != null && intent.getData() != null &&
-				!StringUtils.isEmpty(intent.getData().getQueryParameter("params"))) {
+		if (intent != null && intent.getData() != null && !StringUtils.isEmpty(
+				intent.getData().getQueryParameter("params"))) {
 //			String params = intent.getData().getQueryParameter("params");
 			String key = getStringByResName("BBS_APPKEY");
 			String secret = getStringByResName("BBS_APPSECRET");
-			if(!StringUtils.isEmpty(key) && !StringUtils.isEmpty(secret)) {
+			if (!StringUtils.isEmpty(key) && !StringUtils.isEmpty(secret)) {
 				textHint.setText(getStringByResName("bbs_init_restorefromurl"));
 				MobSDK.init(InitActivity.this, key, secret);
 				layoutParamsContainer.setVisibility(View.GONE);
-				MobLink.setRestoreSceneListener(new RestoreSceneListener() {
-					@Override
-					public void onBeginCheckScene() {
-
-					}
-
-					@Override
-					public void onFinishCheckScene() {
-
-					}
-
-					@Override
-					public boolean onReturnSceneIntent(String s, Intent intent) {
-						return false;
-					}
-
-					@Override
-					public void onReturnSceneData(Activity activity, HashMap<String, Object> hashMap) {
-						Object urlvalue = hashMap.get("ulurl");
-						if(urlvalue != null && urlvalue instanceof String) {
-							strUrl = (String) urlvalue;
-						}
-					}
-				});
 			}
 		}
 	}
@@ -177,6 +156,12 @@ public class InitActivity extends Activity {
 		}
 	}
 
+	@Override
+	public void onReturnSceneData(Scene scene) {
+		strFid = (String) scene.params.get("fid");
+		strTid = (String) scene.params.get("fid");
+	}
+
 	private boolean initAndStartMainActivity(String key, String secret) {
 		if (StringUtils.isEmpty(key) || !key.matches(REGREX_KEY)) {
 			ToastUtils.showToast(InitActivity.this, getStringByResName("bbs_init_illegalkey"));
@@ -189,7 +174,7 @@ public class InitActivity extends Activity {
 		}
 
 		MobSDK.init(InitActivity.this, key, secret);
-		if(initTheme != null) {
+		if (initTheme != null) {
 			if (initTheme == 0) {
 				BBSTheme0.init();
 			} else {
@@ -202,10 +187,16 @@ public class InitActivity extends Activity {
 		startActivity(intent);
 
 		//open web link page if valid
-		if(!StringUtils.isEmpty(strUrl)) {
-			PageWeb web = BBSViewBuilder.getInstance().buildPageWeb();
-			web.setLink(strUrl);
-			web.show(InitActivity.this);
+		if (!StringUtils.isEmpty(strFid) && ! StringUtils.isEmpty(strTid)) {
+			final PageForumThreadDetail details = BBSViewBuilder.getInstance().buildPageForumThreadDetail();
+			details.setForumThread(Long.parseLong(strFid), Long.parseLong(strTid), "");
+			UIHandler.sendMessageDelayed(null, 300, new Handler.Callback() {
+				@Override
+				public boolean handleMessage(Message msg) {
+					details.show(InitActivity.this);
+					return false;
+				}
+			});
 		}
 		return true;
 	}

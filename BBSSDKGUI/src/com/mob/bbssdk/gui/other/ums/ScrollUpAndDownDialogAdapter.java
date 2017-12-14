@@ -9,8 +9,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
-import com.mob.jimu.gui.Dialog;
-import com.mob.jimu.gui.DialogAdapter;
+import com.mob.bbssdk.gui.jimu.gui.Dialog;
+import com.mob.bbssdk.gui.jimu.gui.DialogAdapter;
 import com.mob.tools.utils.ResHelper;
 
 public class ScrollUpAndDownDialogAdapter<D extends Dialog<D>> extends DialogAdapter<D> {
