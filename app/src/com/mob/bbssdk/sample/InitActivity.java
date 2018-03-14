@@ -159,7 +159,7 @@ public class InitActivity extends Activity implements SceneRestorable {
 	@Override
 	public void onReturnSceneData(Scene scene) {
 		strFid = (String) scene.params.get("fid");
-		strTid = (String) scene.params.get("fid");
+		strTid = (String) scene.params.get("tid");
 	}
 
 	private boolean initAndStartMainActivity(String key, String secret) {

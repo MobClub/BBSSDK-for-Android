@@ -1,1 +1,1 @@
-include ':app', ':BBSSDKGUI', ':BBSSDKTHEME0', ':BBSSDKTHEME1'
+include ':app'

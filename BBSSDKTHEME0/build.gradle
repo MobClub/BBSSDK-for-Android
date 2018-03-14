@@ -1,6 +1,0 @@
-apply plugin: 'com.android.library'
-apply from: '../buildCommon.gradle'
-apply from: '../MobSDK.gradle'
-dependencies {
-    compile project(':BBSSDKGUI')
-}

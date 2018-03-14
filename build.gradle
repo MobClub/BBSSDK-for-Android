@@ -19,9 +19,6 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        flatDir {
-            dirs 'libs',  project(':BBSSDKGUI').getProjectDir().getPath() + '/libs'
-        }
     }
 }
 
