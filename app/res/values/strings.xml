@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">BBSSDK Sample</string>
     <string name="bbs_init_intro">请输入以下信息\n预览您的论坛</string>
     <string name="bbs_init_keyhint">App Key</string>
     <string name="bbs_init_secrethint">App Secret</string>
