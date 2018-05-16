@@ -2,5 +2,4 @@
 <resources>
     <!-- 打开附件界面，加载字体大小 -->
     <dimen name="attachment_load_txt_size">16sp</dimen>
-    <dimen name="bbs_forumlistview_banner_height">245dp</dimen>
 </resources>

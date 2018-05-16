@@ -105,7 +105,12 @@ MobSDK {
     }
 
     BBSSDK{
-        version '2.3.0'
         theme 'theme1'
+        devInfo {
+            GadMap { //高德地图apiKey
+                apiKey "ed7498703ea40c2a89ca7bd301f1c9d2"
+            }
+        }
+
     }
 }
