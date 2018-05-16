@@ -18,7 +18,7 @@
 
 -keep class android.net.http.SslError
 -keep class android.webkit.**{*;}
--keep class com.mob.**{*;}
+#-keep class com.mob.**{*;}
 -keep class org.apache.poi.**{*;}
 -keep class org.apache.xmlbeans.**{*;}
 -keep class org.repackage.**{*;}
@@ -82,3 +82,31 @@
 -keep class * implements android.os.Parcelable {
   public static final android.os.Parcelable$Creator *;
 }
+
+-dontwarn com.mob.**
+-dontwarn java.awt.**
+-dontwarn javax.xml.**
+-dontwarn org.apache.**
+
+#=========== shareSDK==============
+-keep class cn.sharesdk.**{*;}
+-keep class com.sina.**{*;}
+-keep class **.R$* {*;}
+-keep class **.R{*;}
+-keep class com.mob.**{*;}
+
+
+#高德地图
+
+#定位
+-keep class com.amap.api.location.**{*;}
+-keep class com.amap.api.fence.**{*;}
+-keep class com.autonavi.aps.amapapi.model.**{*;}
+
+#搜索
+-keep   class com.amap.api.services.**{*;}
+
+#3D 地图 V5.0.0之后：
+-keep   class com.amap.api.maps.**{*;}
+-keep   class com.autonavi.**{*;}
+-keep   class com.amap.api.trace.**{*;}
