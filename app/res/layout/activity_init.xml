@@ -104,6 +104,7 @@
             />
 
         <Button
+            android:visibility="gone"
             android:id="@+id/btnConfirm"
             android:layout_width="match_parent"
             android:layout_height="44dp"
@@ -121,13 +122,13 @@
         />
 
     <LinearLayout
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:background="#5583ca"
         android:orientation="horizontal">
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/textViewEnterBase"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -138,6 +139,7 @@
             android:textSize="16sp"/>
 
         <View
+            android:visibility="gone"
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/bbs_white"
@@ -171,6 +173,7 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/layoutEnterOfficial"
         android:layout_width="match_parent"
         android:layout_height="54dp"

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -47,6 +48,9 @@ public class InitActivity extends Activity implements SceneRestorable {
 	private String strUrl;
 	private String strFid;
 	private String strTid;
+	private BBSUncaughtExceptionHandler bbsUncaughtExceptionHandler;
+	private String strDefaultKey;
+	private String strDefaultSecret;
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -58,16 +62,18 @@ public class InitActivity extends Activity implements SceneRestorable {
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(ResHelper.getLayoutRes(InitActivity.this, "activity_init"));
+		strDefaultKey = getStringByResName("BBS_APPKEY");
+		strDefaultSecret = getStringByResName("BBS_APPSECRET");
 		editTextKey = (EditText) findViewById(ResHelper.getIdRes(InitActivity.this, "editTextKey"));
 		editTextSecret = (EditText) findViewById(ResHelper.getIdRes(InitActivity.this, "editTextSecret"));
 		layoutEnterOfficial = findViewById(ResHelper.getIdRes(InitActivity.this, "layoutEnterOfficial"));
 		layoutParamsContainer = (LinearLayout) findViewById(ResHelper.getIdRes(InitActivity.this, "layoutParamsContainer"));
 		textHint = (TextView) findViewById(ResHelper.getIdRes(InitActivity.this, "textHint"));
 		loadKeyAndSecret();
-		if (!StringUtils.isEmpty(strKeyFromDisk)) {
+		if (!StringUtils.isEmpty(strKeyFromDisk) && !strKeyFromDisk.equals(strDefaultKey)) {
 			editTextKey.setText(strKeyFromDisk);
 		}
-		if (!StringUtils.isEmpty(strSecretFromDisk)) {
+		if (!StringUtils.isEmpty(strSecretFromDisk) && !strSecretFromDisk.equals(strDefaultSecret)) {
 			editTextSecret.setText(strSecretFromDisk);
 		}
 
@@ -80,7 +86,7 @@ public class InitActivity extends Activity implements SceneRestorable {
 		layoutEnterOfficial.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				initAndStartMainActivity(getStringByResName("BBS_APPKEY"), getStringByResName("BBS_APPSECRET"));
+				initAndStartMainActivity(strDefaultKey, strDefaultSecret);
 			}
 		});
 
@@ -88,21 +94,21 @@ public class InitActivity extends Activity implements SceneRestorable {
 			@Override
 			public void onClick(View v) {
 				initTheme = null;
-				initAndStartMainActivity(getStringByResName("BBS_APPKEY"), getStringByResName("BBS_APPSECRET"));
+				enterMainActivity();
 			}
 		});
 		findViewById(ResHelper.getIdRes(InitActivity.this, "textViewEnterTheme0")).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				initTheme = 0;
-				initAndStartMainActivity(getStringByResName("BBS_APPKEY"), getStringByResName("BBS_APPSECRET"));
+				enterMainActivity();
 			}
 		});
 		findViewById(ResHelper.getIdRes(InitActivity.this, "textViewEnterTheme1")).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				initTheme = 1;
-				initAndStartMainActivity(getStringByResName("BBS_APPKEY"), getStringByResName("BBS_APPSECRET"));
+				enterMainActivity();
 			}
 		});
 
@@ -111,22 +117,28 @@ public class InitActivity extends Activity implements SceneRestorable {
 		if (intent != null && intent.getData() != null && !StringUtils.isEmpty(
 				intent.getData().getQueryParameter("params"))) {
 //			String params = intent.getData().getQueryParameter("params");
-			String key = getStringByResName("BBS_APPKEY");
-			String secret = getStringByResName("BBS_APPSECRET");
-			if (!StringUtils.isEmpty(key) && !StringUtils.isEmpty(secret)) {
+			if (!StringUtils.isEmpty(strDefaultKey) && !StringUtils.isEmpty(strDefaultSecret)) {
 				textHint.setText(getStringByResName("bbs_init_restorefromurl"));
-				MobSDK.init(InitActivity.this, key, secret);
+				MobSDK.init(InitActivity.this, strDefaultKey, strDefaultSecret);
 				layoutParamsContainer.setVisibility(View.GONE);
 			}
 		}
 	}
 
 	protected void enterMainActivity() {
-		final String key = editTextKey.getText().toString().trim();
-		final String secret = editTextSecret.getText().toString().trim();
+		String key = editTextKey.getText().toString().trim();
+		String secret = editTextSecret.getText().toString().trim();
+		final String finalkey, finalsecret;
+		if (TextUtils.isEmpty(key) || TextUtils.isEmpty(secret)) {
+			finalkey = strDefaultKey;
+			finalsecret = strDefaultSecret;
+		} else {
+			finalkey = key;
+			finalsecret = secret;
+		}
 		//only check key and secret validation in release version.
 		if (AppUtils.isReleaseVersion()) {
-			CheckKeyUtils.checkKeyLegal(key, secret, new CheckKeyUtils.Callback() {
+			CheckKeyUtils.checkKeyLegal(InitActivity.this, finalkey, finalsecret, new CheckKeyUtils.Callback() {
 				public void onCallback(CheckKeyUtils.Info info) {
 					if (info != null && info.status == 200) {
 						if (info.hasApp != 1) {
@@ -141,8 +153,8 @@ public class InitActivity extends Activity implements SceneRestorable {
 							ToastUtils.showToast(getApplicationContext(), getStringByResName("bbs_init_bbssdknotinit_error"));
 							return;
 						}
-						if (initAndStartMainActivity(key, secret)) {
-							saveKeyAndSecret(key, secret);
+						if (initAndStartMainActivity(finalkey, finalsecret)) {
+							saveKeyAndSecret(finalkey, finalsecret);
 						}
 					} else {
 						ToastUtils.showToast(getApplicationContext(), getStringByResName("bbs_init_appsecret_error"));
@@ -150,8 +162,8 @@ public class InitActivity extends Activity implements SceneRestorable {
 				}
 			});
 		} else {
-			if (initAndStartMainActivity(key, secret)) {
-				saveKeyAndSecret(key, secret);
+			if (initAndStartMainActivity(finalkey, finalsecret)) {
+				saveKeyAndSecret(finalkey, finalsecret);
 			}
 		}
 	}
@@ -174,6 +186,7 @@ public class InitActivity extends Activity implements SceneRestorable {
 		}
 
 		MobSDK.init(InitActivity.this, key, secret);
+		registerMainThreadUncaughtExceptioinHandler();
 		if (initTheme != null) {
 			if (initTheme == 0) {
 				BBSTheme0.init();
@@ -187,7 +200,7 @@ public class InitActivity extends Activity implements SceneRestorable {
 		startActivity(intent);
 
 		//open web link page if valid
-		if (!StringUtils.isEmpty(strFid) && ! StringUtils.isEmpty(strTid)) {
+		if (!StringUtils.isEmpty(strFid) && !StringUtils.isEmpty(strTid)) {
 			final PageForumThreadDetail details = BBSViewBuilder.getInstance().buildPageForumThreadDetail();
 			details.setForumThread(Long.parseLong(strFid), Long.parseLong(strTid), "");
 			UIHandler.sendMessageDelayed(null, 300, new Handler.Callback() {
@@ -220,5 +233,30 @@ public class InitActivity extends Activity implements SceneRestorable {
 			return "";
 		}
 		return getString(ResHelper.getStringRes(InitActivity.this, name));
+	}
+
+	private void registerMainThreadUncaughtExceptioinHandler() {
+		if (bbsUncaughtExceptionHandler != null) {
+			return;
+		}
+		Thread.UncaughtExceptionHandler uncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+		bbsUncaughtExceptionHandler = new BBSUncaughtExceptionHandler(uncaughtExceptionHandler);
+		Thread.setDefaultUncaughtExceptionHandler(bbsUncaughtExceptionHandler);
+	}
+
+	private static class BBSUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
+		private Thread.UncaughtExceptionHandler uncaughtExceptionHandler;
+
+		BBSUncaughtExceptionHandler(Thread.UncaughtExceptionHandler handler) {
+			this.uncaughtExceptionHandler = handler;
+		}
+
+		@Override
+		public void uncaughtException(Thread thread, Throwable ex) {
+			ex.printStackTrace();
+			if (uncaughtExceptionHandler != null) {
+				uncaughtExceptionHandler.uncaughtException(thread, ex);
+			}
+		}
 	}
 }
