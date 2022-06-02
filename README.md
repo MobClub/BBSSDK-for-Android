@@ -1,4 +1,4 @@
-# BBSSDK-for-Android
+# BBSSDK-for-Android/TEST
 <br>
 欢迎查看Android端BBSSDK的Sample工程。<br><br>
 这个工程演示了如何使用BBSSDK快速地为论坛网站构建出全新的APP。    
